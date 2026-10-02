@@ -1,0 +1,541 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Client-side caching</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Client-side caching">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Client-side caching</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Client-side caching
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Client-side caching is a technique used to create high performance services.
+It exploits the memory available on application servers, servers that are
+usually distinct computers compared to the Valkey nodes, to store some subset
+of the Valkey information directly in the application side.</p>
+<p>Normally when data is required, the application servers ask the Valkey about
+such information, like in the following diagram:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>+-------------+                                +----------+</span></span>
+<span class="giallo-l"><span>|             | ------- GET user:1234 -------&gt; |          |</span></span>
+<span class="giallo-l"><span>| Application |                                |  Valkey  |</span></span>
+<span class="giallo-l"><span>|             | &lt;---- username = Alice ------- |          |</span></span>
+<span class="giallo-l"><span>+-------------+                                +----------+</span></span></code></pre>
+<p>When client-side caching is used, the application will store the reply of
+popular queries directly inside the application memory, so that it can
+reuse such replies later, without contacting the Valkey again:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>+-------------+                                +----------+</span></span>
+<span class="giallo-l"><span>|             |                                |          |</span></span>
+<span class="giallo-l"><span>| Application |       ( No chat needed )       |  Valkey  |</span></span>
+<span class="giallo-l"><span>|             |                                |          |</span></span>
+<span class="giallo-l"><span>+-------------+                                +----------+</span></span>
+<span class="giallo-l"><span>| Local cache |</span></span>
+<span class="giallo-l"><span>|             |</span></span>
+<span class="giallo-l"><span>| user:1234 = |</span></span>
+<span class="giallo-l"><span>| username    |</span></span>
+<span class="giallo-l"><span>| Alice       |</span></span>
+<span class="giallo-l"><span>+-------------+</span></span></code></pre>
+<p>While the application memory used for the local cache may not be very big,
+the time needed in order to access the local computer memory is orders of
+magnitude smaller compared to accessing a networked service like a Valkey.
+Since often the same small percentage of data are accessed frequently,
+this pattern can greatly reduce the latency for the application to get data
+and, at the same time, the load in the Valkey side.</p>
+<p>Moreover there are many datasets where items change very infrequently.
+For instance, most user posts in a social network are either immutable or
+rarely edited by the user. Adding to this the fact that usually a small
+percentage of the posts are very popular, either because a small set of users
+have a lot of followers and/or because recent posts have a lot more
+visibility, it is clear why such a pattern can be very useful.</p>
+<p>Usually the two key advantages of client-side caching are:</p>
+<ol>
+<li>Data is available with a very small latency.</li>
+<li>The Valkey system receives less queries, allowing it to serve the same dataset with a smaller number of nodes.</li>
+</ol>
+<h2 id="there-are-two-hard-problems-in-computer-science">There are two hard problems in computer science...</h2>
+<p>A problem with the above pattern is how to invalidate the information that
+the application is holding, in order to avoid presenting stale data to the
+user. For example after the application above locally cached the information
+for user:1234, Alice may update her username to Flora. Yet the application
+may continue to serve the old username for user:1234.</p>
+<p>Sometimes, depending on the exact application we are modeling, this isn't a
+big deal, so the client will just use a fixed maximum "time to live" for the
+cached information. Once a given amount of time has elapsed, the information
+will no longer be considered valid. More complex patterns, when using Valkey,
+leverage the Pub/Sub system in order to send invalidation messages to
+listening clients. This can be made to work but is tricky and costly from
+the point of view of the bandwidth used, because often such patterns involve
+sending the invalidation messages to every client in the application, even
+if certain clients may not have any copy of the invalidated data. Moreover
+every application query altering the data requires to use the <code>PUBLISH</code>
+command, costing the Valkey more CPU time to process this command.</p>
+<p>Regardless of what schema is used, there is a simple fact: many very large
+applications implement some form of client-side caching, because it is the
+next logical step to having a fast store or a fast cache server. For this
+reason Valkey implements direct support for client-side caching, in order
+to make this pattern much simpler to implement, more accessible, reliable,
+and efficient.</p>
+<h2 id="the-valkey-implementation-of-client-side-caching">The Valkey implementation of client-side caching</h2>
+<p>The Valkey client-side caching support is called <em>Tracking</em>, and has two modes:</p>
+<ul>
+<li>In the default mode, the server remembers what keys a given client accessed, and sends invalidation messages when the same keys are modified. This costs memory in the server side, but sends invalidation messages only for the set of keys that the client might have in memory.</li>
+<li>In the <em>broadcasting</em> mode, the server does not attempt to remember what keys a given client accessed, so this mode costs no memory at all in the server side. Instead clients subscribe to key prefixes such as <code>object:</code> or <code>user:</code>, and receive a notification message every time a key matching a subscribed prefix is touched.</li>
+</ul>
+<p>To recap, for now let's forget for a moment about the broadcasting mode, to
+focus on the first mode. We'll describe broadcasting in more detail later.</p>
+<ol>
+<li>Clients can enable tracking if they want. Connections start without tracking enabled.</li>
+<li>When tracking is enabled, the server remembers what keys each client requested during the connection lifetime (by sending read commands about such keys).</li>
+<li>When a key is modified by some client, or is evicted because it has an associated expire time, or evicted because of a <em>maxmemory</em> policy, all the clients with tracking enabled that may have the key cached, are notified with an <em>invalidation message</em>.</li>
+<li>When clients receive invalidation messages, they are required to remove the corresponding keys, in order to avoid serving stale data.</li>
+</ol>
+<p>This is an example of the protocol:</p>
+<ul>
+<li>Client 1 <code>-&gt;</code> Server: CLIENT TRACKING ON</li>
+<li>Client 1 <code>-&gt;</code> Server: GET foo</li>
+<li>(The server remembers that Client 1 may have the key "foo" cached)</li>
+<li>(Client 1 may remember the value of "foo" inside its local memory)</li>
+<li>Client 2 <code>-&gt;</code> Server: SET foo SomeOtherValue</li>
+<li>Server <code>-&gt;</code> Client 1: INVALIDATE "foo"</li>
+</ul>
+<p>This looks great superficially, but if you imagine 10k connected clients all
+asking for millions of keys over long living connection, the server ends up
+storing too much information. For this reason Valkey uses two key ideas in
+order to limit the amount of memory used server-side and the CPU cost of
+handling the data structures implementing the feature:</p>
+<ul>
+<li>The server remembers the list of clients that may have cached a given key in a single global table. This table is called the <strong>Invalidation Table</strong>. The invalidation table can contain a maximum number of entries. If a new key is inserted, the server may evict an older entry by pretending that such key was modified (even if it was not), and sending an invalidation message to the clients. Doing so, it can reclaim the memory used for this key, even if this will force the clients having a local copy of the key to evict it.</li>
+<li>Inside the invalidation table we don't really need to store pointers to clients' structures, that would force a garbage collection procedure when the client disconnects: instead what we do is just store client IDs (each Valkey client has a unique numerical ID). If a client disconnects, the information will be incrementally garbage collected as caching slots are invalidated.</li>
+<li>There is a single keys namespace, not divided by Valkey numbers. So if a client is caching the key <code>foo</code> in Valkey 2, and some other client changes the value of the key <code>foo</code> in Valkey 3, an invalidation message will still be sent. This way we can ignore Valkey numbers reducing both the memory usage and the implementation complexity.</li>
+</ul>
+<h2 id="two-connections-mode">Two connections mode</h2>
+<p>Using the new version of the Valkey protocol, RESP3, it is possible to run the data queries and receive the invalidation messages in the same connection. However many client implementations may prefer to implement client-side caching using two separated connections: one for data, and one for invalidation messages. For this reason when a client enables tracking, it can specify to redirect the invalidation messages to another connection by specifying the "client ID" of a different connection. Many data connections can redirect invalidation messages to the same connection, this is useful for clients implementing connection pooling. The two connections model is the only one that is also supported for RESP2 (which lacks the ability to multiplex different kind of information in the same connection).</p>
+<p>Here's an example of a complete session using the Valkey protocol in the old RESP2 mode involving the following steps: enabling tracking redirecting to another connection, asking for a key, and getting an invalidation message once the key gets modified.</p>
+<p>To start, the client opens a first connection that will be used for invalidations, requests the connection ID, and subscribes via Pub/Sub to the special channel that is used to get invalidation messages when in RESP2 modes (remember that RESP2 is the usual Valkey protocol, and not the more advanced protocol that you can use, optionally, using the <code>HELLO</code> command):</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(Connection 1 -- used for invalidations)</span></span>
+<span class="giallo-l"><span>CLIENT ID</span></span>
+<span class="giallo-l"><span>:4</span></span>
+<span class="giallo-l"><span>SUBSCRIBE __redis__:invalidate</span></span>
+<span class="giallo-l"><span>*3</span></span>
+<span class="giallo-l"><span>$9</span></span>
+<span class="giallo-l"><span>subscribe</span></span>
+<span class="giallo-l"><span>$20</span></span>
+<span class="giallo-l"><span>__redis__:invalidate</span></span>
+<span class="giallo-l"><span>:1</span></span></code></pre>
+<p>Now we can enable tracking from the data connection:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(Connection 2 -- data connection)</span></span>
+<span class="giallo-l"><span>CLIENT TRACKING on REDIRECT 4</span></span>
+<span class="giallo-l"><span>+OK</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>GET foo</span></span>
+<span class="giallo-l"><span>$3</span></span>
+<span class="giallo-l"><span>bar</span></span></code></pre>
+<p>The client may decide to cache <code>"foo" =&gt; "bar"</code> in the local memory.</p>
+<p>A different client will now modify the value of the "foo" key:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(Some other unrelated connection)</span></span>
+<span class="giallo-l"><span>SET foo bar</span></span>
+<span class="giallo-l"><span>+OK</span></span></code></pre>
+<p>As a result, the invalidations connection will receive a message that invalidates the specified key.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(Connection 1 -- used for invalidations)</span></span>
+<span class="giallo-l"><span>*3</span></span>
+<span class="giallo-l"><span>$7</span></span>
+<span class="giallo-l"><span>message</span></span>
+<span class="giallo-l"><span>$20</span></span>
+<span class="giallo-l"><span>__redis__:invalidate</span></span>
+<span class="giallo-l"><span>*1</span></span>
+<span class="giallo-l"><span>$3</span></span>
+<span class="giallo-l"><span>foo</span></span></code></pre>
+<p>The client will check if there are cached keys in this caching slot, and will evict the information that is no longer valid.</p>
+<p>Note that the third element of the Pub/Sub message is not a single key but
+is a Valkey array with just a single element. Since we send an array, if there
+are groups of keys to invalidate, we can do that in a single message.
+In case of a flush (<code>FLUSHALL</code> or <code>FLUSHDB</code>), a <code>null</code> message will be sent.</p>
+<p>A very important thing to understand about client-side caching used with
+RESP2 and a Pub/Sub connection in order to read the invalidation messages,
+is that using Pub/Sub is entirely a trick <strong>in order to reuse old client
+implementations</strong>, but actually the message is not really sent to a channel
+and received by all the clients subscribed to it. Only the connection we
+specified in the <code>REDIRECT</code> argument of the <code>CLIENT</code> command will actually
+receive the Pub/Sub message, making the feature a lot more scalable.</p>
+<p>When RESP3 is used instead, invalidation messages are sent (either in the
+same connection, or in the secondary connection when redirection is used)
+as <code>push</code> messages (read the RESP3 specification for more information).</p>
+<h2 id="what-tracking-tracks">What tracking tracks</h2>
+<p>As you can see clients do not need, by default, to tell the server what keys
+they are caching. Every key that is mentioned in the context of a read-only
+command is tracked by the server, because it <em>could be cached</em>.</p>
+<p>This has the obvious advantage of not requiring the client to tell the server
+what it is caching. Moreover in many clients implementations, this is what
+you want, because a good solution could be to just cache everything that is not
+already cached, using a first-in first-out approach: we may want to cache a
+fixed number of objects, every new data we retrieve, we could cache it,
+discarding the oldest cached object. More advanced implementations may instead
+drop the least used object or alike.</p>
+<p>Note that anyway if there is write traffic on the server, caching slots
+will get invalidated during the course of the time. In general when the
+server assumes that what we get we also cache, we are making a tradeoff:</p>
+<ol>
+<li>It is more efficient when the client tends to cache many things with a policy that welcomes new objects.</li>
+<li>The server will be forced to retain more data about the client keys.</li>
+<li>The client will receive useless invalidation messages about objects it did not cache.</li>
+</ol>
+<p>So there is an alternative described in the next section.</p>
+<h2 id="opt-in-caching">Opt-in caching</h2>
+<p>Clients implementations may want to cache only selected keys, and communicate
+explicitly to the server what they'll cache and what they will not. This will
+require more bandwidth when caching new objects, but at the same time reduces
+the amount of data that the server has to remember and the amount of
+invalidation messages received by the client.</p>
+<p>In order to do this, tracking must be enabled using the OPTIN option:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>CLIENT TRACKING on REDIRECT 1234 OPTIN</span></span></code></pre>
+<p>In this mode, by default, keys mentioned in read queries <em>are not supposed to be cached</em>, instead when a client wants to cache something, it must send a special command immediately before the actual command to retrieve the data:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>CLIENT CACHING YES</span></span>
+<span class="giallo-l"><span>+OK</span></span>
+<span class="giallo-l"><span>GET foo</span></span>
+<span class="giallo-l"><span>&quot;bar&quot;</span></span></code></pre>
+<p>The <code>CACHING</code> command affects the command executed immediately after it,
+however in case the next command is <code>MULTI</code>, all the commands in the
+transaction will be tracked. Similarly in case of Lua scripts, all the
+commands executed by the script will be tracked.</p>
+<h2 id="broadcasting-mode">Broadcasting mode</h2>
+<p>So far we described the first client-side caching model that Valkey implements.
+There is another one, called broadcasting, that sees the problem from the
+point of view of a different tradeoff, does not consume any memory on the
+server side, but instead sends more invalidation messages to clients.
+In this mode we have the following main behaviors:</p>
+<ul>
+<li>Clients enable client-side caching using the <code>BCAST</code> option, specifying one or more prefixes using the <code>PREFIX</code> option. For instance: <code>CLIENT TRACKING on REDIRECT 10 BCAST PREFIX object: PREFIX user:</code>. If no prefix is specified at all, the prefix is assumed to be the empty string, so the client will receive invalidation messages for every key that gets modified. Instead if one or more prefixes are used, only keys matching one of the specified prefixes will be sent in the invalidation messages.</li>
+<li>The server does not store anything in the invalidation table. Instead it uses a different <strong>Prefixes Table</strong>, where each prefix is associated to a list of clients.</li>
+<li>No two prefixes can track overlapping parts of the keyspace. For instance, having the prefix "foo" and "foob" would not be allowed, since they would both trigger an invalidation for the key "foobar". However, just using the prefix "foo" is sufficient.</li>
+<li>Every time a key matching any of the prefixes is modified, all the clients subscribed to that prefix, will receive the invalidation message.</li>
+<li>The server will consume CPU proportional to the number of registered prefixes. If you have just a few, it is hard to see any difference. With a big number of prefixes the CPU cost can become quite large.</li>
+<li>In this mode the server can perform the optimization of creating a single reply for all the clients subscribed to a given prefix, and send the same reply to all. This helps to lower the CPU usage.</li>
+</ul>
+<h2 id="the-noloop-option">The NOLOOP option</h2>
+<p>By default client-side tracking will send invalidation messages to the
+client that modified the key. Sometimes clients want this, since they
+implement very basic logic that does not involve automatically caching
+writes locally. However, more advanced clients may want to cache even the
+writes they are doing in the local in-memory table. In such case receiving
+an invalidation message immediately after the write is a problem, since it
+will force the client to evict the value it just cached.</p>
+<p>In this case it is possible to use the <code>NOLOOP</code> option: it works both
+in normal and broadcasting mode. Using this option, clients are able to
+tell the server they don't want to receive invalidation messages for keys
+that they modified.</p>
+<h2 id="avoiding-race-conditions">Avoiding race conditions</h2>
+<p>When implementing client-side caching redirecting the invalidation messages
+to a different connection, you should be aware that there is a possible
+race condition. See the following example interaction, where we'll call
+the data connection "D" and the invalidation connection "I":</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>[D] client -&gt; server: GET foo</span></span>
+<span class="giallo-l"><span>[I] server -&gt; client: Invalidate foo (somebody else touched it)</span></span>
+<span class="giallo-l"><span>[D] server -&gt; client: &quot;bar&quot; (the reply of &quot;GET foo&quot;)</span></span></code></pre>
+<p>As you can see, because the reply to the GET was slower to reach the
+client, we received the invalidation message before the actual data that
+is already no longer valid. So we'll keep serving a stale version of the
+foo key. To avoid this problem, it is a good idea to populate the cache
+when we send the command with a placeholder:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>Client cache: set the local copy of &quot;foo&quot; to &quot;caching-in-progress&quot;</span></span>
+<span class="giallo-l"><span>[D] client-&gt; server: GET foo.</span></span>
+<span class="giallo-l"><span>[I] server -&gt; client: Invalidate foo (somebody else touched it)</span></span>
+<span class="giallo-l"><span>Client cache: delete &quot;foo&quot; from the local cache.</span></span>
+<span class="giallo-l"><span>[D] server -&gt; client: &quot;bar&quot; (the reply of &quot;GET foo&quot;)</span></span>
+<span class="giallo-l"><span>Client cache: don&#39;t set &quot;bar&quot; since the entry for &quot;foo&quot; is missing.</span></span></code></pre>
+<p>Such a race condition is not possible when using a single connection for both
+data and invalidation messages, since the order of the messages is always known
+in that case.</p>
+<h2 id="what-to-do-when-losing-connection-with-the-server">What to do when losing connection with the server</h2>
+<p>Similarly, if we lost the connection with the socket we use in order to
+get the invalidation messages, we may end with stale data. In order to avoid
+this problem, we need to do the following things:</p>
+<ol>
+<li>Make sure that if the connection is lost, the local cache is flushed.</li>
+<li>Both when using RESP2 with Pub/Sub, or RESP3, ping the invalidation channel periodically (you can send PING commands even when the connection is in Pub/Sub mode!). If the connection looks broken and we are not able to receive ping backs, after a maximum amount of time, close the connection and flush the cache.</li>
+</ol>
+<h2 id="what-to-cache">What to cache</h2>
+<p>Clients may want to run internal statistics about the number of times
+a given cached key was actually served in a request, to understand in the
+future what is good to cache. In general:</p>
+<ul>
+<li>We don't want to cache many keys that change continuously.</li>
+<li>We don't want to cache many keys that are requested very rarely.</li>
+<li>We want to cache keys that are requested often and change at a reasonable rate. For an example of key not changing at a reasonable rate, think of a global counter that is continuously <code>INCR</code>emented.</li>
+</ul>
+<p>However simpler clients may just evict data using some random sampling just
+remembering the last time a given cached value was served, trying to evict
+keys that were not served recently.</p>
+<h2 id="other-hints-for-implementing-client-libraries">Other hints for implementing client libraries</h2>
+<ul>
+<li>Handling TTLs: make sure you also request the key TTL and set the TTL in the local cache if you want to support caching keys with a TTL.</li>
+<li>Putting a max TTL on every key is a good idea, even if it has no TTL. This protects against bugs or connection issues that would make the client have old data in the local copy.</li>
+<li>Limiting the amount of memory used by clients is absolutely needed. There must be a way to evict old keys when new ones are added.</li>
+</ul>
+<h2 id="limiting-the-amount-of-memory-used-by-valkey">Limiting the amount of memory used by Valkey</h2>
+<p>Be sure to configure a suitable value for the maximum number of keys remembered by Valkey or alternatively use the BCAST mode that consumes no memory at all on the Valkey side. Note that the memory consumed by Valkey when BCAST is not used, is proportional both to the number of keys tracked and the number of clients requesting such keys.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/client-side-caching.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

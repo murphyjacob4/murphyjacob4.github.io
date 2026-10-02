@@ -1,0 +1,394 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Valkey Search - Queries</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Valkey Search - Queries">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Valkey Search - Queries</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Valkey Search - Queries
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>The query of the <code>FT.SEARCH</code> and <code>FT.AGGREGATE</code> commands identifies a subset of the keys in the index to be processed by those commands.
+The syntax and semantics of the query string is identical for both commands.</p>
+<p>A query has three different formats: pure-vector, hybrid-vector and non-vector.</p>
+<h1 id="pure-vector-queries">Pure Vector Queries</h1>
+<p>A pure-vector query performs a K Nearest Neighbors (KNN) query of a single vector field within the index.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>*=&gt;[ KNN &lt;K&gt; @&lt;field&gt; $&lt;parameter&gt; [EF_RUNTIME &lt;ef-value&gt;] [AS &lt;name&gt;] ]</span></span></code></pre><h1 id="hybrid-vector-queries">Hybrid Vector Queries</h1>
+<p>A hybrid query adds a filter expression to indicate which keys within the index are candidates for results.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&lt;filter&gt;=&gt;[ KNN &lt;K&gt; @&lt;field&gt; $&lt;parameter&gt; [EF_RUNTIME &lt;ef-value&gt;] [AS &lt;name&gt;] ]</span></span></code></pre><h1 id="non-vector-query">Non-vector Query</h1>
+<p>A non-vector query consists solely of a filter:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&lt;filter&gt;</span></span></code></pre>
+<p>Where:</p>
+<ul>
+<li><code>&lt;filter&gt;</code> (optional): Filter expression, see below</li>
+<li><code>K</code> (required): The number of nearest neighbor vectors to return.</li>
+<li><code>field</code> (required): The name of a vector field within the specified index.</li>
+<li><code>parameter</code> (required): A <code>PARAM</code> name whose corresponding value provides the query vector for the KNN algorithm.
+Note that this parameter must be encoded as a 32-bit IEEE 754 binary floating point in little-endian format.</li>
+<li><code>EF_RUNTIME &lt;ef-value&gt;</code> (optional): Overrides the default value of <code>EF_RUNTIME</code> specified when the index was created.</li>
+<li><code>AS &lt;name&gt;</code> (optional): Overrides the default naming of the output distance field. By default this field is constructed by appending the string "__score" to the name of the vector field.</li>
+</ul>
+<h2 id="filter-expression">Filter Expression</h2>
+<p>A filter identifies a set of keys. Filters can be constructed using individual query operator as well as by combining operators with <code>AND</code>, <code>OR</code>, <code>NEGATE</code> operators.</p>
+<p>It is not the case that the of filtering terminology implies an O(N) scan of keys in an index. Valkey search intelligently combines the usage of secondary indexes and simple filtering to efficiently locate the keys that a filter identifies. Determining the computational complexity of a particular filter is difficult, but generally no worse than O(log N) and sometimes as fast as O(1).</p>
+<p>The BNF for a filter is:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&lt;filter&gt;        ::= &lt;logical-or&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;logical-or&gt;    ::= &lt;logical-and&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;logical-or&gt; &quot;|&quot; &lt;logical-and&gt;</span></span>
+<span class="giallo-l"><span>&lt;logical-and&gt;   ::= &lt;logical-not&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;logical-and&gt; &quot; &quot; &lt;logical-not&gt;</span></span>
+<span class="giallo-l"><span>&lt;logical-not&gt;   ::= &lt;matcher&gt;</span></span>
+<span class="giallo-l"><span>                  | &quot;-&quot; &lt;logical-not&gt;</span></span>
+<span class="giallo-l"><span>&lt;matcher&gt;       ::= &lt;tag-match&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;numeric-match&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;term-match&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;phrase-match&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;fuzzy-match&gt;</span></span>
+<span class="giallo-l"><span>                  | &quot;(&quot; &lt;logical-or&gt; &quot;)&quot;</span></span>
+<span class="giallo-l"></span></code></pre><h3 id="tag-match">Tag Match</h3>
+<p>The tag match operator is specified with one or more match strings separated by the <code>|</code> character.
+Tag match supports both exact match and prefix match.
+If a match string end with an <code>*</code> then prefix matching is performed, otherwise exact matching is performed.
+Case insensitive matching can be configured when the field was declared.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>@&lt;field-name&gt;:{&lt;tag&gt;}</span></span>
+<span class="giallo-l"><span>or</span></span>
+<span class="giallo-l"><span>@&lt;field-name&gt;:{&lt;tag1&gt; | &lt;tag2&gt;}</span></span>
+<span class="giallo-l"><span>or</span></span>
+<span class="giallo-l"><span>@&lt;field-name&gt;:{&lt;tag1&gt; | &lt;tag2&gt; | ...}</span></span></code></pre>
+<p>For example, the following query will return documents with blue OR black OR green color.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>@color:{blue | black | green}</span></span></code></pre>
+<p>As another example, the following query will return documents containing "hello world" or "hello universe"</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>@color:{hello world | hello universe}</span></span></code></pre>
+<p>This example will match black or any word that starts with fred:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>@color:{black | fred*}</span></span></code></pre>
+<p>For more examples see <a href="#example-tag-queries">Tag Fields</a>.</p>
+<h3 id="numeric-range-match">Numeric Range Match</h3>
+<p>Numeric range matcher selects keys based on the value of a numeric field being between a given start and end value.
+Both inclusive and exclusive range queries are supported. For simple relational comparisons, +inf, -inf can be used
+with a range query.</p>
+<p>The syntax for a range search operator is:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>@&lt;field-name&gt;:[ [(] &lt;bound&gt; [(] &lt;bound&gt;]</span></span></code></pre>
+<p>where <bound> is either a decimal integer, floating-point number or ±inf</p>
+<p>Bounds without a leading open paren are inclusive, whereas bounds with the leading open parenthesis are exclusive.</p>
+<p>Use the following table as a guide for mapping mathematical expressions to filtering queries:</p>
+<table><thead><tr><th style="text-align: center">Desired comparison</th><th style="text-align: left">Numeric matcher</th></tr></thead><tbody>
+<tr><td style="text-align: center">min ≤ field ≤ max</td><td style="text-align: left">@field:[min max]</td></tr>
+<tr><td style="text-align: center">min &lt; field ≤ max</td><td style="text-align: left">@field:[(min max]</td></tr>
+<tr><td style="text-align: center">min ≤ field &lt; max</td><td style="text-align: left">@field:[min (max]</td></tr>
+<tr><td style="text-align: center">min &lt; field &lt; max</td><td style="text-align: left">@field:[(min (max]</td></tr>
+<tr><td style="text-align: center">field ≥ min</td><td style="text-align: left">@field:[min +inf]</td></tr>
+<tr><td style="text-align: center">field &gt; min</td><td style="text-align: left">@field:[(min +inf]</td></tr>
+<tr><td style="text-align: center">field ≤ max</td><td style="text-align: left">@field:[-inf max]</td></tr>
+<tr><td style="text-align: center">field &lt; max</td><td style="text-align: left">@field:[-inf (max]</td></tr>
+<tr><td style="text-align: center">field = val</td><td style="text-align: left">@field:[val val]</td></tr>
+</tbody></table>
+<p>Examples of numeric matchers</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>@price:[10 100]           10 ≤ field ≤ 100</span></span>
+<span class="giallo-l"><span>@price:[(10 100.5]        10 &lt; field ≤ 100.5</span></span>
+<span class="giallo-l"><span>@price:[-inf (1e2]        price &lt; 100</span></span></code></pre><h2 id="text-search-operators">Text Search Operators</h2>
+<p>Unlike the other search operators. The text search operators do not require that a field be specified. If a field is not specified for a text search operator, then all text fields within the index are searched. Regardless, if multiple text search operators are combined in an expression, then only keys which have all of the text search operators will satisfy the query.</p>
+<h3 id="term-search">Term Search</h3>
+<p>The term search operator matches a single word. If the word is a stop word, the term search operator is removed from the query expression.
+Term searches are subject to stemming unless the <code>VERBATIM</code> option is specified.</p>
+<p>Examples include:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>hello                   matches the word hello in any text field</span></span>
+<span class="giallo-l"><span>@t:hello                matches the word hello but only in the t field (t must be a text field)</span></span></code></pre><h3 id="prefix-matching">Prefix Matching</h3>
+<p>A term with a trailing <code>*</code> matches any word that starts with that term.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>hello*                  matches words that start with hello such as hello, hello1, hello_world but not ohello</span></span>
+<span class="giallo-l"><span>@t:hello*               matches words that start with hello in the t field (t must be a text field)</span></span></code></pre><h3 id="suffix-matching">Suffix Matching</h3>
+<p>A term with a leading <code>*</code> matches any word that ends with that term.</p>
+<p>Note that suffix searching will only locate words in fields that have <code>WITHSUFFIXTRIE</code> specified, i.e., fields declared with <code>NOSUFFIXTRIE</code> will not be searched.
+If a field specifier is added to a suffix term search and that particular field was declared with <code>NOSUFFIXTRIE</code> then an error will be issued.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>*hello                  matches words that end with hello such as hello, ohello but not hello1</span></span>
+<span class="giallo-l"><span>@t:*hello               matches words that end with hello in the t field (t must be a text field with WITHSUFFIXTRIE)</span></span></code></pre><h3 id="exact-phrase-search">Exact Phrase Search</h3>
+<p>The exact phrase search operator matches an exact sequence of words in a text field. The words to be matched are enclosed in double quotes. The words are not subject to stop word removal nor stemming, otherwise this is equivalent to having the same words in a query with <code>SLOP 0</code> and <code>INORDER</code> options being specified.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&quot;hello world&quot;            matches the exact phrase &quot;hello world&quot; in any text field</span></span>
+<span class="giallo-l"><span>@t:&quot;hello world&quot;         matches the exact phrase &quot;hello world&quot; in the t field (t must be a text field)</span></span></code></pre><h3 id="fuzzy-search">Fuzzy Search</h3>
+<p>The fuzzy search operator matches words within a fixed damerau-levenshtein distance. See <a rel="external" href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">damerau-levenshtein edit distance</a> for more information. Fuzzy matching is specified by enclosing the base word in percent symbols <code>%</code> one for each allowable edit distance. The maximum allowed edit distance is control by the configuration setting <code>search.fuzzy-max-distance</code>.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>%hello%                 matches words that are one edit away from hello such as hello, hello1</span></span>
+<span class="giallo-l"><span>%%hello%%              matches words that are two edits away from hello such as hello, hello1, ohello, hllo</span></span>
+<span class="giallo-l"><span>@t:%hello%             matches words that are one edit away from hello but only in the t field</span></span>
+<span class="giallo-l"><span>%%hello%               Error: leading and trailing count % count are different</span></span></code></pre><h2 id="logical-operators">Logical Operators</h2>
+<h3 id="logical-negation">Logical Negation</h3>
+<p>Any query can be negated by prepending the <code>-</code> character before each query. Negative queries return all keys that don't match the query. This also includes keys that don't have the field.</p>
+<p>For example, the negative query <code>-@genre:{comedy}</code> will return all books that are not comedy AND all books that don't have a genre field.</p>
+<p>The following query will return all books with "comedy" genre that are not published between 2015 and 2024, or that have no year field:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>@genre: {comedy} \-@year:[2015 2024]</span></span></code></pre><h3 id="logical-or">Logical <code>OR</code></h3>
+<p>To set a logical OR, use the <code>|</code> character between the predicates.</p>
+<p>Example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>query1 | query2 | query3</span></span></code></pre><h3 id="logical-and">Logical <code>AND</code></h3>
+<p>To specify the <code>AND</code> operation use a space between the predicates. If the <code>INORDER</code> and <code>SLOP</code> options are not provided then the <code>AND</code> operation is done at the key level. This means that any key which satisfies each of the predicates will match.</p>
+<p>If either of the <code>INORDER</code> or <code>SLOP</code> options are provided, then the <code>AND</code> operation is extended beyond simple key matching to also include positional matching of the text searching operators. Positional matching requires that each predicate not only match the same key but that the text searching operators (term, prefix, suffix, exact phrase and fuzzy) must also match words that satisfy the requirements of <code>INORDER</code> and <code>SLOP</code> in the same field of the same key.</p>
+<p>For example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>query1 query2 query3</span></span></code></pre><h3 id="proximity-and">Proximity <code>AND</code></h3>
+<p>When two or more predicates of an AND operation contain text matchers, it becomes possible to also perform positional matching. Positional matching extends key-based matching to additionally require that matching words meet specified distance and ordering constraints. Positional matching is only applied within a single Text field. There is no positional relationship between terms in different Text fields.</p>
+<p>Position matching is enabled when either the <code>SLOP</code> or <code>INORDER</code> clauses are used on the command and applies to all multi-predicate AND operations within the current command.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/search-query.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

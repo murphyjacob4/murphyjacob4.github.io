@@ -1,0 +1,385 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Keyspace</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Keyspace">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Keyspace</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Keyspace
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey keys are binary safe; this means that you can use any binary sequence as a
+key, from a string like "foo" to the content of a JPEG file.
+The empty string is also a valid key.</p>
+<p>A few other rules about keys:</p>
+<ul>
+<li>Very long keys are not a good idea. For instance a key of 1024 bytes is a bad
+idea not only memory-wise, but also because the lookup of the key in the
+dataset may require several costly key-comparisons. Even when the task at hand
+is to match the existence of a large value, hashing it (for example
+with SHA1) is a better idea, especially from the perspective of memory
+and bandwidth.</li>
+<li>Very short keys are often not a good idea. There is little point in writing
+"u1000flw" as a key if you can instead write "user:1000:followers".  The latter
+is more readable and the added space is minor compared to the space used by
+the key object itself and the value object. While short keys will obviously
+consume a bit less memory, your job is to find the right balance.</li>
+<li>Try to stick with a schema. For instance "object-type:id" is a good
+idea, as in "user:1000". Dots or dashes are often used for multi-word
+fields, as in "comment:4321:reply.to" or "comment:4321:reply-to".</li>
+<li>The maximum allowed key size is 512 MB.</li>
+</ul>
+<h2 id="altering-and-querying-the-key-space">Altering and querying the key space</h2>
+<p>There are commands that are not defined on particular types, but are useful
+in order to interact with the space of keys, and thus, can be used with
+keys of any type.</p>
+<p>For example the <code>EXISTS</code> command returns 1 or 0 to signal if a given key
+exists or not in the database, while the <code>DEL</code> command deletes a key
+and associated value, whatever the value is.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; set mykey hello</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; exists mykey</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>&gt; del mykey</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>&gt; exists mykey</span></span>
+<span class="giallo-l"><span>(integer) 0</span></span></code></pre>
+<p>From the examples you can also see how <code>DEL</code> itself returns 1 or 0 depending on whether
+the key was removed (it existed) or not (there was no such key with that
+name).</p>
+<p>There are many key space related commands, but the above two are the
+essential ones together with the <code>TYPE</code> command, which returns the kind
+of value stored at the specified key:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; set mykey x</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; type mykey</span></span>
+<span class="giallo-l"><span>string</span></span>
+<span class="giallo-l"><span>&gt; del mykey</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>&gt; type mykey</span></span>
+<span class="giallo-l"><span>none</span></span></code></pre><h2 id="key-expiration">Key expiration</h2>
+<p>Before moving on, we should look at an important Valkey feature that works regardless of the type of value you're storing: key expiration. Key expiration lets you set a timeout for a key, also known as a "time to live", or "TTL". When the time to live elapses, the key is automatically destroyed.</p>
+<p>A few important notes about key expiration:</p>
+<ul>
+<li>They can be set both using seconds or milliseconds precision.</li>
+<li>However the expire time resolution is always 1 millisecond.</li>
+<li>Information about expires are replicated and persisted on disk, the time virtually passes when your Valkey server remains stopped (this means that Valkey saves the date at which a key will expire).</li>
+</ul>
+<p>Use the <code>EXPIRE</code> command to set a key's expiration:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; set key some-value</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; expire key 5</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>&gt; get key (immediately)</span></span>
+<span class="giallo-l"><span>&quot;some-value&quot;</span></span>
+<span class="giallo-l"><span>&gt; get key (after some time)</span></span>
+<span class="giallo-l"><span>(nil)</span></span></code></pre>
+<p>The key vanished between the two <code>GET</code> calls, since the second call was
+delayed more than 5 seconds. In the example above we used <code>EXPIRE</code> in
+order to set the expire (it can also be used in order to set a different
+expire to a key already having one, like <code>PERSIST</code> can be used in order
+to remove the expire and make the key persistent forever). However we
+can also create keys with expires using other Valkey commands. For example
+using <code>SET</code> options:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; set key 100 ex 10</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; ttl key</span></span>
+<span class="giallo-l"><span>(integer) 9</span></span></code></pre>
+<p>The example above sets a key with the string value <code>100</code>, having an expire
+of ten seconds. Later the <code>TTL</code> command is called in order to check the
+remaining time to live for the key.</p>
+<p>In order to set and check expires in milliseconds, check the <code>PEXPIRE</code> and
+the <code>PTTL</code> commands, and the full list of <code>SET</code> options.</p>
+<h2 id="navigating-the-keyspace">Navigating the keyspace</h2>
+<h3 id="scan">Scan</h3>
+<p>To incrementally  iterate over the keys in a Valkey database in an efficient manner, you can use the <code>SCAN</code> command.</p>
+<p>Since <code>SCAN</code> allows for incremental iteration, returning only a small number of elements per call, it can be used in production without the downside of commands like <code>KEYS</code> or <code>SMEMBERS</code> that may block the server for a long time (even several seconds) when called against big collections of keys or elements.</p>
+<p>However while blocking commands like <code>SMEMBERS</code> are able to provide all the elements that are part of a Set in a given moment.
+The <code>SCAN</code> family of commands only offer limited guarantees about the returned elements since the collection that we incrementally iterate can change during the iteration process.</p>
+<h3 id="keys">Keys</h3>
+<p>Another way to iterate over the keyspace is to use the <code>KEYS</code> command, but this approach should be used with care, since <code>KEYS</code> will block the Valkey server until all keys are returned.</p>
+<p><strong>Warning</strong>: consider <code>KEYS</code> as a command that should only be used in production
+environments with extreme care.</p>
+<p><code>KEYS</code> may ruin performance when it is executed against large databases.
+This command is intended for debugging and special operations, such as changing
+your keyspace layout.
+Don't use <code>KEYS</code> in your regular application code.
+If you're looking for a way to find keys in a subset of your keyspace, consider
+using <code>SCAN</code> or <a href="/topics/data-types#sets">sets</a>.</p>
+<p>Supported glob-style patterns:</p>
+<ul>
+<li><code>h?llo</code> matches <code>hello</code>, <code>hallo</code> and <code>hxllo</code></li>
+<li><code>h*llo</code> matches <code>hllo</code> and <code>heeeello</code></li>
+<li><code>h[ae]llo</code> matches <code>hello</code> and <code>hallo,</code> but not <code>hillo</code></li>
+<li><code>h[^e]llo</code> matches <code>hallo</code>, <code>hbllo</code>, ... but not <code>hello</code></li>
+<li><code>h[a-b]llo</code> matches <code>hallo</code> and <code>hbllo</code></li>
+</ul>
+<p>Use <code>\</code> to escape special characters if you want to match them verbatim.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/keyspace.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

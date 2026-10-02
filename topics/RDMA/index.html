@@ -1,0 +1,482 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; RDMA experimental support</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: RDMA experimental support">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: RDMA experimental support</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            RDMA experimental support
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey supports the Remote Direct Memory Access (RDMA) connection type via a
+Valkey module that can be dynamically loaded on demand.</p>
+<h2 id="getting-started">Getting Started</h2>
+<p><a rel="external" href="https://en.wikipedia.org/wiki/Remote_direct_memory_access">RDMA</a>
+enables direct data exchange between networked computers' main memory,
+bypassing processors and operating systems.</p>
+<p>As a result, RDMA offers better performance compared to TCP/IP. Test results indicate that
+Valkey Over RDMA achieves approximately 2 times higher QPS and lower latency.</p>
+<p>Please note that Valkey Over RDMA is currently supported only on Linux.
+Also, before using Valkey Over RDMA, you must understand how to configure
+RDMA on your server and client machines.</p>
+<h2 id="running-manually">Running manually</h2>
+<p>To run a Valkey server with RDMA mode:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>./src/valkey-server --protected-mode no \</span></span>
+<span class="giallo-l"><span>     --loadmodule src/valkey-rdma.so bind=192.168.122.100 port=6379</span></span></code></pre>
+<p>Bind address/port of RDMA can be modified at runtime using the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>192.168.122.100:6379&gt; CONFIG SET rdma-port 6380</span></span></code></pre>
+<p>Valkey can run both RDMA and TCP/IP concurrently on the same port:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>./src/valkey-server --protected-mode no \</span></span>
+<span class="giallo-l"><span>     --loadmodule src/valkey-rdma.so bind=192.168.122.100 port=6379 \</span></span>
+<span class="giallo-l"><span>     --port 6379</span></span></code></pre>
+<p>Or append <code>loadmodule src/valkey-rdma.so bind=192.168.122.100 port=6379</code> in valkey.conf, then:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>./src/valkey-server valkey.conf</span></span></code></pre>
+<p>Starting from version 9.0, <code>valkey-cli</code> and <code>valkey-benchmark</code> support the <code>--rdma</code> parameter.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>./src/valkey-cli -h 192.168.122.100 --rdma</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>./src/valkey-benchmark -h 192.168.122.100 --rdma</span></span></code></pre><h3 id="prerequisites">Prerequisites</h3>
+<p>Note that the network interface (192.168.122.100 of this example) should support
+RDMA. To test a server supports RDMA or not:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>rdma dev show (a new version iproute2 package)</span></span></code></pre>
+<p>Or:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>ibv_devices (ibverbs-utils package of Debian/Ubuntu)</span></span></code></pre><h2 id="performance-tuning">Performance tuning</h2>
+<p>The RDMA completion queue will use the completion vector to signal completion events
+via hardware interrupts. A large number of hardware interrupts can affect CPU performance.
+It is possible to tune the performance using <code>rdma-comp-vector</code>.</p>
+<p>See <a rel="external" href="https://man7.org/linux/man-pages/man3/ibv_create_cq.3.html">RDMA CQ completion vector</a></p>
+<h3 id="example-1">Example 1</h3>
+<ul>
+<li>Pin hardware interrupt vectors [0, 3] to CPU [0, 3].</li>
+<li>Set CPU affinity for valkey to CPU [4, X].</li>
+<li>Any valkey server uses a random RDMA completion vector [-1].</li>
+</ul>
+<p>All valkey servers will not affect each other and will be isolated from kernel interrupts.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>  SYS    SYS    SYS    SYS  VALKEY VALKEY     VALKEY</span></span>
+<span class="giallo-l"><span>   |      |      |      |      |      |          |</span></span>
+<span class="giallo-l"><span> CPU0   CPU1   CPU2   CPU3   CPU4   CPU5   ... CPUX</span></span>
+<span class="giallo-l"><span>   |      |      |      |</span></span>
+<span class="giallo-l"><span> INTR0  INTR1  INTR2  INTR3</span></span></code></pre><h3 id="example-2">Example 2</h3>
+<ul>
+<li>Pin hardware interrupt vectors [0, X] to CPU [0, X].</li>
+<li>Set CPU affinity for valkey [M] to CPU [M].</li>
+<li>Valkey server [M] uses RDMA completion vector [M].</li>
+</ul>
+<p>A single CPU [M] handles hardware interrupts, the RDMA completion vector [M],
+and the valkey server [M] within its context only.
+This avoids overhead and function calls across multiple CPUs, fully isolating
+each valkey server from one another.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>VALKEY VALKEY VALKEY VALKEY VALKEY VALKEY     VALKEY</span></span>
+<span class="giallo-l"><span>   |      |      |      |      |      |          |</span></span>
+<span class="giallo-l"><span> CPU0   CPU1   CPU2   CPU3   CPU4   CPU5  ...  CPUX</span></span>
+<span class="giallo-l"><span>   |      |      |      |      |      |          |</span></span>
+<span class="giallo-l"><span> INTR0  INTR1  INTR2  INTR3  INTR4  INTR5      INTRX</span></span></code></pre>
+<p>Use 0 and positive numbers to specify the RDMA completion vector, or specify -1 to allow
+the server to use a random vector for a new connection. The default vector is -1.</p>
+<h2 id="protocol">Protocol</h2>
+<p>The protocol defines the Queue Pairs (QP) type reliable connection (RC),
+like TCP, communication commands, and payload exchange mechanism.
+This dependency is based solely on the RDMA (aka Infiniband) specification
+and is independent of both software (including the OS and user libraries)
+and hardware (including vendors and low-level transports).</p>
+<p>Valkey Over RDMA has control-plane (control messages) and data-plane (payload transfer).</p>
+<h3 id="control-message">Control message</h3>
+<p>Control messages use fixed 32-byte big-endian message structures:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">typedef struct</span><span> ValkeyRdmaFeature {</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* defined as following Opcodes */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint16_t</span><span> opcode;</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* select features */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint16_t</span><span> select;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint8_t</span><span style="color: #FFA657;"> reserved</span><span>[</span><span style="color: #79C0FF;">20</span><span>];</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* feature bits */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint64_t</span><span> features;</span></span>
+<span class="giallo-l"><span>} ValkeyRdmaFeature;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">typedef struct</span><span> ValkeyRdmaKeepalive {</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* defined as following Opcodes */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint16_t</span><span> opcode;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint8_t</span><span style="color: #FFA657;"> reserved</span><span>[</span><span style="color: #79C0FF;">30</span><span>];</span></span>
+<span class="giallo-l"><span>} ValkeyRdmaKeepalive;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">typedef struct</span><span> ValkeyRdmaMemory {</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* defined as following Opcodes */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint16_t</span><span> opcode;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint8_t</span><span style="color: #FFA657;"> reserved</span><span>[</span><span style="color: #79C0FF;">14</span><span>];</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* address of a transfer buffer which is used to receive remote streaming data,</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">     * aka &#39;RX buffer address&#39;. The remote side should use this as &#39;TX buffer address&#39; */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint64_t</span><span> addr;</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* length of the &#39;RX buffer&#39; */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint32_t</span><span> length;</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* the RDMA remote key of &#39;RX buffer&#39; */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    uint32_t</span><span> key;</span></span>
+<span class="giallo-l"><span>} ValkeyRdmaMemory;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">typedef union</span><span> ValkeyRdmaCmd {</span></span>
+<span class="giallo-l"><span>    ValkeyRdmaFeature feature;</span></span>
+<span class="giallo-l"><span>    ValkeyRdmaKeepalive keepalive;</span></span>
+<span class="giallo-l"><span>    ValkeyRdmaMemory memory;</span></span>
+<span class="giallo-l"><span>} ValkeyRdmaCmd;</span></span></code></pre><h3 id="opcodes">Opcodes</h3>
+<table><thead><tr><th style="text-align: center">Command</th><th style="text-align: center">Value</th><th style="text-align: center">Description</th></tr></thead><tbody>
+<tr><td style="text-align: center"><code>GetServerFeature</code></td><td style="text-align: center">0</td><td style="text-align: center">required, get the features offered by Valkey server</td></tr>
+<tr><td style="text-align: center"><code>SetClientFeature</code></td><td style="text-align: center">1</td><td style="text-align: center">required, negotiate features and set it to Valkey server</td></tr>
+<tr><td style="text-align: center"><code>Keepalive</code></td><td style="text-align: center">2</td><td style="text-align: center">required, detect unexpected orphan connection</td></tr>
+<tr><td style="text-align: center"><code>RegisterXferMemory</code></td><td style="text-align: center">3</td><td style="text-align: center">required, tell the 'RX transfer buffer' information to the remote side, and the remote side uses this as 'TX transfer buffer'</td></tr>
+</tbody></table>
+<p>Once any new feature and command are introduced into <code>Valkey Over RDMA</code>, the client should
+detect the new feature <code>VALKEY_RDMA_FEATURE_FOO</code> through the <code>GetServerFeature</code> command,
+and then use the <code>SetClientFeature</code> command to enable the feature <code>VALKEY_RDMA_FEATURE_FOO</code>.
+Once <code>VALKEY_RDMA_FEATURE_FOO</code> is negotiated successfully, the optional
+<code>ValkeyRdmaFoo</code> command will be supported within the connection.</p>
+<h3 id="rdma-operations">RDMA Operations</h3>
+<ul>
+<li>Send a control message by RDMA '<strong><code>ibv_post_send</code></strong>' with opcode '<strong><code>IBV_WR_SEND</code></strong>' with structure
+'ValkeyRdmaCmd'.</li>
+<li>Receive a control message by RDMA '<strong><code>ibv_post_recv</code></strong>', and the received buffer
+size should be size of 'ValkeyRdmaCmd'.</li>
+<li>Transfer stream data by RDMA '<strong><code>ibv_post_send</code></strong>' with opcode '<strong><code>IBV_WR_RDMA_WRITE</code></strong>' (optional) and
+'<strong><code>IBV_WR_RDMA_WRITE_WITH_IMM</code></strong>' (required), to write data segments into a connection by
+RDMA [WRITE][WRITE][WRITE]...[WRITE WITH IMM], the length of total buffer is described by
+immediate data (unsigned int 32). For example:
+a, [WRITE 128 bytes][WRITE 256 bytes][WRITE 128 bytes WITH IMM 512] writes 512 bytes to the
+remote side, the remote side is notified only once.
+b, [WRITE 128 bytes WITH IMM 128][WRITE 256 bytes WITH IMM 256][WRITE 128 bytes WITH IMM 128]
+writes 512 bytes to the remote side, the remote side is notified three times.
+Both example a and b write the same 512 bytes,
+example a has better performance, however b is easier to implement.</li>
+</ul>
+<h3 id="maximum-wqes-of-rdma">Maximum WQEs of RDMA</h3>
+<p>No specific limit, 1024 recommended for WQEs.
+Flow control for WQE MAY be defined/implemented in the future.</p>
+<h3 id="the-workflow-of-this-protocol">The workflow of this protocol</h3>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>                                                                    valkey-server</span></span>
+<span class="giallo-l"><span>                                                                    listen RDMA port</span></span>
+<span class="giallo-l"><span>   valkey-client</span></span>
+<span class="giallo-l"><span>                -------------------RDMA connect--------------------&gt;</span></span>
+<span class="giallo-l"><span>                                                                    accept connection</span></span>
+<span class="giallo-l"><span>                &lt;--------------- Establish RDMA --------------------</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>                --------Get server feature [@IBV_WR_SEND] ---------&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>                --------Set client feature [@IBV_WR_SEND] ---------&gt;</span></span>
+<span class="giallo-l"><span>                                                                    setup RX buffer</span></span>
+<span class="giallo-l"><span>                &lt;---- Register transfer memory [@IBV_WR_SEND] ------</span></span>
+<span class="giallo-l"><span>[@ibv_post_recv]</span></span>
+<span class="giallo-l"><span>setup TX buffer</span></span>
+<span class="giallo-l"><span>                ----- Register transfer memory [@IBV_WR_SEND] -----&gt;</span></span>
+<span class="giallo-l"><span>                                                                    [@ibv_post_recv]</span></span>
+<span class="giallo-l"><span>                                                                    setup TX buffer</span></span>
+<span class="giallo-l"><span>                -- Valkey commands [@IBV_WR_RDMA_WRITE_WITH_IMM] --&gt;</span></span>
+<span class="giallo-l"><span>                &lt;- Valkey response [@IBV_WR_RDMA_WRITE_WITH_IMM] ---</span></span>
+<span class="giallo-l"><span>                                  .......</span></span>
+<span class="giallo-l"><span>                -- Valkey commands [@IBV_WR_RDMA_WRITE_WITH_IMM] --&gt;</span></span>
+<span class="giallo-l"><span>                &lt;- Valkey response [@IBV_WR_RDMA_WRITE_WITH_IMM] ---</span></span>
+<span class="giallo-l"><span>                                  .......</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>RX is full</span></span>
+<span class="giallo-l"><span>                ----- Register transfer memory [@IBV_WR_SEND] -----&gt;</span></span>
+<span class="giallo-l"><span>                                                                    [@ibv_post_recv]</span></span>
+<span class="giallo-l"><span>                                                                    setup TX buffer</span></span>
+<span class="giallo-l"><span>                &lt;- Valkey response [@IBV_WR_RDMA_WRITE_WITH_IMM] ---</span></span>
+<span class="giallo-l"><span>                                  .......</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>                                                                    RX is full</span></span>
+<span class="giallo-l"><span>                &lt;---- Register transfer memory [@IBV_WR_SEND] ------</span></span>
+<span class="giallo-l"><span>[@ibv_post_recv]</span></span>
+<span class="giallo-l"><span>setup TX buffer</span></span>
+<span class="giallo-l"><span>                -- Valkey commands [@IBV_WR_RDMA_WRITE_WITH_IMM] --&gt;</span></span>
+<span class="giallo-l"><span>                &lt;- Valkey response [@IBV_WR_RDMA_WRITE_WITH_IMM] ---</span></span>
+<span class="giallo-l"><span>                                  .......</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>                -------------------RDMA disconnect-----------------&gt;</span></span>
+<span class="giallo-l"><span>                &lt;------------------RDMA disconnect------------------</span></span></code></pre>
+<p>The Valkey Over RDMA protocol is designed to efficiently transfer stream data and
+bears similarities to several mechanisms introduced in academic papers with some differences:</p>
+<ul>
+<li><a rel="external" href="https://dl.acm.org/doi/10.1145/3341302.3342071">Socksdirect: datacenter sockets can be fast and compatible</a></li>
+<li><a rel="external" href="https://dl.acm.org/doi/abs/10.1145/3132747.3132762">LITE Kernel RDMA Support for Datacenter Applications</a></li>
+<li><a rel="external" href="https://www.usenix.org/system/files/conference/nsdi14/nsdi14-paper-dragojevic.pdf">FaRM: Fast Remote Memory</a></li>
+</ul>
+<h2 id="how-does-valkey-use-rdma">How does Valkey use RDMA</h2>
+<p>Valkey supports a connection abstraction framework that hides listen/connect/accept/shutdown/read/write,
+and so on. This allows the connection types to register into Valkey core during startup time.
+What's more, a connection type is either Valkey built-in (Ex, TCP/IP and Unix domain socket) or
+Valkey module (Ex, TLS).
+Enabling RDMA support needs to link additional libraries, rather than valkey-server's additional dependence
+on the shared libraries, build Valkey Over RDMA into Valkey module,
+Then a user starts valkey-server with RDMA module, valkey-server loads the additional shared libraries on demand.</p>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>Valkey Over RDMA is experimental, it may be changed or be removed in any minor or major version.</li>
+<li>TLS is not supported by Valkey Over RDMA. But it is workable in theory by a certain amount of work.</li>
+<li>Valkey Over RDMA is supported on Linux only.</li>
+<li>Not compatible with replication currently, TCP/TLS is needed for replication.</li>
+<li>Depending on different hardware, too many active queue pairs may lead performance drop.</li>
+</ul>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/RDMA.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

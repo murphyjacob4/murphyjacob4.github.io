@@ -1,0 +1,579 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Bloom Filters</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Bloom Filters">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Bloom Filters</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Bloom Filters
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>In Valkey, the bloom filter data type / commands are implemented in the <a rel="external" href="https://github.com/valkey-io/valkey-bloom">valkey-bloom module</a> which is an official valkey module compatible with versions 8.0 and above. Users will need to load this module onto their valkey server in order to use this feature.</p>
+<p>Bloom filters are a space efficient probabilistic data structure that allows adding elements and checking whether elements exist. False positives are possible where a filter incorrectly indicates that an element exists, even though it was not added. However, Bloom Filters guarantee that false negatives (incorrectly indicating that an element does not exist, even though it was added) do not occur.</p>
+<h2 id="basic-bloom-commands">Basic Bloom commands</h2>
+<ul>
+<li><a href="/commands/bf.add"><code>BF.ADD</code></a> - adds an item to a bloom filter</li>
+<li><a href="/commands/bf.card"><code>BF.CARD</code></a> - returns the cardinality of a bloom filter</li>
+<li><a href="/commands/bf.exists"><code>BF.EXISTS</code></a> - checks if an item has been added to a bloom filter</li>
+<li><a href="/commands/bf.info"><code>BF.INFO</code></a> - returns information about a bloom filter</li>
+</ul>
+<p>See the <a href="/commands/#bloom">complete list of bloom filter commands</a>.</p>
+<h2 id="common-use-cases-for-bloom-filters">Common use cases for bloom filters</h2>
+<h3 id="advertisement-campaign-placement-and-deduplication">Advertisement / Campaign placement and deduplication</h3>
+<p>Bloom filters can help e-commerce sites, streaming services, advertising networks, or marketing platforms answer the following questions:</p>
+<ul>
+<li>Has an advertisement already been shown to a user?</li>
+<li>Has a promotional email or notification already been sent to a user?</li>
+<li>Has a product already been purchased by a user?</li>
+</ul>
+<p>Example: For each user, use a Bloom filter to store all the products they have purchased. The recommendation engine can then suggest a new product and check if it is present in the user's Bloom filter.</p>
+<ul>
+<li>If the product is not in the filter, the ad is shown to the user, and the product is added to the filter.</li>
+<li>If the product is already in the filter, it means the ad has already been shown to the user and the recommendation engine finds a different ad to show.</li>
+</ul>
+<h3 id="fraud-detection">Fraud detection</h3>
+<p>Bloom filters can be used to answer the question, "Has this card been flagged as stolen?". To do this, use a bloom filter that contains cards reported as stolen. When a card is used, check whether it is present in the bloom filter. If the card is not found, it means it is not marked as stolen. If the card is present in the filter, a check can be made against the main database, or the purchase can be denied.</p>
+<h3 id="filtering-spam-harmful-content">Filtering Spam / Harmful Content</h3>
+<p>Bloom filters provide an efficient way to screen content for potential threats and harmful material. Here's how they can be effectively used:</p>
+<p>Example: Bloom filters can answer the question "is a URL malicious?". Any URL inputted would be checked against a malicious URL bloom filter.</p>
+<ul>
+<li>If no, then we allow access to the site.</li>
+<li>If yes, then we can deny access or perform a full check of the URL.</li>
+</ul>
+<p>Example: Bloom filters can answer the question is this content harmful or spam. Create a bloom filter that contains spam email addresses or spam phone numbers. When an email or text is received then check if the number or email is present in the bloom filter.</p>
+<ul>
+<li>If no, then the message can be displayed to the user.</li>
+<li>If yes, then we can send the message to the spam folder or perform a full check on the email or number.</li>
+</ul>
+<h3 id="check-if-a-username-is-taken">Check if a username is taken</h3>
+<p>Bloom filters can answer the question: Has this username/email/domain name/slug already been used?</p>
+<p>In this username example, we can use a Bloom filter to track every username that has signed up. When a new user attempts to sign up with their desired username, the app checks if the username exists in the Bloom filter.</p>
+<ul>
+<li>If no, the user is created and the username is added to the Bloom filter.</li>
+<li>If yes, the app can decide to either check the main database or reject the username.</li>
+</ul>
+<h2 id="tutorial">Tutorial</h2>
+<p><strong>There are two ways to run valkey-bloom:</strong></p>
+<ul>
+<li><strong>Docker</strong>: Follow the steps here for using the <a href="/topics/valkey-bundle">valkey bundle</a></li>
+<li><strong>Build from source</strong>: Follow the <a rel="external" href="https://github.com/valkey-io/valkey-bloom/blob/unstable/README.md#build-instructions">build instructions</a></li>
+</ul>
+<h3 id="usage-example-with-cli">Usage example with CLI</h3>
+<ul>
+<li>Create a bloom filter to track the usernames which are taken with a 1 in 1000 chance of a false positive and 10000 as the initial capacity.</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.RESERVE usernames</span><span style="color: #79C0FF;"> 0.001 10000</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span></code></pre>
+<ul>
+<li>Add usernames which now have signed up to the bloom filters</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #8B949E;"># Add one user to the bloom filter</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.ADD usernames johnsmith</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 1</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Add multiple users at once</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.MADD usernames JaneDoe valkeyFan bloomEnjoyer</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">1</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">2</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">3</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 1</span></span></code></pre>
+<ul>
+<li>Check if usernames have been taken already</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #8B949E;"># Check if as single user has been added</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.EXISTS usernames johnsmith</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.EXISTS usernames fake_user</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 0</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Check if multiple users are present in the bloomfilter at once</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.MEXISTS usernames johnsmith fake_user JaneDoe</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">1</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">2</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">3</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 1</span></span></code></pre>
+<ul>
+<li>Check how many users have been added to the filter</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.CARD usernames</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 4</span></span></code></pre>
+<ul>
+<li>View your bloom filter object's usage:</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.INFO usernames</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 1</span><span>) Capacity</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 2</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 10000</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 3</span><span>) Size</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 4</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 23912</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 5</span><span>) Number of filters</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 6</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 7</span><span>) Number of items inserted</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 8</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 4</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 9</span><span>) Error rate</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">10</span><span>) </span><span style="color: #A5D6FF;">&quot;0.001&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">11</span><span>) Expansion rate</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">12</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 2</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">13</span><span>) Tightening ratio</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">14</span><span>) </span><span style="color: #A5D6FF;">&quot;0.5&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">15</span><span>) Max scaled capacity</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">16</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 26214300</span></span></code></pre>
+<ul>
+<li>If you know the exact number of users who will sign up, or if want to limit the number of items regardless, you can create a non scaling bloom filter. This will create a filter that has capacity for only 1000 items with a 1 in 100,000 chance of a false positive.</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.RESERVE limited_users</span><span style="color: #79C0FF;"> 0.00001 1000</span><span style="color: #A5D6FF;"> NONSCALING</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span></code></pre>
+<ul>
+<li>If you anticipate that, once initial users have signed up, you will get a large increase in users after a while, you can set a custom expansion rate.</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.RESERVE expanding_users</span><span style="color: #79C0FF;"> 0.001 10000</span><span style="color: #A5D6FF;"> EXPANSION</span><span style="color: #79C0FF;"> 4</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span></code></pre><h2 id="scaling-and-non-scaling-bloom-filters">Scaling and non scaling bloom filters</h2>
+<p>The bloom filter data type can act either as a "scaling bloom filter" or "non scaling bloom filter" depending on user configuration.</p>
+<p>The difference between scaling and non scaling bloom filters is that scaling bloom filters do not have a fixed capacity, instead they can grow. Non-scaling bloom filters will have a fixed capacity, meaning only a fixed number of items can be inserted to it. Scaling bloom filters consist of a vector of "Sub filters" with length &gt;= 1, while non scaling will only contain 1 sub filter.</p>
+<p>When a scaling bloom filter reaches its capacity, adding a new unique item will trigger a scale out and a new sub filter is created and added to the vector of sub filters. This new sub filter will have a larger capacity (previous bloom filter's capacity * expansion rate of the bloom object).</p>
+<p>After a non scaling bloom filter reaches its capacity, if a user tries to add a new unique item, an error will be returned</p>
+<p>The expansion rate is the rate that a scaling bloom filter's capacity is increased by upon scale out. For example, we have a bloom filter with capacity 100 at creation with an expansion rate of 2. After adding 101 unique items, it will scale out and create a new sub filter with capacity 200. Then, after adding 200 more unique items (301 items total), a new sub filter of capacity 400 is added upon scale out and so on.</p>
+<h3 id="when-should-you-use-scaling-vs-non-scaling-filters">When should you use scaling vs non-scaling filters</h3>
+<p>If the capacity (number of items we want to add) is known and fixed, using a non-scaling bloom filter is preferred. Likewise the reverse case, if the capacity is unknown / dynamically calculated, using a scaling bloom filters is ideal.</p>
+<p>There are a few benefits for using non scaling filters. A non scaling filter will have better performance than a filter that has scaled out several times (e.g. &gt; 100). Also, non scaling filters in general use less memory for a scaling filter that has scaled out several times to hold the same capacity.</p>
+<p>However, to ensure you do not hit any capacity related errors, and want use-as-you-go capacity, scaling is better.</p>
+<h2 id="bloom-properties">Bloom properties</h2>
+<ul>
+<li>
+<p>Capacity - The number of unique items that would need to be added before a scale out occurs or (non scaling) before it rejects addition of unique items.</p>
+</li>
+<li>
+<p>False Positive Rate (Error rate) - The rate that controls the probability of bloom check/set operations being false positives. Example: An item addition returning 0 (or an item check returning 1) indicating that the item was already added even though it was not.</p>
+</li>
+<li>
+<p>Expansion - This is a property of scalable bloom filters which controls the growth in overall capacity when a bloom filter scales out by determining the capacity of the new sub filter which gets created. This new capacity is equal to the previous filters capacity * expansion rate</p>
+</li>
+</ul>
+<h3 id="advanced-properties">Advanced Properties</h3>
+<p>The following two properties can be specified in the <code>BF.INSERT</code> command:</p>
+<ul>
+<li>
+<p>Seed -  This is the key with which hash functions are created for the bloom filter. In case of scalable bloom filters, the same seed is used across all sub filters. This property is only useful if you have a specific 32 byte seed that you want your bloom filter to use. By default every bloom filter will use a random seed.</p>
+</li>
+<li>
+<p>Tightening Ratio - This is a property of scalable bloom filters which controls the overall correctness of the bloom filter as it scales out by keeping the actual false positive rate closer to the user requested false positive rate when the bloom filter was created. This is done by using the tightening ratio to set a stricter false positive on the new sub filter which gets created during each scale out. We do not recommend fine tuning this unless there is a specific use case for lower memory usage with higher false positive or vice versa.</p>
+</li>
+</ul>
+<h3 id="default-bloom-properties">Default bloom properties</h3>
+<p>These are the default bloom properties along with the commands and configs which allow customizing.</p>
+<table><thead><tr><th>Property</th><th>Default Value</th><th>Command Name</th><th>Configuration name</th></tr></thead><tbody>
+<tr><td>Capacity</td><td>100</td><td>BF.INSERT, BF.RESERVE</td><td>BF.BLOOM-CAPACITY</td></tr>
+<tr><td>False Positive Rate</td><td>0.01</td><td>BF.INSERT, BF.RESERVE</td><td>BF.BLOOM-FP-RATE</td></tr>
+<tr><td>Scaling / Non Scaling</td><td>Scaling</td><td>BF.INSERT, BF.RESERVE</td><td>BF.BLOOM-EXPANSION</td></tr>
+<tr><td>Expansion Rate</td><td>2</td><td>BF.INSERT, BF.RESERVE</td><td>BF.BLOOM-EXPANSION</td></tr>
+<tr><td>Tightening Ratio</td><td>0.5</td><td>BF.INSERT</td><td>BF.BLOOM-TIGHTENING-RATIO</td></tr>
+<tr><td>Seed</td><td>Random Seed</td><td>BF.INSERT</td><td>BF.BLOOM-USE-RANDOM-SEED</td></tr>
+</tbody></table>
+<p>Since bloom filters have a default expansion of 2, this means any default creation as a result of <code>BF.ADD</code>, <code>BF.MADD</code>, <code>BF.INSERT</code> will be a scalable bloom filter. Users can create a non scaling bloom filter using <code>BF.RESERVE &lt;filter-name&gt; &lt;error-rate&gt; &lt;capacity&gt; NONSCALING</code> or by specifying <code>NONSCALING</code> in <code>BF.INSERT</code>. Additionally, the other default properties of a bloom filter creation can be seen in the table above and BF.INFO command response below. These default properties can be configured through configs on the bloom module.</p>
+<p>Example of default bloom filter information:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.ADD default_filter item</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.INFO default_filter</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 1</span><span>) Capacity</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 2</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 100</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 3</span><span>) Size</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 4</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 384</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 5</span><span>) Number of filters</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 6</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 7</span><span>) Number of items inserted</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 8</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 2</span></span>
+<span class="giallo-l"><span style="color: #FFA657;"> 9</span><span>) Error rate</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">10</span><span>) </span><span style="color: #A5D6FF;">&quot;0.01&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">11</span><span>) Expansion rate</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">12</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 2</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">13</span><span>) Tightening ratio</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">14</span><span>) </span><span style="color: #A5D6FF;">&quot;0.5&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">15</span><span>) Max scaled capacity</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">16</span><span>) (</span><span style="color: #FFA657;">integer</span><span>) 26214300</span></span></code></pre><h3 id="when-to-adjust-default-configurations">When to adjust default configurations</h3>
+<p>Adjusting the default configurations below can be used to update the behavior of the default bloom object created and are beneficial in different scenarios:</p>
+<ul>
+<li>
+<p><strong>Higher capacity (bf.bloom-capacity)</strong>: Increase this value when you expect to store a larger number of items in all your new bloom filter objects. It increases the overall capacity for non scaling filters. For scaling filters, it increases the starting/initial capacity which potentially reduces the need for additional scaling operations which can improve performance.</p>
+</li>
+<li>
+<p><strong>Lower false positive rate (bf.bloom-fp-rate)</strong>: Decrease this value when correctness is critical for your application and you want to reduce the number of false positives in all your new bloom filter objects. For example, in fraud detection or security applications where false positives are costly.</p>
+</li>
+<li>
+<p><strong>Higher expansion rate (bf.bloom-expansion)</strong>: Increase this value when you want faster growth of bloom filters that will scale across all your new scaling bloom filter objects. This reduces the number of scaling operations but uses more memory quicker.</p>
+</li>
+<li>
+<p><strong>Lower tightening ratio (bf.bloom-tightening-ratio)</strong>: Lower this when you want to maintain a more consistent false positive rate across multiple scaling operations for all your new bloom filter objects. (Not advisable to change this default, as it is already set to a strict value of 0.5)</p>
+</li>
+<li>
+<p><strong>Fixed seed (bf.bloom-use-random-seed)</strong>: Set to false only when you want the new bloom filter object creations to use a fixed seed for deterministic occurrence of false positives during item add/exists operations. It can be used for testing or reproducibility.</p>
+</li>
+</ul>
+<p>You can modify these default values using the CONFIG SET command. However, note that the effect of the configuration change is only applicable to the bloom objects created after the configuration change where the property is not specified through the command already.</p>
+<p>Example usage of changing all the different properties:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> CONFIG SET bf.bloom-fp-rate</span><span style="color: #79C0FF;"> 0.001</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> CONFIG SET bf.bloom-capacity</span><span style="color: #79C0FF;"> 1000</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> CONFIG SET bf.bloom-expansion</span><span style="color: #79C0FF;"> 4</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> CONFIG SET bf.bloom-tightening-ratio</span><span style="color: #79C0FF;"> 0.6</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> CONFIG SET bf.bloom-use-random-seed no</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span></code></pre><h3 id="memory-usage-limit">Memory usage limit</h3>
+<p>The <code>bf.bloom-memory-usage-limit</code> configuration (default 128MB) controls the maximum memory that a single bloom filter can use:</p>
+<p>Example usage of increasing the limit:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> CONFIG SET bf.bloom-memory-usage-limit</span><span style="color: #79C0FF;"> 268435456</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span></code></pre>
+<p>Having a limit on the max memory per bloom object prevents them from growing unbounded, thus maintaining server performance during serialization.</p>
+<p>If your use case requires bloom filters with capacity beyond what this limit supports, you can increase this configuration value. However, be aware it can impact overall system performance and memory availability for other operations.</p>
+<p>When a bloom filter reaches this memory limit, any operation that would cause it to exceed the limit will fail with an error message indicating that the memory limit would be exceeded.</p>
+<p>Example of error returned:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> bf.add full_filter ne_item</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">1</span><span>) (</span><span style="color: #FFA657;">error</span><span>) ERR operation exceeds bloom object memory limit</span></span></code></pre><h2 id="performance">Performance</h2>
+<p>The bloom commands which involve adding items or checking the existence of items have a time complexity of O(N * K) where N is the number of hash functions used by the bloom filter and K is the number of elements being inserted. This means that both BF.ADD and BF.EXISTS are both O(N) as they only operate on one item.</p>
+<p>In case of scalable bloom filters, with every scale out, we increase the number of checks (using hash functions of each sub filter) performed during any add / exists operation. For this reason, it is recommended that users choose a capacity and expansion rate after evaluating the use case / workload to avoid several scale outs and reduce the number of checks.</p>
+<p>The other bloom filter commands are O(1) time complexity: BF.CARD, BF.INFO, BF.RESERVE, and BF.INSERT (when no items are provided).</p>
+<h2 id="monitoring">Monitoring</h2>
+<p>To check the server's overall bloom filter metrics, you can use the <code>INFO BF</code> or the <code>INFO MODULES</code> command.</p>
+<p>Example of <code>INFO BF</code> calls in different scenarios:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> INFO BF</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># bf_bloom_core_metrics</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_total_memory_bytes:0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_num_objects:0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_num_filters_across_objects:0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_num_items_across_objects:0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_capacity_across_objects:0</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># bf_bloom_defrag_metrics</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_defrag_hits:0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_defrag_misses:0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> bf.add key value</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> info bf</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># bf_bloom_core_metrics</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_total_memory_bytes:384</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_num_objects:1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_num_filters_across_objects:1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_num_items_across_objects:1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_capacity_across_objects:100</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># bf_bloom_defrag_metrics</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_defrag_hits:0</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf_bloom_defrag_misses:0</span></span></code></pre><h3 id="bloom-filter-core-metrics">Bloom filter core metrics</h3>
+<ul>
+<li>
+<p><code>bf_bloom_total_memory_bytes</code>: Current total number of bytes used by all bloom filters.</p>
+</li>
+<li>
+<p><code>bf_bloom_num_objects</code>: Current total number of bloom filters.</p>
+</li>
+<li>
+<p><code>bf_bloom_num_filters_across_objects</code>: Current total number of sub filters across all bloom filters.</p>
+</li>
+<li>
+<p><code>bf_bloom_num_items_across_objects</code>: Current total number of items across all bloom filters.</p>
+</li>
+<li>
+<p><code>bf_bloom_capacity_across_objects</code>: Current total capacity across all bloom filters.</p>
+</li>
+</ul>
+<h3 id="bloom-filter-defrag-metrics">Bloom filter defrag metrics</h3>
+<ul>
+<li>
+<p><code>bf_bloom_defrag_hits</code>: Total number of defrag hits that have occurred on bloom filters.</p>
+</li>
+<li>
+<p><code>bf_bloom_defrag_misses</code>: Total number of defrag misses that have occurred on bloom filters.</p>
+</li>
+</ul>
+<h2 id="handling-large-bloom-filters">Handling Large Bloom Filters</h2>
+<p>There are two notable validations bloom filters faces.</p>
+<ol>
+<li>
+<p>Memory Usage:</p>
+<p>The memory usage limit per bloom filter by default is defined by the <code>BF.BLOOM-MEMORY-USAGE-LIMIT</code> module configuration which has a default value of 128 MB. If a command results in a creation / scale out causing the overall memory usage to exceed this limit, the command is rejected. This config is modifiable and can be increased as needed.</p>
+</li>
+</ol>
+<p>The <code>BF.INFO</code> command's <code>SIZE</code> field can be used to find out the current size of a bloom filter.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.INFO validate_scale_valid SIZE</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 384</span></span></code></pre>
+<ol start="2">
+<li>
+<p>Number of sub filters (in case of scalable bloom filters):</p>
+<p>When a bloom filter scales out, a new sub filter is added. The limit on the number of sub filters depends on the false positive rate and tightening ratio. Each sub filter has a stricter false positive, and this is controlled by the tightening ratio. If a command attempting a scale out results in the sub filter reaching a false positive of 0, the command is rejected.</p>
+</li>
+</ol>
+<p>You can use <code>VALIDATESCALETO</code> as an optional arg of <code>BF.INSERT</code> to help determine whether the bloom filter can scale out to the reach the specified capacity without hitting either limits mentioned above. It will reject the command otherwise.</p>
+<p>As seen below, when trying to create a bloom filter with a capacity that cannot be achieved through scale outs (given the memory limits), the command is rejected. However, if the capacity can be achieved through scale out (even with the limits), then the creation of the bloom filter will succeed.</p>
+<p>Example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.INSERT validate_scale_fail VALIDATESCALETO</span><span style="color: #79C0FF;"> 26214301</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">error</span><span>)</span><span style="color: #FFA657;"> ERR</span><span style="color: #A5D6FF;"> provided VALIDATESCALETO causes bloom object to exceed memory limit</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.INSERT validate_scale_valid VALIDATESCALETO</span><span style="color: #79C0FF;"> 26214300</span></span>
+<span class="giallo-l"><span>[]</span></span></code></pre>
+<p>The <code>BF.INFO</code> command's <code>MAXSCALEDCAPACITY</code> field can be used to find out the maximum capacity that the scalable bloom filter can expand to hold.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> BF.INFO validate_scale_valid MAXSCALEDCAPACITY</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #FFA657;">integer</span><span>)</span><span style="color: #FFA657;"> 26214300</span></span></code></pre>
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/bloomfilters.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

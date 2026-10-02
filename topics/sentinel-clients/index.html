@@ -1,0 +1,376 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Sentinel client spec</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Sentinel client spec">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Sentinel client spec</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Sentinel client spec
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey Sentinel is a monitoring solution for Valkey instances that handles
+automatic failover of Valkey primaries and service discovery (who is the current
+primary for a given group of instances?). Since Sentinel is both responsible
+for reconfiguring instances during failovers, and providing configurations to
+clients connecting to Valkey primaries or replicas, clients are required to have
+explicit support for Valkey Sentinel.</p>
+<p>This document is targeted at Valkey clients developers that want to support Sentinel in their clients implementation with the following goals:</p>
+<ul>
+<li>Automatic configuration of clients via Sentinel.</li>
+<li>Improved safety of Valkey Sentinel automatic failover.</li>
+</ul>
+<p>For details about how Valkey Sentinel works, please check the <a href="/topics/sentinel">Valkey Documentation</a>, as this document only contains information needed for Valkey client developers, and it is expected that readers are familiar with the way Valkey Sentinel works.</p>
+<h2 id="valkey-service-discovery-via-sentinel">Valkey service discovery via Sentinel</h2>
+<p>Valkey Sentinel identifies every primary with a name like "stats" or "cache".
+Every name actually identifies a <em>group of instances</em>, composed of a primary
+and a variable number of replicas.</p>
+<p>The address of the Valkey primary that is used for a specific purpose inside a network may change after events like an automatic failover, a manually triggered failover (for instance in order to upgrade a Valkey instance), and other reasons.</p>
+<p>Normally Valkey clients have some kind of hard-coded configuration that specifies the address of a Valkey primary instance within a network as IP address and port number. However if the primary address changes, manual intervention in every client is needed.</p>
+<p>A Valkey client supporting Sentinel can automatically discover the address of a Valkey primary from the primary name using Valkey Sentinel. So instead of a hard coded IP address and port, a client supporting Sentinel should optionally be able to take as input:</p>
+<ul>
+<li>A list of ip:port pairs pointing to known Sentinel instances.</li>
+<li>The name of the service, like "cache" or "timelines".</li>
+</ul>
+<p>This is the procedure a client should follow in order to obtain the primary address starting from the list of Sentinels and the service name.</p>
+<h2 id="step-1-connect-to-the-first-sentinel">Step 1: connect to the first Sentinel</h2>
+<p>The client should iterate the list of Sentinel addresses. For every address it should try to connect to the Sentinel, using a short timeout (in the order of a few hundreds of milliseconds). On errors or timeouts the next Sentinel address should be tried.</p>
+<p>If all the Sentinel addresses were tried without success, an error should be returned to the client.</p>
+<p>The first Sentinel replying to the client request should be put at the start of the list, so that at the next reconnection, we'll try first the Sentinel that was reachable in the previous connection attempt, minimizing latency.</p>
+<h2 id="step-2-ask-for-primary-address">Step 2: ask for primary address</h2>
+<p>Once a connection with a Sentinel is established, the client should retry to execute the following command on the Sentinel:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SENTINEL get-master-addr-by-name master-name</span></span></code></pre>
+<p>Where <em>master-name</em> should be replaced with the actual service name specified by the user.</p>
+<p>The result from this call can be one of the following two replies:</p>
+<ul>
+<li>An ip:port pair.</li>
+<li>A null reply. This means Sentinel does not know this primary.</li>
+</ul>
+<p>If an ip:port pair is received, this address should be used to connect to the Valkey primary. Otherwise if a null reply is received, the client should try the next Sentinel in the list.</p>
+<h2 id="step-3-call-the-role-command-in-the-target-instance">Step 3: call the ROLE command in the target instance</h2>
+<p>Once the client discovered the address of the primary instance, it should
+attempt a connection with the primary, and call the <code>ROLE</code> command in order
+to verify the role of the instance is actually a primary.</p>
+<p>If the instance is not a primary as expected, the client should wait a short amount of time (a few hundreds of milliseconds) and should try again starting from Step 1.</p>
+<h1 id="handling-reconnections">Handling reconnections</h1>
+<p>Once the service name is resolved into the primary address and a connection is established with the Valkey primary instance, every time a reconnection is needed, the client should resolve again the address using Sentinels restarting from Step 1. For instance Sentinel should contacted again the following cases:</p>
+<ul>
+<li>If the client reconnects after a timeout or socket error.</li>
+<li>If the client reconnects because it was explicitly closed or reconnected by the user.</li>
+</ul>
+<p>In the above cases and any other case where the client lost the connection with the Valkey server, the client should resolve the primary address again.</p>
+<h1 id="sentinel-failover-disconnection">Sentinel failover disconnection</h1>
+<p>When Valkey Sentinel changes the configuration of
+an instance, for example promoting a replica to a primary, demoting a primary to
+replicate to the new primary after a failover, or simply changing the primary
+address of a stale replica instance, it sends a <code>CLIENT KILL type normal</code>
+command to the instance in order to make sure all the clients are disconnected
+from the reconfigured instance. This will force clients to resolve the primary
+address again.</p>
+<p>If the client will contact a Sentinel with yet not updated information, the verification of the Valkey instance role via the <code>ROLE</code> command will fail, allowing the client to detect that the contacted Sentinel provided stale information, and will try again.</p>
+<p>Note: it is possible that a stale primary returns online at the same time a client contacts a stale Sentinel instance, so the client may connect with a stale primary, and yet the ROLE output will match. However when the primary is back again Sentinel will try to demote it to replica, triggering a new disconnection. The same reasoning applies to connecting to stale replicas that will get reconfigured to replicate with a different primary.</p>
+<h1 id="connecting-to-replicas">Connecting to replicas</h1>
+<p>Sometimes clients are interested to connect to replicas, for example in order to scale read requests. This protocol supports connecting to replicas by modifying step 2 slightly. Instead of calling the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SENTINEL get-master-addr-by-name master-name</span></span></code></pre>
+<p>The clients should call instead:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SENTINEL replicas primary-name</span></span></code></pre>
+<p>In order to retrieve a list of replica instances.</p>
+<p>Symmetrically the client should verify with the <code>ROLE</code> command that the
+instance is actually a replica, in order to avoid scaling read queries with
+the primary.</p>
+<h1 id="connection-pools">Connection pools</h1>
+<p>For clients implementing connection pools, on reconnection of a single connection, the Sentinel should be contacted again, and in case of a primary address change all the existing connections should be closed and connected to the new address.</p>
+<h1 id="error-reporting">Error reporting</h1>
+<p>The client should correctly return the information to the user in case of errors. Specifically:</p>
+<ul>
+<li>If no Sentinel can be contacted (so that the client was never able to get the reply to <code>SENTINEL get-master-addr-by-name</code>), an error that clearly states that Valkey Sentinel is unreachable should be returned.</li>
+<li>If all the Sentinels in the pool replied with a null reply, the user should be informed with an error that Sentinels don't know this primary name.</li>
+</ul>
+<h1 id="sentinels-list-automatic-refresh">Sentinels list automatic refresh</h1>
+<p>Optionally once a successful reply to <code>get-master-addr-by-name</code> is received, a client may update its internal list of Sentinel nodes following this procedure:</p>
+<ul>
+<li>Obtain a list of other Sentinels for this primary using the command <code>SENTINEL sentinels &lt;master-name&gt;</code>.</li>
+<li>Add every ip:port pair not already existing in our list at the end of the list.</li>
+</ul>
+<p>It is not needed for a client to be able to make the list persistent updating its own configuration. The ability to upgrade the in-memory representation of the list of Sentinels can be already useful to improve reliability.</p>
+<h1 id="subscribe-to-sentinel-events-to-improve-responsiveness">Subscribe to Sentinel events to improve responsiveness</h1>
+<p>The <a href="/topics/sentinel">Sentinel documentation</a> shows how clients can connect to
+Sentinel instances using Pub/Sub in order to subscribe to changes in the
+Valkey instances configurations.</p>
+<p>This mechanism can be used in order to speedup the reconfiguration of clients,
+that is, clients may listen to Pub/Sub in order to know when a configuration
+change happened in order to run the three steps protocol explained in this
+document in order to resolve the new Valkey primary (or replica) address.</p>
+<p>However update messages received via Pub/Sub should not substitute the
+above procedure, since there is no guarantee that a client is able to
+receive all the update messages.</p>
+<blockquote>
+<p>NOTE: If not for backward compatibility, the Valkey project no longer uses the words "master" and "slave". Unfortunately in the given commands these words are part of the protocol, so we’ll be able to remove such occurrences only when this API will be naturally deprecated.</p>
+</blockquote>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/sentinel-clients.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

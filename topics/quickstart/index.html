@@ -1,0 +1,370 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Quick start guide</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Quick start guide">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Quick start guide</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Quick start guide
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <h2 id="getting-started-with-valkey">Getting Started with Valkey</h2>
+<h3 id="what-is-valkey">What is Valkey?</h3>
+<p>Valkey is a fully open-source, in-memory data store backed by the Linux Foundation, offering microsecond-latency operations on rich data structures. See the <a href="/topics/introduction">Introduction</a> for more.</p>
+<h3 id="installation-and-setup">Installation and Setup</h3>
+<p>Getting Valkey up and running is straightforward. See the <a href="/topics/installation">Installation Guide</a> for detailed instructions.</p>
+<p>If you just want to try Valkey quickly, head over to <a rel="external" href="https://valkey.io/try-valkey/">Try-Valkey</a> — an interactive playground where you can run any Valkey command right in your browser.</p>
+<h3 id="data-operations">Data Operations</h3>
+<p>Once connected with Valkey, you can interact by issuing commands to store and retrieve data. Valkey behaves like a <strong>remote dictionary</strong> – you can think of it as a giant hash map on a server. Each piece of data is stored under a unique <strong>key</strong>, and you use commands to read or modify values associated with those keys.</p>
+<p>Let’s walk through some fundamental operations **** with two of the most commonly used data types in Valkey: <strong>strings</strong> and <strong>hashes</strong>.</p>
+<ul>
+<li><strong>Strings:</strong> The simplest data type in Valkey is a string (binary-safe sequence of bytes). You can store text or binary data under a key. For example, to store a string value and then retrieve it:</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; SET user:1000 &quot;Alice&quot;</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; GET user:1000</span></span>
+<span class="giallo-l"><span>&quot;Alice&quot;</span></span></code></pre>
+<p>Here we use the <code>SET</code> command to save the value <code>"Alice"</code> under the key <code>user:1000</code>, and <code>GET</code> to fetch it back. Valkey keys are often namespaced with prefixes (like <code>user:</code>) to group related items. You can store any data serialized as a string – numbers, JSON, binary blobs, etc. (Up to 512 MB per value, though very large values are not recommended for performance).</p>
+<ul>
+<li><strong>Hashes:</strong> Hashes allow you to store multiple fields and values under one key, similar to a JSON object or dictionary. This is useful for representing objects without using separate keys for each field. For example:</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; HSET user:1000 name &quot;Alice&quot; email &quot;alice@example.com&quot; age &quot;30&quot;</span></span>
+<span class="giallo-l"><span>(integer) 3</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; HGET user:1000 name</span></span>
+<span class="giallo-l"><span>&quot;Alice&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; HGETALL user:1000</span></span>
+<span class="giallo-l"><span>1) &quot;name&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;Alice&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;email&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;alice@example.com&quot;</span></span>
+<span class="giallo-l"><span>5) &quot;age&quot;</span></span>
+<span class="giallo-l"><span>6) &quot;30&quot;</span></span></code></pre>
+<p>We add three fields to the hash stored at <code>user:1000</code>. <code>HGET</code> retrieves a single field, and <code>HGETALL</code> returns all fields and values. Hashes are memory-efficient for storing structured data.</p>
+<ul>
+<li><strong>Other Data Types:</strong> Valkey supports many other native data structures. For example, <strong>lists</strong> (ordered collections of elements) support queue/stack operations, <strong>sets</strong> store unique items (useful for tags or unique lists), <strong>sorted sets</strong> maintain ordered rankings, and more. Each data type comes with specialized commands (e.g. <code>LPUSH</code>/<code>LRANGE</code> for lists, <code>SADD</code>/<code>SMEMBERS</code> for sets). You can find a full overview in the <a href="/topics/data-types">Valkey data types documentation</a> and the command reference.</li>
+</ul>
+<h3 id="example-use-case-caching-with-valkey">Example Use Case: Caching with Valkey</h3>
+<p>One of the most popular ways to use Valkey is as a caching layer in front of a traditional database or expensive API. By caching results in Valkey, applications can serve repeated requests much faster and reduce load on back-end systems.</p>
+<p><strong>Scenario:</strong> Imagine a web application that needs to fetch user profile data from a database. Without caching, each page load would query the database, making the app slow under load. With Valkey, you can cache the user data after the first retrieval:</p>
+<ol>
+<li><strong>Check cache first:</strong> On a user profile request, the application first checks Valkey (using a key like <code>user:42:profile</code>) to see if the data is already cached.</li>
+<li><strong>Fallback to DB if miss:</strong> If the key is <strong>not</strong> found in Valkey (a cache miss), the application queries the database for the data.</li>
+<li><strong>Store in cache:</strong> The result from the database is then stored in Valkey for next time, with an expiration time (TTL).</li>
+<li><strong>Subsequent hits:</strong> Future requests find the data in Valkey (cache hit) and can skip the database query, returning data to the user much faster.</li>
+</ol>
+<p>In Valkey, setting a key with an expiration can be done in one command. For example, to cache a rendered page for 5 minutes (300 seconds):</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; SET page:homepage &quot;&lt;html&gt;...rendered content...&lt;/html&gt;&quot; EX 300</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre>
+<p>The <code>EX 300</code> option tells Valkey to automatically expire (remove) the key after 300 seconds. Until it expires, any request for <code>page:homepage</code> will be served the cached content from memory. You can adjust TTLs based on how fresh the data needs to be. Expiring keys ensures the cache doesn’t serve stale data indefinitely.</p>
+<p>Valkey can <strong>cache nearly anything</strong> – from database query results and API responses to session tokens, rendered HTML, or even generated reports. Database caching is a classic use case, but it's only the beginning. E-commerce platforms use Valkey to serve personalized recommendations instantly. Gaming companies rely on it for real-time leaderboards and matchmaking. Fintech systems trust Valkey to cache fraud detection signals and scoring results under heavy load. In AI and ML pipelines, Valkey accelerates inference by caching model outputs, storing precomputed embeddings, and managing access tokens across distributed systems. With sub-millisecond latency and the capacity to process hundreds of thousands of operations per second, Valkey is built to keep up — no matter how demanding the workload.</p>
+<h3 id="best-practices-and-troubleshooting">Best Practices and Troubleshooting</h3>
+<p><strong>Best Practices:</strong></p>
+<ul>
+<li><strong>Use descriptive key names:</strong> Organize keys with namespaces using colon notation (e.g. <code>user:42:settings</code>). This makes it easier to manage related keys and avoid collisions.</li>
+<li><strong>Choose the right data type:</strong> Store data in its natural form. For example, use a hash to keep an object’s fields together under one key instead of multiple separate keys, or use a list for an ordered collection of items. Leverage Valkey’s rich data structures to minimize client-side processing.</li>
+<li><strong>Set expirations for volatile data:</strong> If using Valkey as a cache, always set a TTL on keys that represent transient data (sessions, cache entries, etc.) to prevent them from living forever. This helps automatically prune old data and keeps memory usage in check.</li>
+<li><strong>Mind memory limits:</strong> By default, Valkey will keep growing in memory until it reaches the host’s limits. For production, configure a <code>maxmemory</code> limit and an eviction policy (like <em>Least Recently Used</em> eviction) if using it as a cache. This ensures Valkey evicts least-used entries when full, rather than failing once memory is exhausted.</li>
+<li><strong>Enable persistence if needed:</strong> If you want Valkey to permanently store data (not just cache), enable persistence options. Valkey supports creating point-in-time snapshots (RDB files) or append-only file logging (AOF) similar to Redis. This safeguards data in case of a restart or failure.</li>
+</ul>
+<p><strong>Troubleshooting Common Issues:</strong></p>
+<ul>
+<li><strong>Cannot connect to Valkey:</strong> If the CLI or client can’t connect (e.g. <em>Connection refused</em> or <em>Unable to connect</em> errors), first ensure the Valkey server process is running. If it’s running on a different host or container, make sure you specify the correct <code>-h</code> and <code>-p</code> in <code>valkey-cli</code>, and that the port <strong>6379</strong> is open through any firewalls. You can always test connectivity with <code>valkey-cli ping</code> (expect a <strong>PONG</strong>).</li>
+<li><strong>Keys not found (or data missing):</strong> If you expected data to be in Valkey but <code>GET</code> returns nothing, consider that the key might have expired or been evicted if you set a max memory policy. Use the <code>TTL &lt;key&gt;</code> command to check time-to-live, and ensure your application logic correctly stores the data. Also, confirm that you’re connecting to the same Valkey instance (and database number, if applicable) where the data was written.</li>
+<li><strong>Performance issues:</strong> If you encounter high latency, monitor Valkey’s built-in metrics. You can use the <code>INFO</code> command to get stats on memory, CPU, and command usage. For deeper analysis of latency spikes, Valkey provides a latency monitoring feature and a benchmarking tool (<code>valkey-benchmark</code>). Common causes of slowdowns include very large payloads or expensive commands blocking the server. If needed, consider distributing load via clustering or splitting data across multiple instances.</li>
+<li><strong>Valkey server crashes or is unstable:</strong> Though rare, if Valkey crashes, check the server logs for errors. Ensure your system’s memory is healthy (faulty RAM can cause issues in in-memory databases). Run <code>valkey-server --test-memory</code> to perform a memory test of your system.</li>
+</ul>
+<p>For further diagnostics, see the <a href="/topics/problems">official troubleshooting guide</a>. We want to ensure that Valkey runs smoothly in your environment.</p>
+<h3 id="next-steps">Next Steps</h3>
+<p>Now that you have Valkey running and understand the basics, you can explore more advanced topics and use cases:</p>
+<ul>
+<li><strong>Try Valkey</strong>: Use <a rel="external" href="https://valkey.io/try-valkey/">Try Valkey</a> allows you to try Valkey, the high-performance in-memory data store, directly from your browser — no installation needed</li>
+<li><strong>Core Data Types</strong>: Valkey offers powerful <a href="/topics/data-types">data types</a> beyond simple strings. Understanding these types is key to designing efficient applications:
+<ul>
+<li><a href="/topics/strings">Strings</a>: The simplest type, used for caching, counters, and more.</li>
+<li><a href="/topics/lists">Lists</a>: Ordered sequences ideal for queues and logs.</li>
+<li><a href="/topics/sets">Sets</a>: Unordered collections of unique elements, great for tags or membership checks.</li>
+<li><a href="/topics/hashes">Hashes</a>: Field-value pairs, often used for storing objects or records.</li>
+<li><a href="/topics/sorted-sets">Sorted Sets</a>: Unique elements with scores, useful for leaderboards or time-series data.</li>
+</ul>
+</li>
+<li><strong>Explore Valkey Modules:</strong> Valkey supports pluggable modules that extend its core functionality with custom commands and data types. Take a look at few of our official modules to get started.
+<ul>
+<li><strong><a href="/topics/valkey-json">Valkey Json</a></strong></li>
+<li><strong><a href="/topics/bloomfilters">Valkey Bloom</a></strong></li>
+<li><strong><a href="/topics/ldap">Valkey LDAP</a></strong></li>
+<li><strong><a href="/topics/search">Valkey Search</a></strong></li>
+</ul>
+</li>
+<li><strong>Publish/Subscribe Messaging:</strong> Dive into Valkey’s Pub/Sub feature to build real-time apps (such as chat systems o live notifications). See the <a href="/topics/pubsub"><strong>Pub/Sub</strong> section</a> of the docs for patterns and best practices (Valkey’s Pub/Sub supports pattern subscriptions and sharded channels for scalability).</li>
+<li><strong>Clustering and High Availability:</strong> When you need to scale out or ensure uptime, Valkey Cluster mode allows sharding data across multiple nodes with automatic failover. Check out the <strong><a href="/topics/cluster-tutorial">Valkey Cluster tutorial</a></strong> for a step-by-step guide to setting up a cluster and using replication.</li>
+<li><strong>Further Documentation:</strong> Explore the <strong><a href="/topics/">Valkey Documentation by Topic</a></strong> for in-depth guides on persistence, security, Lua scripting, modules, and more. Key references include the <a href="/commands/">Commands Reference</a> for details on every command, and the <a href="/topics/faq">FAQ</a> for answers to common questions.</li>
+</ul>
+<p>Happy caching with Valkey! With its speed and flexibility, you now have a powerful tool to build fast, scalable applications. <strong>Next steps</strong> above will guide you as you deepen your Valkey knowledge and tackle more complex scenarios. Good luck on your Valkey journey!</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/quickstart.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

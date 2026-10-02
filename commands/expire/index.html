@@ -1,0 +1,621 @@
+
+
+
+
+
+
+
+
+    
+    
+    
+        
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Command &middot; EXPIRE</title>
+    <meta name="title" property="og:title" content="Valkey Command: EXPIRE">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+    
+        <div class="styled-title">
+            <h1 class="page-title">EXPIRE </h1>
+        </div>
+    
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/commands/" class="breadcrumb-link">Commands</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            EXPIRE
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <dl>
+        <dt>Usage:</dt>
+        <dd>
+            <code>
+             EXPIRE
+            
+            
+          key  
+        
+          seconds  
+        
+        [   
+         NX    |
+        
+         XX    |
+        
+         GT    |
+        
+         LT   
+         ]
+        
+            
+            </code>
+        </dd>
+    </dl>
+    
+    <dl>
+        <dt>Complexity:</dt>
+        <dd>O(1)</dd>
+    <dl>
+    
+    
+    
+    <dl>
+        <dt>Since:</dt>
+        <dd>1.0.0</dd>
+    <dl>
+    
+    
+    <dl>
+        <dt>ACL Categories:</dt>
+        <dd>
+            
+                @fast, 
+            
+                @keyspace, 
+            
+                @write
+            
+        </dd>
+    <dl>
+    
+    </dl>
+
+
+
+
+
+
+<p>Set a timeout on <code>key</code>.
+After the timeout has expired, the key will automatically be deleted.
+A key with an associated timeout is often said to be <em>volatile</em> in Valkey
+terminology.</p>
+<p>The timeout will only be cleared by commands that delete or overwrite the
+contents of the key, including <a href="/commands/del"><code>DEL</code></a>, <a href="/commands/set"><code>SET</code></a>, <a href="/commands/getset"><code>GETSET</code></a> and all the <code>*STORE</code>
+commands.
+This means that all the operations that conceptually <em>alter</em> the value stored at
+the key without replacing it with a new one will leave the timeout untouched.
+For instance, incrementing the value of a key with <a href="/commands/incr"><code>INCR</code></a>, pushing a new value
+into a list with <a href="/commands/lpush"><code>LPUSH</code></a>, or altering the field value of a hash with <a href="/commands/hset"><code>HSET</code></a> are
+all operations that will leave the timeout untouched.</p>
+<p>The timeout can also be cleared, turning the key back into a persistent key,
+using the <a href="/commands/persist"><code>PERSIST</code></a> command.</p>
+<p>If a key is renamed with <a href="/commands/rename"><code>RENAME</code></a>, the associated time to live is transferred to
+the new key name.</p>
+<p>If a key is overwritten by <code>RENAME</code>, like in the case of an existing key <code>Key_A</code>
+that is overwritten by a call like <code>RENAME Key_B Key_A</code>, it does not matter if
+the original <code>Key_A</code> had a timeout associated or not, the new key <code>Key_A</code> will
+inherit all the characteristics of <code>Key_B</code>.</p>
+<p>Note that calling <code>EXPIRE</code>/<a href="/commands/pexpire"><code>PEXPIRE</code></a> with a non-positive timeout or
+<a href="/commands/expireat"><code>EXPIREAT</code></a>/<a href="/commands/pexpireat"><code>PEXPIREAT</code></a> with a time in the past will result in the key being
+<a href="/commands/del">deleted</a> rather than expired (accordingly, the emitted <a href="/topics/notifications">key event</a>
+will be <code>del</code>, not <code>expired</code>).</p>
+<h2 id="options">Options</h2>
+<p>The <code>EXPIRE</code> command supports a set of options:</p>
+<ul>
+<li><code>NX</code> -- Set expiry only when the key has no expiry</li>
+<li><code>XX</code> -- Set expiry only when the key has an existing expiry</li>
+<li><code>GT</code> -- Set expiry only when the new expiry is greater than current one</li>
+<li><code>LT</code> -- Set expiry only when the new expiry is less than current one</li>
+</ul>
+<p>A non-volatile key is treated as an infinite TTL for the purpose of <code>GT</code> and <code>LT</code>.
+The <code>GT</code>, <code>LT</code> and <code>NX</code> options are mutually exclusive.</p>
+<h2 id="refreshing-expires">Refreshing expires</h2>
+<p>It is possible to call <code>EXPIRE</code> using as argument a key that already has an
+existing expire set.
+In this case the time to live of a key is <em>updated</em> to the new value.
+There are many useful applications for this, an example is documented in the
+<em>Navigation session</em> pattern section below.</p>
+<p><code>EXPIRE</code> would return 0 and not alter the timeout for a key with a timeout set.</p>
+<h2 id="examples">Examples</h2>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; SET mykey &quot;Hello&quot;</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EXPIRE mykey 10</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; TTL mykey</span></span>
+<span class="giallo-l"><span>(integer) 10</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; SET mykey &quot;Hello World&quot;</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; TTL mykey</span></span>
+<span class="giallo-l"><span>(integer) -1</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EXPIRE mykey 10 XX</span></span>
+<span class="giallo-l"><span>(integer) 0</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; TTL mykey</span></span>
+<span class="giallo-l"><span>(integer) -1</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EXPIRE mykey 10 NX</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; TTL mykey</span></span>
+<span class="giallo-l"><span>(integer) 10</span></span></code></pre><h2 id="pattern-navigation-session">Pattern: Navigation session</h2>
+<p>Imagine you have a web service and you are interested in the latest N pages
+<em>recently</em> visited by your users, such that each adjacent page view was not
+performed more than 60 seconds after the previous.
+Conceptually you may consider this set of page views as a <em>Navigation session</em>
+of your user, that may contain interesting information about what kind of
+products he or she is looking for currently, so that you can recommend related
+products.</p>
+<p>You can easily model this pattern in Valkey using the following strategy: every
+time the user does a page view you call the following commands:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MULTI</span></span>
+<span class="giallo-l"><span>RPUSH pagewviews.user:&lt;userid&gt; http://.....</span></span>
+<span class="giallo-l"><span>EXPIRE pagewviews.user:&lt;userid&gt; 60</span></span>
+<span class="giallo-l"><span>EXEC</span></span></code></pre>
+<p>If the user will be idle more than 60 seconds, the key will be deleted and only
+subsequent page views that have less than 60 seconds of difference will be
+recorded.</p>
+<p>This pattern is easily modified to use counters using <code>INCR</code> instead of lists
+using <a href="/commands/rpush"><code>RPUSH</code></a>.</p>
+<h1 id="appendix-valkey-expires">Appendix: Valkey expires</h1>
+<h2 id="keys-with-an-expire">Keys with an expire</h2>
+<p>Normally Valkey keys are created without an associated time to live.
+The key will simply live forever, unless it is removed by the user in an
+explicit way, for instance using the <code>DEL</code> command.</p>
+<p>The <code>EXPIRE</code> family of commands is able to associate an expire to a given key,
+at the cost of some additional memory used by the key.
+When a key has an expire set, Valkey will make sure to remove the key when the
+specified amount of time elapsed.</p>
+<p>The key time to live can be updated or entirely removed using the <code>EXPIRE</code> and
+<a href="/commands/persist"><code>PERSIST</code></a> command (or other strictly related commands).</p>
+<h2 id="expire-accuracy">Expire accuracy</h2>
+<p>The expire error is from 0 to 1 milliseconds.</p>
+<h2 id="expires-and-persistence">Expires and persistence</h2>
+<p>Keys expiring information is stored in milliseconds.
+This means that the time is flowing even when the Valkey instance is not active.</p>
+<p>For expires to work well, the computer time must be taken stable.
+If you move an RDB file from two computers with a big desync in their clocks,
+funny things may happen (like all the keys loaded to be expired at loading
+time).</p>
+<p>Even running instances will always check the computer clock, so for instance if
+you set a key with a time to live of 1000 seconds, and then set your computer
+time 2000 seconds in the future, the key will be expired immediately, instead of
+lasting for 1000 seconds.</p>
+<h2 id="how-valkey-reclaims-expired-keys">How Valkey reclaims expired keys</h2>
+<p>Valkey reclaims expired keys in two ways: on access and in the background in what is called the "active expire key" cycles. On access expiration is when a client tries to access a key with the expiration time which is found to be timed out. Such a key is deleted on this access attempt.</p>
+<p>Relying solely on the on access expiration only is not enough because there are expired keys that may never be accessed again. To address this, Valkey uses the background expiration algorithm known as the "active expire key" effort. This  algorithm is adaptive: it tries to use less CPU if there are few expired keys to reclaim. Otherwise, it gets more aggressive trying to free more memory by reclaiming more keys in shorter runs but using more CPU.</p>
+<p>This is how it works:</p>
+<p>Valkey slowly scans the keyspace to identify and reclaim expired keys. This "slow cycle" is the main way to collect expired keys and operates with the server's hertz frequency (usually 10 hertz). During the slow cycle, Valkey tolerates having not more than 10% of the expired keys in the memory and tries to use a maximum of 25% CPU power. These default values are adjusted if the user changes the active expire key effort configuration.</p>
+<p>If the number of expired keys remains high after the slow cycle, the active expire key effort transitions into the "fast cycle", trying to do less work but more often. The fast cycle runs no longer than 1000 microseconds and repeats at the same interval. During the fast cycle, the check of every database is interrupted once the number of already expired keys in the database is estimated to be lower than 10%. This is done to avoid doing too much work to gain too little memory.</p>
+<p>You can modify the active expire key effort with the <code>active-expire-effort</code> parameter in the configuration file up to the maximum value of <code>10</code>. The default <code>active-expire-effort</code> value is <code>1</code>, and it is described by the following base values:</p>
+<ul>
+<li><code>ACTIVE_EXPIRE_CYCLE_KEYS_PER_LOOP</code> has a base value of 20. The number of keys for each DB loop.</li>
+<li><code>ACTIVE_EXPIRE_CYCLE_FAST_DURATION</code> has a base value of 1000. The maximum duration of the fast cycle in microseconds.</li>
+<li><code>ACTIVE_EXPIRE_CYCLE_SLOW_TIME_PERC</code> has a base value of 25. The maximum % of CPU to use during the slow cycle.</li>
+<li><code>ACTIVE_EXPIRE_CYCLE_ACCEPTABLE_STALE</code> has a base value of 10. The maximum % of expired keys to tolerate in memory.</li>
+</ul>
+<p>Changing the <code>active-expire-effort</code> value results in a lower percentage of expired keys tolerated in memory. However, it will lead to longer cycles and increased CPU usage, which may introduce latency.</p>
+<p>To calculate the new values, use the following formulas:</p>
+<ul>
+<li><code>ACTIVE_EXPIRE_CYCLE_KEYS_PER_LOOP + (ACTIVE_EXPIRE_CYCLE_KEYS_PER_LOOP / 4 * (effort - 1))</code></li>
+<li><code>ACTIVE_EXPIRE_CYCLE_FAST_DURATION + (ACTIVE_EXPIRE_CYCLE_FAST_DURATION / 4 * (effort - 1))</code></li>
+<li><code>ACTIVE_EXPIRE_CYCLE_SLOW_TIME_PERC + (2 * (effort - 1))</code></li>
+<li><code>ACTIVE_EXPIRE_CYCLE_ACCEPTABLE_STALE - (effort - 1)</code></li>
+</ul>
+<p>where <code>ACTIVE_EXPIRE_CYCLE_KEYS_PER_LOOP</code>, <code>ACTIVE_EXPIRE_CYCLE_FAST_DURATION</code>, <code>ACTIVE_EXPIRE_CYCLE_SLOW_TIME_PERC</code>, and <code>ACTIVE_EXPIRE_CYCLE_ACCEPTABLE_STALE</code> are the base values, and <code>effort</code> is the specified <code>active-expire-effort</code>.</p>
+<h2 id="how-expires-are-handled-in-the-replication-link-and-aof-file">How expires are handled in the replication link and AOF file</h2>
+<p>In order to obtain a correct behavior without sacrificing consistency, when a
+key expires, a <code>DEL</code> operation is synthesized in both the AOF file and gains all
+the attached replicas nodes.
+This way the expiration process is centralized in the primary instance, and there
+is no chance of consistency errors.</p>
+<p>However while the replicas connected to a primary will not expire keys
+independently (but will wait for the <code>DEL</code> coming from the primary), they'll
+still take the full state of the expires existing in the dataset, so when a
+replica is elected to primary it will be able to expire the keys independently,
+fully acting as a primary.</p>
+
+
+
+<h3>RESP2/RESP3 Reply</h3>
+            <p>One of the following:</p>
+<ul>
+<li>
+<p><a href="/topics/protocol#integers">Integer reply</a>: <code>0</code> if the timeout was not set; for example, the key doesn't exist, or the operation was skipped because of the provided arguments.</p>
+</li>
+<li>
+<p><a href="/topics/protocol#integers">Integer reply</a>: <code>1</code> if the timeout was set.</p>
+</li>
+</ul>
+
+        
+<h3>History</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Version</th>
+            <th>Change</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+        
+        <tr>
+            <td>7.0.0</td>
+            <td><p>Added options: <code>NX</code>, <code>XX</code>, <code>GT</code> and <code>LT</code>.</p>
+</td>
+        </tr>
+        
+
+    </tbody>
+</table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+
+
+
+
+<div class="sb-search-container">
+    <input type="search" id="sidebar-search-box" placeholder="Search all commands..." autocomplete="off" aria-label="Search all commands" />
+</div>
+
+<!-- No results message for sidebar search -->
+<div id="sidebar-no-results-message" class="no-results-message" hidden>
+    <span>&lt;/&gt;</span>
+    <h4>No commands found</h4>
+    <p>Check your spelling or try different keywords</p>
+</div>
+
+<h2 id="command-list-title">Similar commands</h2>
+<ul id="command-list" class="sb-command-list"></ul>
+<div class="sb-command-list-footer">
+    <button type="button" id="sidebar-show-more" class="command-show-more" hidden>Show more</button>
+    
+    <p id="sidebar-command-status" class="command-list-status" aria-live="polite"></p>
+    <p><a href="/commands/">Browse the full command reference</a></p>
+</div>
+
+<script src="/assets/js/command-reference.js"></script>
+<script>
+(() => {
+    const CR = window.ValkeyCommandReference;
+    const PAGE_SIZE = 10;
+    const CURRENT_SLUG = "expire";
+    const groups = {
+    "bitmap": { name: "Bitmap", description: "Operations on the Bitmap data type" },
+    "bloom": { name: "Bloom filter", description: "Operations on the Bloom filter data type" },
+    "search": { name: "Search", description: "Vector Similarity Search engine optimized for AI-driven workloads" },
+    "cluster": { name: "Cluster", description: "Valkey Cluster management" },
+    "connection": { name: "Connection", description: "Client connections management" },
+    "generic": { name: "Generic", description: "Generic commands" },
+    "geo": { name: "Geospatial indices", description: "Operations on the Geospatial Index data type" },
+    "hash": { name: "Hash", description: "Operations on the Hash data type" },
+    "hyperloglog": { name: "HyperLogLog", description: "Operations on the HyperLogLog data type" },
+    "json": { name: "JSON", description: "Operations on the JSON data type" },
+    "list": { name: "List", description: "Operations on the List data type" },
+    "pubsub": { name: "Pub/Sub", description: "Pub/Sub commands" },
+    "scripting": { name: "Scripting and Functions", description: "Valkey server-side scripting and functions" },
+    "sentinel": { name: "Sentinel", description: "Valkey Sentinel commands" },
+    "server": { name: "Server", description: "Server management commands" },
+    "set": { name: "Set", description: "Operations on the Set data type" },
+    "sorted-set": { name: "Sorted Set", description: "Operations on the Sorted Set data type" },
+    "stream": { name: "Stream", description: "Operations on the Stream data type" },
+    "string": { name: "String", description: "Operations on the String data type" },
+    "transactions": { name: "Transactions", description: "Valkey Transaction management" }
+};
+    const groupNames = Object.fromEntries(Object.entries(groups).map(([key, g]) => [key, g.name]));
+
+    const listEl = document.getElementById("command-list");
+    const searchBox = document.getElementById("sidebar-search-box");
+    const title = document.getElementById("command-list-title");
+    const showMore = document.getElementById("sidebar-show-more");
+    const status = document.getElementById("sidebar-command-status");
+    const noResults = document.getElementById("sidebar-no-results-message");
+
+    let entries = [];
+    let current = null;
+    let similar = [];
+    const state = { query: "", shown: PAGE_SIZE };
+    const setStatus = CR.liveStatus(status);
+
+    // `typing` debounces the live status so screen readers aren't interrupted on every keystroke.
+    function render(typing) {
+        const query = CR.normalizeQuery(state.query);
+        const matches = query ? CR.search(entries, query) : similar;
+        const visible = matches.slice(0, state.shown);
+        CR.showEntries(listEl, entries, visible);
+        if (current) current.el.classList.add("is-current");
+
+        title.textContent = query ? `${matches.length} ${matches.length === 1 ? "result" : "results"}` : "Similar commands";
+        title.hidden = query !== "" && matches.length === 0;
+        noResults.hidden = matches.length !== 0;
+
+        const remaining = matches.length - visible.length;
+        CR.updateShowMore(showMore, remaining, PAGE_SIZE);
+        let message;
+        if (!matches.length) {
+            message = query ? "No commands found." : "";
+        } else if (!query && remaining <= 0) {
+            message = `Can't find it? Search above to look through all ${entries.length} commands.`;
+        } else {
+            message = `Showing ${visible.length} of ${matches.length}.`;
+        }
+        setStatus(message, !typing);
+    }
+
+    function init(html) {
+        listEl.innerHTML = html;
+        entries = Array.from(listEl.querySelectorAll(".command-list-item"), (el) => CR.parseEntry(el, groupNames));
+        current = entries.find((e) => e.slug === CURRENT_SLUG) || null;
+        similar = current
+            ? CR.mostSimilar(entries, current)
+            // Unknown command: fall back to the most popular ones.
+            : entries.filter((e) => e.rank !== Infinity).sort((a, b) => a.rank - b.rank);
+        render();
+    }
+
+    searchBox.addEventListener("input", () => {
+        state.query = searchBox.value;
+        state.shown = PAGE_SIZE;
+        render(true);
+    });
+    CR.bindSearchKeys(searchBox, listEl);
+    // No "/" shortcut here: on long doc pages it would override the browser's quick find.
+    showMore.addEventListener("click", () => {
+        state.shown += PAGE_SIZE;
+        render();
+    });
+
+    fetch("/command-list/")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(init)
+        .catch(() => {
+            title.hidden = true;
+            showMore.hidden = true;
+            status.textContent = "";
+            listEl.innerHTML = "<li>Could not load the command list.</li>";
+        });
+})();
+</script>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

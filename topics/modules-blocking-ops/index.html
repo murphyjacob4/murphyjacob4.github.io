@@ -1,0 +1,487 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Modules and blocking commands</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Modules and blocking commands">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Modules and blocking commands</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Modules and blocking commands
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey has a few blocking commands among the built-in set of commands.
+One of the most used is <code>BLPOP</code> (or the symmetric <code>BRPOP</code>) which blocks
+waiting for elements arriving in a list.</p>
+<p>The interesting fact about blocking commands is that they do not block
+the whole server, but just the client calling them. Usually the reason to
+block is that we expect some external event to happen: this can be
+some change in the Valkey data structures like in the <code>BLPOP</code> case, a
+long computation happening in a thread, to receive some data from the
+network, and so forth.</p>
+<p>Valkey modules have the ability to implement blocking commands as well,
+this documentation shows how the API works and describes a few patterns
+that can be used in order to model blocking commands.</p>
+<h2 id="how-blocking-and-resuming-works">How blocking and resuming works.</h2>
+<p><strong>Note:</strong> You may want to check the <code>helloblock.c</code> example in the Valkey source tree
+inside the <code>src/modules</code> directory, for a simple to understand example
+on how the blocking API is applied.</p>
+<p>In Valkey modules, commands are implemented by callback functions that
+are invoked by the Valkey core when the specific command is called
+by the user. Normally the callback terminates its execution sending
+some reply to the client. Using the following function instead, the
+function implementing the module command may request that the client
+is put into the blocked state:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span>ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span style="color: #D2A8FF;">ValkeyModule_BlockClient</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>,</span></span>
+<span class="giallo-l"><span>                                                    ValkeyModuleCmdFunc </span><span style="color: #FFA657;">reply_callback</span><span>,</span></span>
+<span class="giallo-l"><span>                                                    ValkeyModuleCmdFunc </span><span style="color: #FFA657;">timeout_callback</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">                                                    void</span><span> (</span><span style="color: #FF7B72;">*</span><span>free_privdata)(</span><span style="color: #FF7B72;">void*</span><span>),</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">                                                    long long</span><span style="color: #FFA657;"> timeout_ms</span><span>);</span></span></code></pre>
+<p>The function returns a <code>ValkeyModuleBlockedClient</code> object, which is later
+used in order to unblock the client. The arguments have the following
+meaning:</p>
+<ul>
+<li><code>ctx</code> is the command execution context as usually in the rest of the API.</li>
+<li><code>reply_callback</code> is the callback, having the same prototype of a normal command function, that is called when the client is unblocked in order to return a reply to the client.</li>
+<li><code>timeout_callback</code> is the callback, having the same prototype of a normal command function that is called when the client reached the <code>ms</code> timeout.</li>
+<li><code>free_privdata</code> is the callback that is called in order to free the private data. Private data is a pointer to some data that is passed between the API used to unblock the client, to the callback that will send the reply to the client. We'll see how this mechanism works later in this document.</li>
+<li><code>ms</code> is the timeout in milliseconds. When the timeout is reached, the timeout callback is called and the client is automatically aborted.</li>
+</ul>
+<p>Once a client is blocked, it can be unblocked with the following API:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> ValkeyModule_UnblockClient</span><span>(ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">bc</span><span>,</span><span style="color: #FF7B72;"> void *</span><span style="color: #FFA657;">privdata</span><span>);</span></span></code></pre>
+<p>The function takes as argument the blocked client object returned by
+the previous call to <code>ValkeyModule_BlockClient()</code>, and unblock the client.
+Immediately before the client gets unblocked, the <code>reply_callback</code> function
+specified when the client was blocked is called: this function will
+have access to the <code>privdata</code> pointer used here.</p>
+<p>IMPORTANT: The above function is thread safe, and can be called from within
+a thread doing some work in order to implement the command that blocked
+the client.</p>
+<p>The <code>privdata</code> data will be freed automatically using the <code>free_privdata</code>
+callback when the client is unblocked. This is useful <strong>since the reply
+callback may never be called</strong> in case the client timeouts or disconnects
+from the server, so it's important that it's up to an external function
+to have the responsibility to free the data passed if needed.</p>
+<p>To better understand how the API works, we can imagine writing a command
+that blocks a client for one second, and then send as reply "Hello!".</p>
+<p>Note: arity checks and other non important things are not implemented
+int his command, in order to take the example simple.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> Example_ValkeyCommand</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>, ValkeyModuleString </span><span style="color: #FF7B72;">**</span><span style="color: #FFA657;">argv</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">                         int</span><span style="color: #FFA657;"> argc</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span>    ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span>bc </span><span style="color: #FF7B72;">=</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        ValkeyModule_BlockClient</span><span>(ctx,reply_func,timeout_func,</span><span style="color: #79C0FF;">NULL</span><span>,</span><span style="color: #79C0FF;">0</span><span>);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    pthread_t</span><span> tid;</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">    pthread_create</span><span>(</span><span style="color: #FF7B72;">&amp;</span><span>tid,</span><span style="color: #79C0FF;">NULL</span><span>,threadmain,bc);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    return</span><span> VALKEYMODULE_OK;</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">void *</span><span style="color: #D2A8FF;">threadmain</span><span>(</span><span style="color: #FF7B72;">void *</span><span style="color: #FFA657;">arg</span><span>) {</span></span>
+<span class="giallo-l"><span>    ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span>bc </span><span style="color: #FF7B72;">=</span><span> arg;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">    sleep</span><span>(</span><span style="color: #79C0FF;">1</span><span>);</span><span style="color: #8B949E;"> /* Wait one second and unblock. */</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">    ValkeyModule_UnblockClient</span><span>(bc,</span><span style="color: #79C0FF;">NULL</span><span>);</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>The above command blocks the client ASAP, spawning a thread that will
+wait a second and will unblock the client. Let's check the reply and
+timeout callbacks, which are in our case very similar, since they
+just reply the client with a different reply type.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> reply_func</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>, ValkeyModuleString </span><span style="color: #FF7B72;">**</span><span style="color: #FFA657;">argv</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">               int</span><span style="color: #FFA657;"> argc</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    return</span><span style="color: #D2A8FF;"> ValkeyModule_ReplyWithSimpleString</span><span>(ctx,</span><span style="color: #A5D6FF;">&quot;Hello!&quot;</span><span>);</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> timeout_func</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>, ValkeyModuleString </span><span style="color: #FF7B72;">**</span><span style="color: #FFA657;">argv</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">               int</span><span style="color: #FFA657;"> argc</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    return</span><span style="color: #D2A8FF;"> ValkeyModule_ReplyWithNull</span><span>(ctx);</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>The reply callback just sends the "Hello!" string to the client.
+The important bit here is that the reply callback is called when the
+client is unblocked from the thread.</p>
+<p>The timeout command returns <code>NULL</code>, as it often happens with actual
+Valkey blocking commands timing out.</p>
+<h2 id="passing-reply-data-when-unblocking">Passing reply data when unblocking</h2>
+<p>The above example is simple to understand but lacks an important
+real world aspect of an actual blocking command implementation: often
+the reply function will need to know what to reply to the client,
+and this information is often provided as the client is unblocked.</p>
+<p>We could modify the above example so that the thread generates a
+random number after waiting one second. You can think at it as an
+actually expansive operation of some kind. Then this random number
+can be passed to the reply function so that we return it to the command
+caller. In order to make this working, we modify the functions as follow:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">void *</span><span style="color: #D2A8FF;">threadmain</span><span>(</span><span style="color: #FF7B72;">void *</span><span style="color: #FFA657;">arg</span><span>) {</span></span>
+<span class="giallo-l"><span>    ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span>bc </span><span style="color: #FF7B72;">=</span><span> arg;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">    sleep</span><span>(</span><span style="color: #79C0FF;">1</span><span>);</span><span style="color: #8B949E;"> /* Wait one second and unblock. */</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    long *</span><span>mynumber </span><span style="color: #FF7B72;">=</span><span style="color: #D2A8FF;"> ValkeyModule_Alloc</span><span>(</span><span style="color: #FF7B72;">sizeof</span><span>(</span><span style="color: #FF7B72;">long</span><span>));</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    *</span><span>mynumber </span><span style="color: #FF7B72;">=</span><span style="color: #D2A8FF;"> rand</span><span>();</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">    ValkeyModule_UnblockClient</span><span>(bc,mynumber);</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>As you can see, now the unblocking call is passing some private data,
+that is the <code>mynumber</code> pointer, to the reply callback. In order to
+obtain this private data, the reply callback will use the following
+function:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">void *</span><span style="color: #D2A8FF;">ValkeyModule_GetBlockedClientPrivateData</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>);</span></span></code></pre>
+<p>So our reply callback is modified like that:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> reply_func</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>, ValkeyModuleString </span><span style="color: #FF7B72;">**</span><span style="color: #FFA657;">argv</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">               int</span><span style="color: #FFA657;"> argc</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    long *</span><span>mynumber </span><span style="color: #FF7B72;">=</span><span style="color: #D2A8FF;"> ValkeyModule_GetBlockedClientPrivateData</span><span>(ctx);</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    /* IMPORTANT: don&#39;t free mynumber here, but in the</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">     * free privdata callback. */</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    return</span><span style="color: #D2A8FF;"> ValkeyModule_ReplyWithLongLong</span><span>(ctx,mynumber);</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Note that we also need to pass a <code>free_privdata</code> function when blocking
+the client with <code>ValkeyModule_BlockClient()</code>, since the allocated
+long value must be freed. Our callback will look like the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">void</span><span style="color: #D2A8FF;"> free_privdata</span><span>(</span><span style="color: #FF7B72;">void *</span><span style="color: #FFA657;">privdata</span><span>) {</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">    ValkeyModule_Free</span><span>(privdata);</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>NOTE: It is important to stress that the private data is best freed in the
+<code>free_privdata</code> callback because the reply function may not be called
+if the client disconnects or timeout.</p>
+<p>Also note that the private data is also accessible from the timeout
+callback, always using the <code>GetBlockedClientPrivateData()</code> API.</p>
+<h2 id="aborting-the-blocking-of-a-client">Aborting the blocking of a client</h2>
+<p>One problem that sometimes arises is that we need to allocate resources
+in order to implement the non blocking command. So we block the client,
+then, for example, try to create a thread, but the thread creation function
+returns an error. What to do in such a condition in order to recover? We
+don't want to take the client blocked, nor we want to call <code>UnblockClient()</code>
+because this will trigger the reply callback to be called.</p>
+<p>In this case the best thing to do is to use the following function:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> ValkeyModule_AbortBlock</span><span>(ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">bc</span><span>);</span></span></code></pre>
+<p>Practically this is how to use it:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> Example_ValkeyCommand</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>, ValkeyModuleString </span><span style="color: #FF7B72;">**</span><span style="color: #FFA657;">argv</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">                         int</span><span style="color: #FFA657;"> argc</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span>    ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span>bc </span><span style="color: #FF7B72;">=</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        ValkeyModule_BlockClient</span><span>(ctx,reply_func,timeout_func,</span><span style="color: #79C0FF;">NULL</span><span>,</span><span style="color: #79C0FF;">0</span><span>);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    pthread_t</span><span> tid;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    if</span><span> (</span><span style="color: #D2A8FF;">pthread_create</span><span>(</span><span style="color: #FF7B72;">&amp;</span><span>tid,</span><span style="color: #79C0FF;">NULL</span><span>,threadmain,bc)</span><span style="color: #FF7B72;"> !=</span><span style="color: #79C0FF;"> 0</span><span>) {</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        ValkeyModule_AbortBlock</span><span>(bc);</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        ValkeyModule_ReplyWithError</span><span>(ctx,</span><span style="color: #A5D6FF;">&quot;Sorry can&#39;t create a thread&quot;</span><span>);</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    return</span><span> VALKEYMODULE_OK;</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>The client will be unblocked but the reply callback will not be called.</p>
+<h2 id="implementing-the-command-reply-and-timeout-callback-using-a-single-function">Implementing the command, reply and timeout callback using a single function</h2>
+<p>The following functions can be used in order to implement the reply and
+callback with the same function that implements the primary command
+function:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> ValkeyModule_IsBlockedReplyRequest</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>);</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> ValkeyModule_IsBlockedTimeoutRequest</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>);</span></span></code></pre>
+<p>So I could rewrite the example command without using a separated
+reply and timeout callback:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF7B72;">int</span><span style="color: #D2A8FF;"> Example_ValkeyCommand</span><span>(ValkeyModuleCtx </span><span style="color: #FF7B72;">*</span><span style="color: #FFA657;">ctx</span><span>, ValkeyModuleString </span><span style="color: #FF7B72;">**</span><span style="color: #FFA657;">argv</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">                         int</span><span style="color: #FFA657;"> argc</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    if</span><span> (</span><span style="color: #D2A8FF;">ValkeyModule_IsBlockedReplyRequest</span><span>(ctx)) {</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">        long *</span><span>mynumber </span><span style="color: #FF7B72;">=</span><span style="color: #D2A8FF;"> ValkeyModule_GetBlockedClientPrivateData</span><span>(ctx);</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">        return</span><span style="color: #D2A8FF;"> ValkeyModule_ReplyWithLongLong</span><span>(ctx,mynumber);</span></span>
+<span class="giallo-l"><span>    }</span><span style="color: #FF7B72;"> else if</span><span> (ValkeyModule_IsBlockedTimeoutRequest) {</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">        return</span><span style="color: #D2A8FF;"> ValkeyModule_ReplyWithNull</span><span>(ctx);</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    ValkeyModuleBlockedClient </span><span style="color: #FF7B72;">*</span><span>bc </span><span style="color: #FF7B72;">=</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        ValkeyModule_BlockClient</span><span>(ctx,reply_func,timeout_func,</span><span style="color: #79C0FF;">NULL</span><span>,</span><span style="color: #79C0FF;">0</span><span>);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    pthread_t</span><span> tid;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    if</span><span> (</span><span style="color: #D2A8FF;">pthread_create</span><span>(</span><span style="color: #FF7B72;">&amp;</span><span>tid,</span><span style="color: #79C0FF;">NULL</span><span>,threadmain,bc)</span><span style="color: #FF7B72;"> !=</span><span style="color: #79C0FF;"> 0</span><span>) {</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        ValkeyModule_AbortBlock</span><span>(bc);</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        ValkeyModule_ReplyWithError</span><span>(ctx,</span><span style="color: #A5D6FF;">&quot;Sorry can&#39;t create a thread&quot;</span><span>);</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    return</span><span> VALKEYMODULE_OK;</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Functionally is the same but there are people that will prefer the less
+verbose implementation that concentrates most of the command logic in a
+single function.</p>
+<h2 id="working-on-copies-of-data-inside-a-thread">Working on copies of data inside a thread</h2>
+<p>An interesting pattern in order to work with threads implementing the
+slow part of a command, is to work with a copy of the data, so that
+while some operation is performed in a key, the user continues to see
+the old version. However when the thread terminated its work, the
+representations are swapped and the new, processed version, is used.</p>
+<p>An example of this approach is the
+<a rel="external" href="https://github.com/antirez/neural-redis">Neural Redis module</a>
+where neural networks are trained in different threads while the
+user can still execute and inspect their older versions.</p>
+<h2 id="thread-safe-contexts">Thread safe contexts</h2>
+<p>See <a href="/topics/modules-api-ref#section-thread-safe-contexts">Thread Safe Contexts</a> in
+the Modules API reference for how Valkey modules APIs can be called in a safe
+way from threads.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/modules-blocking-ops.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey &middot; Topics</title>
+    <meta name="title" property="og:title" content="Valkey: Topics">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+<div class="styled-title">
+    <h1>Documentation by Topic</h1>
+</div>
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+            <div class="main-inner">
+                
+
+
+
+
+
+
+<p>The Valkey documentation is managed in markdown files in the
+<a rel="external" href="https://github.com/valkey-io/valkey-doc">valkey-doc repository</a>.
+It's released under the
+<a rel="external" href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International license</a>.</p>
+<h1 id="valkey-documentation">Valkey Documentation</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<ul>
+<li>What is Valkey? See <a href="/topics/introduction">Introduction</a>.</li>
+<li><a href="/topics/quickstart">Quick start</a>: Get started with Valkey.</li>
+<li><a href="/topics/valkey-bundle">Valkey Bundle</a>: Get started with Valkey Bundle.</li>
+<li><a href="/topics/faq">FAQ</a>: Frequently asked questions.</li>
+</ul>
+<h2 id="2-developer-guide">2. Developer Guide</h2>
+<h3 id="core-concepts">Core Concepts</h3>
+<ul>
+<li><a href="/topics/data-types">Data types</a>: Keys are strings, but values can be of many different data types.</li>
+<li><a href="/commands/">The full list of commands</a>, with documentation for each of them.</li>
+<li><a href="/topics/pipelining">Pipelining</a>: How to send multiple commands at once, saving on round trip time.</li>
+<li><a href="/topics/transactions">Transactions</a>: Valkey's approach to atomic transactions.</li>
+<li><a href="/commands/expire">Expires</a>: How to set a Time To Live (TTL) on key so that it will be automatically removed from the server when it expires.</li>
+<li><a href="/topics/pubsub">Pub/Sub</a>: Using Valkey as a message broker using the Publish/Subscribe messaging system.</li>
+<li><a href="/topics/notifications">Keyspace notifications</a>: Get notifications of keyspace events via Pub/Sub.</li>
+<li><a href="/topics/keyspace">Keyspace management</a>: How to alter, query, and navigate the keyspace.</li>
+</ul>
+<h3 id="application-patterns-tutorials">Application Patterns &amp; Tutorials</h3>
+<ul>
+<li><a href="/topics/lru-cache">Valkey as an LRU cache</a>: How to configure Valkey as a cache with a fixed amount of memory and automatic eviction of keys.</li>
+<li><a href="/topics/client-side-caching">Client side caching</a>: How a client can be notified by the server when a key has changed.</li>
+<li><a href="/topics/distlock">Distributed locks</a>: Implementing a distributed lock manager.</li>
+<li><a href="/topics/indexing">Secondary indexes</a>: How to simulate secondary indexes, composed indexes and traverse graphs using various data structures.</li>
+<li><a href="/topics/twitter-clone">Writing a simple Twitter clone with PHP and Valkey</a></li>
+</ul>
+<h2 id="3-extending-valkey">3. Extending Valkey</h2>
+<h3 id="server-side-scripting-in-valkey">Server-side scripting in Valkey</h3>
+<ul>
+<li><a href="/topics/programmability">Programmability overview</a>: An overview of programmability in Valkey.</li>
+<li><a href="/topics/eval-intro">Introduction to Eval Scripts</a>: An introduction about using cached scripts.</li>
+<li><a href="/topics/functions-intro">Introduction to Valkey Functions</a>: An introduction about using functions.</li>
+<li><a href="/topics/lua-api">Valkey Lua API</a>: The embedded <a rel="external" href="https://lua.org">Lua 5.1</a> interpreter runtime environment and APIs.</li>
+<li><a href="/topics/ldb">Debugging Lua scripts</a>: An overview of the native Valkey Lua debugger for cached scripts.</li>
+</ul>
+<h3 id="valkey-modules-api">Valkey modules API</h3>
+<ul>
+<li><a href="/topics/modules-intro">Introduction to Valkey modules</a>: Extend Valkey using dynamically linked modules.</li>
+<li><a href="/topics/modules-native-types">Implementing native data types</a>: Modules scan implement new data types (data structures and more) that look like built-in data types. This documentation covers the API to do so.</li>
+<li><a href="/topics/modules-blocking-ops">Blocking operations</a>: Write commands that can block the client (without blocking Valkey) and can execute tasks in other threads.</li>
+<li><a href="/topics/modules-api-ref">Modules API reference</a>: Documentation of all module API functions. Low level details about API usage.</li>
+</ul>
+<h2 id="4-administration">4. Administration</h2>
+<h3 id="core-management">Core Management</h3>
+<ul>
+<li><a href="/topics/license">License</a>: License information for Valkey.</li>
+<li><a href="/topics/installation">Installation</a>: How to install and configure Valkey. This targets people without prior experience with Valkey.</li>
+<li><a rel="external" href="https://valkey.io/download/releases/">Release Downloads</a>: Lists links to download all current and previous releases.</li>
+<li><a href="/topics/cli">valkey-cli</a>: The Valkey command line interface, used for administration, troubleshooting and experimenting with Valkey.</li>
+<li><a href="/topics/server">valkey-server</a>: How to run the Valkey server.</li>
+<li><a href="/topics/valkey.conf">Configuration</a>: How to configure Valkey.</li>
+<li><a href="/topics/persistence">Persistence</a>: Options for configuring durability using disk backups.</li>
+<li><a href="/topics/signals">Signals Handling</a>: How Valkey handles signals.</li>
+<li><a href="/topics/clients">Connections Handling</a>: How Valkey handles clients connections.</li>
+<li><a href="/topics/migration">Migration</a>: How to migrate from Redis to Valkey and check Redis compatibility.</li>
+<li><a href="/topics/releases">Releases and Versioning</a>: Valkey's development cycle and version numbering.</li>
+<li><a href="/topics/admin">Administration</a>: Various administration topics.</li>
+</ul>
+<h3 id="deployment-topology">Deployment Topology</h3>
+<ul>
+<li><a href="/topics/replication">Replication</a>: What you need to know to set up primary-replica replication.</li>
+<li><a href="/topics/sentinel">Sentinel</a>: Valkey Sentinel is one of the official high availability deployment modes.</li>
+<li><a href="/topics/sentinel-clients">Sentinel client spec</a>: How to build clients for Valkey Sentinel.</li>
+<li><a href="/topics/cluster-tutorial">Cluster tutorial</a>: A gentle introduction to Valkey Cluster, a deployment mode for horizontal scaling and high availability.</li>
+<li><a href="/topics/cluster-spec">Cluster specification</a>: The more formal description of the behavior and algorithms used in Valkey Cluster.</li>
+<li><a href="/topics/atomic-slot-migration">Atomic slot migration</a>: An overview of atomic slot migration in Valkey Cluster.</li>
+</ul>
+<h3 id="security">Security</h3>
+<ul>
+<li><a href="/topics/security">Security</a>: An overview of Valkey's security.</li>
+<li><a href="/topics/acl">Access Control Lists</a>: ACLs make it possible to allow users to run only selected commands and access only specific key patterns.</li>
+<li><a href="/topics/tls">TLS</a>: How to use TLS for communication.</li>
+</ul>
+<h3 id="platform-specific">Platform Specific</h3>
+<ul>
+<li><a href="/topics/ARM">ARM and Raspberry Pi</a>: ARM and the Raspberry Pi are supported platforms. This page contains general information and benchmarks.</li>
+<li><a href="/topics/RDMA">RDMA</a>: An overview of RDMA support.</li>
+</ul>
+<h2 id="5-performance-troubleshooting">5. Performance &amp; Troubleshooting</h2>
+<ul>
+<li><a href="/topics/problems">Troubleshooting</a>: Problems? Bugs? High latency? Other issues? Use our problems troubleshooting page as a starting point to find more information.</li>
+<li><a href="/topics/memory-optimization">Memory optimization</a>: Understand how Valkey uses RAM.</li>
+<li><a href="/topics/latency-monitor">Latency monitoring</a>: Integrated latency monitoring and reporting help tuning for low latency.</li>
+<li><a href="/topics/benchmark">valkey-benchmark</a>: The benchmarking tool shipped with Valkey.</li>
+<li><a href="/topics/performance-on-cpu">On-CPU profiling and tracing</a>: How to find on-CPU resource bottlenecks.</li>
+<li><a href="/topics/debugging">Debugging</a>: How to debug Valkey server processes.</li>
+<li><a href="/topics/latency">Diagnosing latency issues</a>: How to diagnose latency problems with Valkey.</li>
+<li><a href="/topics/mass-insertion">Mass insertion of data</a>: How to add a big amount of data to a Valkey instance in a short time.</li>
+</ul>
+<h2 id="6-low-level-internals">6. Low-Level Internals</h2>
+<ul>
+<li><a href="/topics/protocol">Protocol specification</a>: The client-server protocol, for client authors.</li>
+<li><a href="/topics/key-specs">Command key specifications</a>: How to extract the names of keys accessed by every command.</li>
+<li><a href="/topics/command-tips">Command tips</a>: Command tips communicate non-trivial execution modes and post-processing information about commands.</li>
+<li><a href="/topics/command-arguments">Command arguments</a>: An overview of command arguments as returned by the <code>COMMAND DOCS</code> command.</li>
+</ul>
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2>Alphabetical Index</h2>
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+    
+    
+
+    
+        
+        
+        
+
+        
+    
+   
+
+
+    
+     
+    
+    <ul class="topic-list">
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;acl&#x2F;">
+                    ACL
+                    <span class="topic-description">Valkey Access Control List</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;ARM&#x2F;">
+                    ARM support
+                    <span class="topic-description">Exploring Valkey on the ARM CPU Architecture </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;admin&#x2F;">
+                    Administration
+                    <span class="topic-description">Advice for configuring and managing Valkey in production</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;atomic-slot-migration&#x2F;">
+                    Atomic slot migration
+                    <span class="topic-description">Overview of atomic slot migration</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;benchmark&#x2F;">
+                    Benchmarking tool
+                    <span class="topic-description">Using the valkey-benchmark utility on a Valkey server </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;bitfields&#x2F;">
+                    Bitfields
+                    <span class="topic-description">Introduction to Bitfields </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;bitmaps&#x2F;">
+                    Bitmaps
+                    <span class="topic-description">Introduction to Bitmaps </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;bloomfilters&#x2F;">
+                    Bloom Filters
+                    <span class="topic-description">Introduction to Bloom Filters </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;mass-insertion&#x2F;">
+                    Bulk loading
+                    <span class="topic-description">Writing data in bulk using the RESP protocol </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;cli&#x2F;">
+                    CLI
+                    <span class="topic-description">Valkey command line interface </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;performance-on-cpu&#x2F;">
+                    CPU profiling
+                    <span class="topic-description">Performance engineering guide for on-CPU profiling and tracing </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;clients&#x2F;">
+                    Client handling
+                    <span class="topic-description">How the Valkey server manages client connections </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;client-side-caching&#x2F;">
+                    Client-side caching
+                    <span class="topic-description">Server-assisted, client-side caching in Valkey </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;cluster-spec&#x2F;">
+                    Cluster specification
+                    <span class="topic-description">Detailed specification for Valkey cluster </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;cluster-tutorial&#x2F;">
+                    Cluster tutorial
+                    <span class="topic-description">Horizontal scaling with Valkey Cluster</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;command-arguments&#x2F;">
+                    Command arguments
+                    <span class="topic-description">How Valkey commands expose their documentation programmatically</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;key-specs&#x2F;">
+                    Command key specifications
+                    <span class="topic-description">What are command key specification and how to use them in your client</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;command-tips&#x2F;">
+                    Command tips
+                    <span class="topic-description">Get additional information about a command</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;valkey.conf&#x2F;">
+                    Configuration
+                    <span class="topic-description">Overview of valkey.conf, the Valkey configuration file </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;data-types&#x2F;">
+                    Data types
+                    <span class="topic-description">Overview of data types supported by Valkey</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;debugging&#x2F;">
+                    Debugging
+                    <span class="topic-description">A guide to debugging Valkey server processes </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;ldb&#x2F;">
+                    Debugging Lua scripts
+                    <span class="topic-description">How to use the built-in Lua debugger</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;latency&#x2F;">
+                    Diagnosing latency issues
+                    <span class="topic-description">Finding the causes of slow responses</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;distlock&#x2F;">
+                    Distributed Locks
+                    <span class="topic-description">A distributed lock pattern with Valkey </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;faq&#x2F;">
+                    FAQ
+                    <span class="topic-description">Commonly asked questions when getting started with Valkey </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;functions-intro&#x2F;">
+                    Functions
+                    <span class="topic-description">Scripting with functions stored on the server </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;geospatial&#x2F;">
+                    Geospatial
+                    <span class="topic-description">Introduction to the Valkey Geospatial data type </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;hashes&#x2F;">
+                    Hashes
+                    <span class="topic-description">Introduction to Hashes </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;sentinel&#x2F;">
+                    High availability with Valkey Sentinel
+                    <span class="topic-description">High availability for non-clustered Valkey</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;history&#x2F;">
+                    History
+                    <span class="topic-description">How the Valkey project started</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;hyperloglogs&#x2F;">
+                    HyperLogLog
+                    <span class="topic-description">HyperLogLog is a probabilistic data structure that estimates the cardinality of a set. </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;installation&#x2F;">
+                    Installation
+                    <span class="topic-description">Install Valkey on Linux, macOS, and Windows </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;introduction&#x2F;">
+                    Introduction
+                    <span class="topic-description">Learn about the Valkey open source project</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;lru-cache&#x2F;">
+                    Key eviction
+                    <span class="topic-description">Overview of Valkey key eviction policies (LRU, LFU, etc.)</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;keyspace&#x2F;">
+                    Keyspace
+                    <span class="topic-description">Managing keys in Valkey: Key expiration, scanning, altering and querying the key space </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;notifications&#x2F;">
+                    Keyspace notifications
+                    <span class="topic-description">Monitor changes to Valkey keys and values in real time </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;ldap&#x2F;">
+                    LDAP Authentication
+                    <span class="topic-description">Introduction to LDAP &#x2F; Active Directory Authentication </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;latency-monitor&#x2F;">
+                    Latency monitoring
+                    <span class="topic-description">Discovering slow server events in Valkey</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;license&#x2F;">
+                    License
+                    <span class="topic-description">License and trademark information </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;lists&#x2F;">
+                    Lists
+                    <span class="topic-description">Introduction to Lists </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;lua-api&#x2F;">
+                    Lua API reference
+                    <span class="topic-description">Executing Lua in Valkey </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;memory-optimization&#x2F;">
+                    Memory optimization
+                    <span class="topic-description">Strategies for optimizing memory usage in Valkey</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;migration&#x2F;">
+                    Migration from Redis to Valkey
+                    <span class="topic-description">How to migrate from Redis to Valkey and check Redis compatibility</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;modules-native-types&#x2F;">
+                    Modules API for native types
+                    <span class="topic-description">How to use native types in a Valkey module </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;modules-api-ref&#x2F;">
+                    Modules API reference
+                    <span class="topic-description">Reference for the Valkey Modules API </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;modules-intro&#x2F;">
+                    Modules Introduction
+                    <span class="topic-description">Introduction to writing Valkey modules </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;modules-blocking-ops&#x2F;">
+                    Modules and blocking commands
+                    <span class="topic-description">How to implement blocking commands in a Valkey module </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;twitter-clone&#x2F;">
+                    Patterns example
+                    <span class="topic-description">Learn several Valkey patterns by building a Twitter clone</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;persistence&#x2F;">
+                    Persistence
+                    <span class="topic-description">How Valkey writes data to disk</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;pipelining&#x2F;">
+                    Pipelining
+                    <span class="topic-description">How to optimize round-trip times by batching Valkey commands</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;programmability&#x2F;">
+                    Programmability
+                    <span class="topic-description">Extending Valkey with Lua and Valkey Functions </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;pubsub&#x2F;">
+                    Pub&#x2F;Sub
+                    <span class="topic-description">How to use pub&#x2F;sub channels in Valkey</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;quickstart&#x2F;">
+                    Quick start guide
+                    <span class="topic-description">Understand how to use basic Valkey data types</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;RDMA&#x2F;">
+                    RDMA experimental support
+                    <span class="topic-description">Valkey Over RDMA experimental support</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;releases&#x2F;">
+                    Releases and versioning schema
+                    <span class="topic-description">How new versions of Valkey are released and supported</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;replication&#x2F;">
+                    Replication
+                    <span class="topic-description">How Valkey supports high availability and failover with replication</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;eval-intro&#x2F;">
+                    Scripting with Lua
+                    <span class="topic-description">Executing Lua in Valkey </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;indexing&#x2F;">
+                    Secondary indexing
+                    <span class="topic-description">Building secondary indexes in Valkey </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;security&#x2F;">
+                    Security
+                    <span class="topic-description">Security model and features in Valkey</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;sentinel-clients&#x2F;">
+                    Sentinel client spec
+                    <span class="topic-description">How to build clients for Valkey Sentinel</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;protocol&#x2F;">
+                    Serialization protocol specification
+                    <span class="topic-description">Valkey&#x27;s serialization protocol (RESP) is the wire protocol that clients implement</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;sets&#x2F;">
+                    Sets
+                    <span class="topic-description">Introduction to Sets </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;signals&#x2F;">
+                    Signal handling
+                    <span class="topic-description">How Valkey handles common Unix signals</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;sorted-sets&#x2F;">
+                    Sorted Sets
+                    <span class="topic-description">Introduction to Sorted Sets </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;streams-intro&#x2F;">
+                    Streams
+                    <span class="topic-description">Introduction to Streams </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;strings&#x2F;">
+                    Strings
+                    <span class="topic-description">Introduction to Strings </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;tls&#x2F;">
+                    TLS
+                    <span class="topic-description">Valkey TLS support</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;server&#x2F;">
+                    The Valkey server
+                    <span class="topic-description">Manual for valkey-server, the Valkey server program </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;transactions&#x2F;">
+                    Transactions
+                    <span class="topic-description">How transactions work in Valkey</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;problems&#x2F;">
+                    Troubleshooting Valkey
+                    <span class="topic-description">Problems with Valkey? Start here.</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;valkey-bundle&#x2F;">
+                    Valkey Bundle Getting Started Guide
+                    <span class="topic-description">How to get started with Valkey Bundle</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;valkey-json&#x2F;">
+                    Valkey JSON
+                    <span class="topic-description">Introduction to Valkey JSON </span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;search-expressions&#x2F;">
+                    Valkey Search - Aggregation Expressions
+                    <span class="topic-description">Valkey Search Module Aggregation Expression Language</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;search-data-formats&#x2F;">
+                    Valkey Search - Data Formats
+                    <span class="topic-description">Valkey Search Module Formats for Input Field Data</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;search-monitoring&#x2F;">
+                    Valkey Search - Metrics and configurations
+                    <span class="topic-description">Valkey Search Module INFO SEARCH</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;search&#x2F;">
+                    Valkey Search - Overview
+                    <span class="topic-description">Valkey Search Module Overview</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="&#x2F;topics&#x2F;search-query&#x2F;">
+                    Valkey Search - Queries
+                    <span class="topic-description">Valkey Search Module Query Language Syntax, Semantics and Examples</span>
+                </a>
+            </li>
+        
+    </ul>
+
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

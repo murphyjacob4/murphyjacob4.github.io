@@ -1,0 +1,559 @@
+
+
+
+
+
+
+
+
+    
+    
+    
+        
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Command &middot; SORT</title>
+    <meta name="title" property="og:title" content="Valkey Command: SORT">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+    
+        <div class="styled-title">
+            <h1 class="page-title">SORT </h1>
+        </div>
+    
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/commands/" class="breadcrumb-link">Commands</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            SORT
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <dl>
+        <dt>Usage:</dt>
+        <dd>
+            <code>
+             SORT
+            
+            
+          key  
+        
+        [ BY by-pattern  ]
+        
+        [ LIMIT  
+          offset  
+        
+          count  
+         ]
+        
+        [ GET get-pattern  ]
+        
+            [ [ GET get-pattern  ] ... ]
+        
+        [   
+         ASC    |
+        
+         DESC   
+         ]
+        
+        [ ALPHA   ]
+        
+        [ STORE destination  ]
+        
+            
+            </code>
+        </dd>
+    </dl>
+    
+    <dl>
+        <dt>Complexity:</dt>
+        <dd>O(N+M*log(M)) where N is the number of elements in the list or set to sort, and M the number of returned elements. When the elements are not sorted, complexity is O(N).</dd>
+    <dl>
+    
+    
+    
+    <dl>
+        <dt>Since:</dt>
+        <dd>1.0.0</dd>
+    <dl>
+    
+    
+    <dl>
+        <dt>ACL Categories:</dt>
+        <dd>
+            
+                @dangerous, 
+            
+                @list, 
+            
+                @set, 
+            
+                @slow, 
+            
+                @sortedset, 
+            
+                @write
+            
+        </dd>
+    <dl>
+    
+    </dl>
+
+
+
+
+
+
+<p>Returns or stores the elements contained in the <a href="/topics/data-types#lists">list</a>, <a href="/topics/data-types#set">set</a> or
+<a href="/topics/data-types#sorted-sets">sorted set</a> at <code>key</code>.</p>
+<p>There is also the <a href="/commands/sort_ro"><code>SORT_RO</code></a> read-only variant of this command.</p>
+<p>By default, sorting is numeric and elements are compared by their value
+interpreted as double precision floating point number.
+This is <code>SORT</code> in its simplest form:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist</span></span></code></pre>
+<p>Assuming <code>mylist</code> is a list of numbers, this command will return the same list
+with the elements sorted from small to large.
+In order to sort the numbers from large to small, use the <code>DESC</code> modifier:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist DESC</span></span></code></pre>
+<p>When <code>mylist</code> contains string values and you want to sort them
+lexicographically, use the <code>ALPHA</code> modifier:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist ALPHA</span></span></code></pre>
+<p>Valkey is UTF-8 aware, assuming you correctly set the <code>LC_COLLATE</code> environment
+variable or the <code>locale-collate</code> config.</p>
+<p>The number of returned elements can be limited using the <code>LIMIT</code> modifier.
+This modifier takes the <code>offset</code> argument, specifying the number of elements to
+skip and the <code>count</code> argument, specifying the number of elements to return from
+starting at <code>offset</code>.
+The following example will return 10 elements of the sorted version of <code>mylist</code>,
+starting at element 0 (<code>offset</code> is zero-based):</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist LIMIT 0 10</span></span></code></pre>
+<p>Almost all modifiers can be used together.
+The following example will return the first 5 elements, lexicographically sorted
+in descending order:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist LIMIT 0 5 ALPHA DESC</span></span></code></pre><h2 id="sorting-by-external-keys">Sorting by external keys</h2>
+<p>Sometimes you want to sort elements using external keys as weights to compare
+instead of comparing the actual elements in the list, set or sorted set.
+Let's say the list <code>mylist</code> contains the elements <code>1</code>, <code>2</code> and <code>3</code> representing
+unique IDs of objects stored in <code>object_1</code>, <code>object_2</code> and <code>object_3</code>.
+When these objects have associated weights stored in <code>weight_1</code>, <code>weight_2</code> and
+<code>weight_3</code>, <code>SORT</code> can be instructed to use these weights to sort <code>mylist</code> with
+the following statement:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist BY weight_*</span></span></code></pre>
+<p>The <code>BY</code> option takes a pattern (equal to <code>weight_*</code> in this example) that is
+used to generate the keys that are used for sorting.
+These key names are obtained substituting the first occurrence of <code>*</code> with the
+actual value of the element in the list (<code>1</code>, <code>2</code> and <code>3</code> in this example).</p>
+<h2 id="skip-sorting-the-elements">Skip sorting the elements</h2>
+<p>The <code>BY</code> option can also take a non-existent key, which causes <code>SORT</code> to skip
+the sorting operation.
+This is useful if you want to retrieve external keys (see the <code>GET</code> option
+below) without the overhead of sorting.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist BY nosort</span></span></code></pre><h2 id="retrieving-external-keys">Retrieving external keys</h2>
+<p>Our previous example returns just the sorted IDs.
+In some cases, it is more useful to get the actual objects instead of their IDs
+(<code>object_1</code>, <code>object_2</code> and <code>object_3</code>).
+Retrieving external keys based on the elements in a list, set or sorted set can
+be done with the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist BY weight_* GET object_*</span></span></code></pre>
+<p>The <code>GET</code> option can be used multiple times in order to get more keys for every
+element of the original list, set or sorted set.</p>
+<p>It is also possible to <code>GET</code> the element itself using the special pattern <code>#</code>:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist BY weight_* GET object_* GET #</span></span></code></pre><h2 id="restrictions-for-using-external-keys">Restrictions for using external keys</h2>
+<p>Before 8.0, when enabling Valkey <code>cluster-mode</code> there is no way to guarantee the existence of the external keys on the node which the command is processed on. In this case, any use of <code>GET</code> or <code>BY</code> which reference external key pattern will cause the command to fail with an error.</p>
+<p>Starting from 8.0, pattern with hash tag can be mapped to a slot, and so in Valkey <code>cluster-mode</code>, the use of <code>BY</code> or <code>GET</code> is allowed when pattern contains hash tag and implies a specific slot which the key is also in, which means any key matching this pattern must be in the same slot as the key, and therefore in the same node. For example, in cluster mode, <code>{mylist}weight_*</code> is acceptable as a pattern when sorting <code>mylist</code>, while pattern <code>{abc}weight_*</code> will be denied, causing the command to fail with an error.</p>
+<p>To use pattern with hash tag, see <a href="/topics/cluster-spec#hash-tags">Hash tags</a> for more information.</p>
+<p>Any use of <code>GET</code> or <code>BY</code> which reference external key pattern will only be allowed in case the current user running the command has full key read permissions.
+Full key read permissions can be set for the user by, for example, specifying <code>'%R~*'</code> or <code>'~*</code> with the relevant command access rules.
+You can check the <a href="/commands/acl-setuser"><code>ACL SETUSER</code></a> command manual for more information on setting ACL access rules.
+If full key read permissions aren't set, the command will fail with an error.</p>
+<h2 id="storing-the-result-of-a-sort-operation">Storing the result of a SORT operation</h2>
+<p>By default, <code>SORT</code> returns the sorted elements to the client.
+With the <code>STORE</code> option, the result will be stored as a list at the specified
+key instead of being returned to the client.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist BY weight_* STORE resultkey</span></span></code></pre>
+<p>An interesting pattern using <code>SORT ... STORE</code> consists in associating an
+<code>EXPIRE</code> timeout to the resulting key so that in applications where the result
+of a <code>SORT</code> operation can be cached for some time.
+Other clients will use the cached list instead of calling <code>SORT</code> for every
+request.
+When the key will timeout, an updated version of the cache can be created by
+calling <code>SORT ... STORE</code> again.</p>
+<p>Note that for correctly implementing this pattern it is important to avoid
+multiple clients rebuilding the cache at the same time.
+Some kind of locking is needed here (for instance using <a href="/commands/setnx"><code>SETNX</code></a>).</p>
+<h2 id="using-hashes-in-by-and-get">Using hashes in <code>BY</code> and <code>GET</code></h2>
+<p>It is possible to use <code>BY</code> and <code>GET</code> options against hash fields with the
+following syntax:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SORT mylist BY weight_*-&gt;fieldname GET object_*-&gt;fieldname</span></span></code></pre>
+<p>The string <code>-&gt;</code> is used to separate the key name from the hash field name.
+The key is substituted as documented above, and the hash stored at the resulting
+key is accessed to retrieve the specified hash field.</p>
+
+
+
+<h3>RESP2/RESP3 Reply</h3>
+            <p><a href="/topics/protocol#arrays">Array reply</a>: without passing the <em>STORE</em> option, the command returns a list of sorted elements.</p>
+<p><a href="/topics/protocol#integers">Integer reply</a>: when the <em>STORE</em> option is specified, the command returns the number of sorted elements in the destination list.</p>
+
+        
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+
+
+
+
+<div class="sb-search-container">
+    <input type="search" id="sidebar-search-box" placeholder="Search all commands..." autocomplete="off" aria-label="Search all commands" />
+</div>
+
+<!-- No results message for sidebar search -->
+<div id="sidebar-no-results-message" class="no-results-message" hidden>
+    <span>&lt;/&gt;</span>
+    <h4>No commands found</h4>
+    <p>Check your spelling or try different keywords</p>
+</div>
+
+<h2 id="command-list-title">Similar commands</h2>
+<ul id="command-list" class="sb-command-list"></ul>
+<div class="sb-command-list-footer">
+    <button type="button" id="sidebar-show-more" class="command-show-more" hidden>Show more</button>
+    
+    <p id="sidebar-command-status" class="command-list-status" aria-live="polite"></p>
+    <p><a href="/commands/">Browse the full command reference</a></p>
+</div>
+
+<script src="/assets/js/command-reference.js"></script>
+<script>
+(() => {
+    const CR = window.ValkeyCommandReference;
+    const PAGE_SIZE = 10;
+    const CURRENT_SLUG = "sort";
+    const groups = {
+    "bitmap": { name: "Bitmap", description: "Operations on the Bitmap data type" },
+    "bloom": { name: "Bloom filter", description: "Operations on the Bloom filter data type" },
+    "search": { name: "Search", description: "Vector Similarity Search engine optimized for AI-driven workloads" },
+    "cluster": { name: "Cluster", description: "Valkey Cluster management" },
+    "connection": { name: "Connection", description: "Client connections management" },
+    "generic": { name: "Generic", description: "Generic commands" },
+    "geo": { name: "Geospatial indices", description: "Operations on the Geospatial Index data type" },
+    "hash": { name: "Hash", description: "Operations on the Hash data type" },
+    "hyperloglog": { name: "HyperLogLog", description: "Operations on the HyperLogLog data type" },
+    "json": { name: "JSON", description: "Operations on the JSON data type" },
+    "list": { name: "List", description: "Operations on the List data type" },
+    "pubsub": { name: "Pub/Sub", description: "Pub/Sub commands" },
+    "scripting": { name: "Scripting and Functions", description: "Valkey server-side scripting and functions" },
+    "sentinel": { name: "Sentinel", description: "Valkey Sentinel commands" },
+    "server": { name: "Server", description: "Server management commands" },
+    "set": { name: "Set", description: "Operations on the Set data type" },
+    "sorted-set": { name: "Sorted Set", description: "Operations on the Sorted Set data type" },
+    "stream": { name: "Stream", description: "Operations on the Stream data type" },
+    "string": { name: "String", description: "Operations on the String data type" },
+    "transactions": { name: "Transactions", description: "Valkey Transaction management" }
+};
+    const groupNames = Object.fromEntries(Object.entries(groups).map(([key, g]) => [key, g.name]));
+
+    const listEl = document.getElementById("command-list");
+    const searchBox = document.getElementById("sidebar-search-box");
+    const title = document.getElementById("command-list-title");
+    const showMore = document.getElementById("sidebar-show-more");
+    const status = document.getElementById("sidebar-command-status");
+    const noResults = document.getElementById("sidebar-no-results-message");
+
+    let entries = [];
+    let current = null;
+    let similar = [];
+    const state = { query: "", shown: PAGE_SIZE };
+    const setStatus = CR.liveStatus(status);
+
+    // `typing` debounces the live status so screen readers aren't interrupted on every keystroke.
+    function render(typing) {
+        const query = CR.normalizeQuery(state.query);
+        const matches = query ? CR.search(entries, query) : similar;
+        const visible = matches.slice(0, state.shown);
+        CR.showEntries(listEl, entries, visible);
+        if (current) current.el.classList.add("is-current");
+
+        title.textContent = query ? `${matches.length} ${matches.length === 1 ? "result" : "results"}` : "Similar commands";
+        title.hidden = query !== "" && matches.length === 0;
+        noResults.hidden = matches.length !== 0;
+
+        const remaining = matches.length - visible.length;
+        CR.updateShowMore(showMore, remaining, PAGE_SIZE);
+        let message;
+        if (!matches.length) {
+            message = query ? "No commands found." : "";
+        } else if (!query && remaining <= 0) {
+            message = `Can't find it? Search above to look through all ${entries.length} commands.`;
+        } else {
+            message = `Showing ${visible.length} of ${matches.length}.`;
+        }
+        setStatus(message, !typing);
+    }
+
+    function init(html) {
+        listEl.innerHTML = html;
+        entries = Array.from(listEl.querySelectorAll(".command-list-item"), (el) => CR.parseEntry(el, groupNames));
+        current = entries.find((e) => e.slug === CURRENT_SLUG) || null;
+        similar = current
+            ? CR.mostSimilar(entries, current)
+            // Unknown command: fall back to the most popular ones.
+            : entries.filter((e) => e.rank !== Infinity).sort((a, b) => a.rank - b.rank);
+        render();
+    }
+
+    searchBox.addEventListener("input", () => {
+        state.query = searchBox.value;
+        state.shown = PAGE_SIZE;
+        render(true);
+    });
+    CR.bindSearchKeys(searchBox, listEl);
+    // No "/" shortcut here: on long doc pages it would override the browser's quick find.
+    showMore.addEventListener("click", () => {
+        state.shown += PAGE_SIZE;
+        render();
+    });
+
+    fetch("/command-list/")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(init)
+        .catch(() => {
+            title.hidden = true;
+            showMore.hidden = true;
+            status.textContent = "";
+            listEl.innerHTML = "<li>Could not load the command list.</li>";
+        });
+})();
+</script>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

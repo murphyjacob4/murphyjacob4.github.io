@@ -1,0 +1,488 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Valkey JSON</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Valkey JSON">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Valkey JSON</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Valkey JSON
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>In Valkey, the JSON data type and commands are implemented in the <a rel="external" href="https://github.com/valkey-io/valkey-json">valkey-json</a> module which is an official valkey module compatible with versions 8.0 and above. Users will need to load this module onto their valkey server in order to use this feature.</p>
+<p>Valkey JSON is a Valkey module written in C++ that provides native JSON (JavaScript Object Notation) support for Valkey. The implementation complies with <a rel="external" href="https://www.ietf.org/rfc/rfc7159.txt">RFC7159</a> and <a rel="external" href="https://www.ietf.org/rfc/rfc7159.txt">ECMA-404</a> JSON data interchange standards. Users can natively store, query, and modify JSON data structures using the JSONPath query language. The query expressions support advanced capabilities including wildcard selections, filter expressions, array slices, union operations, and recursive searches.</p>
+<h2 id="example-valkey-json-commands">Example Valkey JSON Commands</h2>
+<ul>
+<li><code>JSON.SET</code> sets JSON values at the path.</li>
+<li><code>JSON.GET</code> gets the serialized JSON at one or multiple paths.</li>
+<li><code>JSON.ARRINSERT</code> inserts one or more values into the array values at path before the index.</li>
+<li><code>JSON.ARRLEN</code> gets the length of the array at the path.</li>
+</ul>
+<p>See the <a href="/commands/#json">complete list of valkey-json commands</a>.</p>
+<h2 id="common-use-cases-for-valkey-json">Common use cases for Valkey JSON</h2>
+<p>Prior to the valkey-json module, storing JSON in Valkey typically involved serializing it into a string or use hash datatype. This approach made it difficult to work with nested data or perform partial updates. valkey-json addresses these limitations by enabling native JSON support.</p>
+<p>Valkey JSON provides an efficient way to store and manipulate structured data. Its key benefits include fast search and filtering capabilities. It also provides the ability to perform in-place updates to JSON data without needing to overwrite entire documents. These features allow you to efficiently query, modify, and manage complex data structures, making it an ideal choice for applications that require dynamic and flexible data storage.</p>
+<h2 id="json-properties">JSON Properties</h2>
+<ul>
+<li>
+<p>Max Document Size - valkey-json allows configuring a limit on the size of individual JSON keys to prevent potential out-of-memory issues from malicious or unbounded insertions (e.g., via <code>JSON.ARRINSERT</code>). By default, this value is 0, meaning there is no limit. You can set this limit using the <code>CONFIG SET json.max-document-size &lt;value&gt;</code> command. Use <code>JSON.DEBUG MEMORY &lt;key&gt;</code> or <code>MEMORY USAGE &lt;key&gt;</code> to inspect memory usage.</p>
+</li>
+<li>
+<p>Max Depth - The maximum nesting level for JSON objects and arrays. If a JSON object or array contains another object or array, it is considered nested. The default maximum allowed nesting depth is 128. Any attempt to exceed this limit will result in an error. You can adjust this limit using the following command: <code>CONFIG SET json.max-path-limit &lt;value&gt;</code> where value is the desired depth limit.</p>
+</li>
+</ul>
+<h2 id="performance">Performance</h2>
+<p>The performance of JSON operations in Valkey is primarily influenced by the complexity of the JSONPath evaluation and the size or depth of the JSON object. Most operations — including <code>JSON.GET</code>, <code>JSON.SET</code>, <code>JSON.DEL</code>, <code>JSON.NUMINCRBY</code>, <code>JSON.STRAPPEND</code> and <code>JSON.ARRAPPEND</code> — are typically O(1) when using direct paths but may increase to a complexity of O(N), where N is the number of paths matched. Simpler paths like <code>$.user.name</code> perform significantly faster than recursive or filtered queries such as <code>$..[?(@.active==true)]</code>.</p>
+<p>For optimal performance, it's recommended to minimize excessive nesting, avoid frequent mutations of deeply nested objects, and use path filters judiciously.</p>
+<h2 id="json-acl">JSON ACL</h2>
+<ul>
+<li>
+<p>Similar to the existing per-datatype categories (@string, @hash, etc.), a new category @json is added to simplify managing access to JSON commands and data. No other existing Valkey commands are members of the @json category. All JSON commands enforce any keyspace or command restrictions and permissions.</p>
+</li>
+<li>
+<p>There are 4 existing Valkey ACL categories which are updated to include new JSON commands: @read, @write, @fast, @slow. The following table indicates the mapping of JSON commands to the appropriate categories.</p>
+</li>
+</ul>
+<p>For each of these categories and a row for each command, if the cell contains a “y” then that command is added into that category.</p>
+<table><thead><tr><th style="text-align: left">JSON Command</th><th style="text-align: left">@json</th><th style="text-align: left">@read</th><th style="text-align: left">@write</th><th style="text-align: left">@fast</th><th style="text-align: left">@slow</th></tr></thead><tbody>
+<tr><td style="text-align: left">JSON.ARRAPPEND</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.ARRINDEX</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.ARRINSERT</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.ARRLEN</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.ARRPOP</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.ARRTRIM</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.CLEAR</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.DEBUG</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left"></td><td style="text-align: left">y</td></tr>
+<tr><td style="text-align: left">JSON.DEL</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.FORGET</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.GET</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.MGET</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.MSET</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td></tr>
+<tr><td style="text-align: left">JSON.NUMINCRBY</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.NUMMULTBY</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.OBJKEYS</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.OBJLEN</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.RESP</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.SET</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td></tr>
+<tr><td style="text-align: left">JSON.STRAPPEND</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.STRLEN</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.TOGGLE</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left">JSON.TYPE</td><td style="text-align: left">y</td><td style="text-align: left">y</td><td style="text-align: left"></td><td style="text-align: left">y</td><td style="text-align: left"></td></tr>
+</tbody></table>
+<h2 id="path-syntax">Path Syntax</h2>
+<p>Valkey JSON supports two kinds of path syntaxes:</p>
+<ul>
+<li><strong>Enhanced syntax</strong> – Follows the JSONPath syntax described by <a rel="external" href="https://goessner.net/articles/JsonPath/">Goessner</a>, as shown in the following table. We've reordered and modified the descriptions in the table for clarity.</li>
+<li><strong>Restricted syntax</strong> – Has limited query capabilities.</li>
+</ul>
+<p>If a query path starts with <code>$</code>, it uses the enhanced syntax. Otherwise, the restricted syntax is used. It is recommended that you use the enhanced syntax for new development.</p>
+<p><strong>Enhanced Syntax Symbols &amp; Expressions</strong></p>
+<table><thead><tr><th>Symbol/Expression</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>$</code></td><td>The root element.</td></tr>
+<tr><td><code>.</code> or <code>[]</code></td><td>Child operator.</td></tr>
+<tr><td><code>..</code></td><td>Recursive descent.</td></tr>
+<tr><td><code>*</code></td><td>Wildcard. All elements in an object or array.</td></tr>
+<tr><td><code>[]</code></td><td>Array subscript operator. Index is 0-based.</td></tr>
+<tr><td><code>[ , ]</code></td><td>Union operator.</td></tr>
+<tr><td><code>[start:end:step]</code></td><td>Array slice operator.</td></tr>
+<tr><td><code>?()</code></td><td>Applies a filter (script) expression to the current array or object.</td></tr>
+<tr><td><code>()</code></td><td>Filter expression.</td></tr>
+<tr><td><code>@</code></td><td>Used in filter expressions that refer to the current node being processed.</td></tr>
+<tr><td><code>==</code></td><td>Equal to, used in filter expressions.</td></tr>
+<tr><td><code>!=</code></td><td>Not equal to, used in filter expressions.</td></tr>
+<tr><td><code>&gt;</code></td><td>Greater than, used in filter expressions.</td></tr>
+<tr><td><code>&gt;=</code></td><td>Greater than or equal to, used in filter expressions.</td></tr>
+<tr><td><code>&lt;</code></td><td>Less than, used in filter expressions.</td></tr>
+<tr><td><code>&lt;=</code></td><td>Less than or equal to, used in filter expressions.</td></tr>
+<tr><td><code>&amp;&amp;</code></td><td>Logical AND, used to combine multiple filter expressions.</td></tr>
+<tr><td><code>||</code></td><td>Logical OR, used to combine multiple filter expressions.</td></tr>
+</tbody></table>
+<p><strong>Examples</strong> <br />
+The following examples are built on <a rel="external" href="https://goessner.net/articles/JsonPath/">Goessner's</a> example XML data, which we have modified by adding additional fields.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>{ &quot;store&quot;: {</span></span>
+<span class="giallo-l"><span>    &quot;book&quot;: [ </span></span>
+<span class="giallo-l"><span>      { &quot;category&quot;: &quot;reference&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;author&quot;: &quot;Nigel Rees&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;title&quot;: &quot;Sayings of the Century&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;price&quot;: 8.95,</span></span>
+<span class="giallo-l"><span>        &quot;in-stock&quot;: true,</span></span>
+<span class="giallo-l"><span>        &quot;sold&quot;: true</span></span>
+<span class="giallo-l"><span>      },</span></span>
+<span class="giallo-l"><span>      { &quot;category&quot;: &quot;fiction&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;author&quot;: &quot;Evelyn Waugh&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;title&quot;: &quot;Sword of Honour&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;price&quot;: 12.99,</span></span>
+<span class="giallo-l"><span>        &quot;in-stock&quot;: false,</span></span>
+<span class="giallo-l"><span>        &quot;sold&quot;: true</span></span>
+<span class="giallo-l"><span>      },</span></span>
+<span class="giallo-l"><span>      { &quot;category&quot;: &quot;fiction&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;author&quot;: &quot;Herman Melville&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;title&quot;: &quot;Moby Dick&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;isbn&quot;: &quot;0-553-21311-3&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;price&quot;: 8.99,</span></span>
+<span class="giallo-l"><span>        &quot;in-stock&quot;: true,</span></span>
+<span class="giallo-l"><span>        &quot;sold&quot;: false</span></span>
+<span class="giallo-l"><span>      },</span></span>
+<span class="giallo-l"><span>      { &quot;category&quot;: &quot;fiction&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;author&quot;: &quot;J. R. R. Tolkien&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;title&quot;: &quot;The Lord of the Rings&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;isbn&quot;: &quot;0-395-19395-8&quot;,</span></span>
+<span class="giallo-l"><span>        &quot;price&quot;: 22.99,</span></span>
+<span class="giallo-l"><span>        &quot;in-stock&quot;: false,</span></span>
+<span class="giallo-l"><span>        &quot;sold&quot;: false</span></span>
+<span class="giallo-l"><span>      }</span></span>
+<span class="giallo-l"><span>    ],</span></span>
+<span class="giallo-l"><span>    &quot;bicycle&quot;: {</span></span>
+<span class="giallo-l"><span>      &quot;color&quot;: &quot;red&quot;,</span></span>
+<span class="giallo-l"><span>      &quot;price&quot;: 19.95,</span></span>
+<span class="giallo-l"><span>      &quot;in-stock&quot;: true,</span></span>
+<span class="giallo-l"><span>      &quot;sold&quot;: false</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>  }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><table><thead><tr><th>Path</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>'$.store.book[*].author'</code></td><td>The authors of all books in the store.</td></tr>
+<tr><td><code>'$..author'</code></td><td>All authors.</td></tr>
+<tr><td><code>'$.store.*'</code></td><td>All members of the store.</td></tr>
+<tr><td><code>'$["store"].*'</code></td><td>All members of the store.</td></tr>
+<tr><td><code>'$.store..price'</code></td><td>The price of everything in the store.</td></tr>
+<tr><td><code>'$..*'</code></td><td>All recursive members of the JSON structure.</td></tr>
+<tr><td><code>'$..book[*]'</code></td><td>All books.</td></tr>
+<tr><td><code>'$..book[0]'</code></td><td>The first book.</td></tr>
+<tr><td><code>'$..book[-1]'</code></td><td>The last book.</td></tr>
+<tr><td><code>'$..book[0:2]'</code></td><td>The first two books.</td></tr>
+<tr><td><code>'$..book[0,1]'</code></td><td>The first two books.</td></tr>
+<tr><td><code>'$..book[0:4]'</code></td><td>Books from index 0 to 3 (ending index is not inclusive).</td></tr>
+<tr><td><code>'$..book[0:4:2]'</code></td><td>Books at index 0 and 2.</td></tr>
+<tr><td><code>'$..book[?(@.isbn)]'</code></td><td>All books with an ISBN number.</td></tr>
+<tr><td><code>'$..book[?(@.price &lt; 10)]'</code></td><td>All books cheaper than $10.</td></tr>
+<tr><td><code>'$..book[?(@["price"] &lt; 10)]'</code></td><td>All books cheaper than $10. (alternate syntax)</td></tr>
+<tr><td><code>'$..book[?(@.["price"] &lt; 10)]'</code></td><td>All books cheaper than $10. (alternate syntax)</td></tr>
+<tr><td><code>'$..book[?(@.price &gt;= 10 &amp;&amp; @.price &lt;= 100)]'</code></td><td>All books in the price range of $10 to $100, inclusive.</td></tr>
+<tr><td><code>'$..book[?(@.sold == true || @.in-stock == false)]'</code></td><td>All books sold or out of stock.</td></tr>
+<tr><td><code>'$.store.book[?(@.["category"] == "fiction")]'</code></td><td>All books in the fiction category.</td></tr>
+<tr><td><code>'$.store.book[?(@.["category"] != "fiction")]'</code></td><td>All books in nonfiction categories.</td></tr>
+</tbody></table>
+<p>Additional filter expression examples:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.SET k1 . &#39;{&quot;books&quot;: [{&quot;price&quot;:5,&quot;sold&quot;:true,&quot;in-stock&quot;:true,&quot;title&quot;:&quot;foo&quot;}, {&quot;price&quot;:15,&quot;sold&quot;:false,&quot;title&quot;:&quot;abc&quot;}]]: &#39;</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k1 $.books[?(@.price&gt;1&amp;&amp;@.price&lt;20&amp;&amp;@.in-stock)]</span></span>
+<span class="giallo-l"><span>&quot;[{\&quot;price\&quot;:5,\&quot;sold\&quot;:true,\&quot;in-stock\&quot;:true,\&quot;title\&quot;:\&quot;foo\&quot;]: ]&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k1 &#39;$.books[?(@.price&gt;1 &amp;&amp; @.price&lt;20 &amp;&amp; @.in-stock)]&#39;</span></span>
+<span class="giallo-l"><span>&quot;[{\&quot;price\&quot;:5,\&quot;sold\&quot;:true,\&quot;in-stock\&quot;:true,\&quot;title\&quot;:\&quot;foo\&quot;]: ]&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k1 &#39;$.books[?((@.price&gt;1 &amp;&amp; @.price&lt;20) &amp;&amp; (@.sold==false))]&#39;</span></span>
+<span class="giallo-l"><span>&quot;[{\&quot;price\&quot;:15,\&quot;sold\&quot;:false,\&quot;title\&quot;:\&quot;abc\&quot;]: ]&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k1 &#39;$.books[?(@.title == &quot;abc&quot;)]&#39;</span></span>
+<span class="giallo-l"><span>[{&quot;price&quot;:15,&quot;sold&quot;:false,&quot;title&quot;:&quot;abc&quot;]: ]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.SET k2 . &#39;[1,2,3,4,5]&#39;</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k2 $.*.[?(@&gt;2)]</span></span>
+<span class="giallo-l"><span>&quot;[3,4,5]&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k2 &#39;$.*.[?(@ &gt; 2)]&#39;</span></span>
+<span class="giallo-l"><span>&quot;[3,4,5]&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.SET k3 . &#39;[true,false,true,false,null,1,2,3,4]&#39;</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k3 $.*.[?(@==true)]</span></span>
+<span class="giallo-l"><span>&quot;[true,true]&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k3 &#39;$.*.[?(@ == true)]&#39;</span></span>
+<span class="giallo-l"><span>&quot;[true,true]&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k3 $.*.[?(@&gt;1)]</span></span>
+<span class="giallo-l"><span>&quot;[2,3,4]&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; JSON.GET k3 &#39;$.*.[?(@ &gt; 1)]&#39;</span></span>
+<span class="giallo-l"><span>&quot;[2,3,4]&quot;</span></span></code></pre>
+<p><strong>Restricted Syntax Symbols and Expressions</strong></p>
+<table><thead><tr><th>Symbol/Expression</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>.</code> or <code>[]</code></td><td>Child operator.</td></tr>
+<tr><td><code>[]</code></td><td>Array subscript operator. Index is 0-based.</td></tr>
+</tbody></table>
+<table><thead><tr><th>Path</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>'.store.book[0].author'</code></td><td>The author of the first book.</td></tr>
+<tr><td><code>'.store.book[-1].author'</code></td><td>The author of the last book.</td></tr>
+<tr><td><code>'.address.city'</code></td><td>City name.</td></tr>
+<tr><td><code>'["store"]["book"][0]["title"]'</code></td><td>The title of the first book.</td></tr>
+<tr><td><code>'["store"]["book"][-1]["title"]'</code></td><td>The title of the last book.</td></tr>
+</tbody></table>
+<h2 id="common-error-prefixes">Common error prefixes</h2>
+<p>Each error message has a prefix. The following is a list of common error prefixes.</p>
+<table><thead><tr><th>Prefix</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ERR</code></td><td>A general error.</td></tr>
+<tr><td><code>LIMIT</code></td><td>An error that occurs when the size limit is exceeded. For example, the document size limit or nesting depth limit was exceeded.</td></tr>
+<tr><td><code>NONEXISTENT</code></td><td>A key or path does not exist.</td></tr>
+<tr><td><code>OUTOFBOUNDARIES</code></td><td>Array index out of bounds.</td></tr>
+<tr><td><code>SYNTAXERR</code></td><td>Syntax error.</td></tr>
+<tr><td><code>WRONGTYPE</code></td><td>Wrong value type.</td></tr>
+</tbody></table>
+<h2 id="json-related-metrics">JSON-related metrics</h2>
+<table><thead><tr><th>Info</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>json_total_memory_bytes</code></td><td>Total memory allocated to JSON objects.</td></tr>
+<tr><td><code>json_num_documents</code></td><td>Total number of documents in Valkey</td></tr>
+</tbody></table>
+<p>To query core metrics, run the following command: <code>info json_core_metrics</code></p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/valkey-json.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

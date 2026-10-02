@@ -1,0 +1,577 @@
+
+
+
+
+
+
+
+
+    
+    
+    
+        
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Command &middot; BLPOP</title>
+    <meta name="title" property="og:title" content="Valkey Command: BLPOP">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+    
+        <div class="styled-title">
+            <h1 class="page-title">BLPOP </h1>
+        </div>
+    
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/commands/" class="breadcrumb-link">Commands</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            BLPOP
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <dl>
+        <dt>Usage:</dt>
+        <dd>
+            <code>
+             BLPOP
+            
+            
+          key  
+        
+            [   key   ... ]
+        
+          timeout  
+        
+            
+            </code>
+        </dd>
+    </dl>
+    
+    <dl>
+        <dt>Complexity:</dt>
+        <dd>O(N) where N is the number of provided keys.</dd>
+    <dl>
+    
+    
+    
+    <dl>
+        <dt>Since:</dt>
+        <dd>2.0.0</dd>
+    <dl>
+    
+    
+    <dl>
+        <dt>ACL Categories:</dt>
+        <dd>
+            
+                @blocking, 
+            
+                @list, 
+            
+                @slow, 
+            
+                @write
+            
+        </dd>
+    <dl>
+    
+    </dl>
+
+
+
+
+
+
+<p><code>BLPOP</code> is a blocking list pop primitive.
+It is the blocking version of <a href="/commands/lpop"><code>LPOP</code></a> because it blocks the connection when there
+are no elements to pop from any of the given lists.
+An element is popped from the head of the first list that is non-empty, with the
+given keys being checked in the order that they are given.</p>
+<h2 id="non-blocking-behavior">Non-blocking behavior</h2>
+<p>When <code>BLPOP</code> is called, if at least one of the specified keys contains a
+non-empty list, an element is popped from the head of the list and returned to
+the caller together with the <code>key</code> it was popped from.</p>
+<p>Keys are checked in the order that they are given.
+Let's say that the key <code>list1</code> doesn't exist and <code>list2</code> and <code>list3</code> hold
+non-empty lists.
+Consider the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>BLPOP list1 list2 list3 0</span></span></code></pre>
+<p><code>BLPOP</code> guarantees to return an element from the list stored at <code>list2</code> (since
+it is the first non empty list when checking <code>list1</code>, <code>list2</code> and <code>list3</code> in
+that order).</p>
+<h2 id="blocking-behavior">Blocking behavior</h2>
+<p>If none of the specified keys exist, <code>BLPOP</code> blocks the connection until another
+client performs an <a href="/commands/lpush"><code>LPUSH</code></a> or <a href="/commands/rpush"><code>RPUSH</code></a> operation against one of the keys.</p>
+<p>Once new data is present on one of the lists, the client returns with the name
+of the key unblocking it and the popped value.</p>
+<p>When <code>BLPOP</code> causes a client to block and a non-zero timeout is specified,
+the client will unblock returning a <code>nil</code> multi-bulk value when the specified
+timeout has expired without a push operation against at least one of the
+specified keys.</p>
+<p><strong>The timeout argument is interpreted as a double value specifying the maximum number of seconds to block</strong>. A timeout of zero can be used to block indefinitely.</p>
+<h2 id="what-key-is-served-first-what-client-what-element-priority-ordering-details">What key is served first? What client? What element? Priority ordering details.</h2>
+<ul>
+<li>If the client tries to blocks for multiple keys, but at least one key contains elements, the returned key / element pair is the first key from left to right that has one or more elements. In this case the client is not blocked. So for instance <code>BLPOP key1 key2 key3 key4 0</code>, assuming that both <code>key2</code> and <code>key4</code> are non-empty, will always return an element from <code>key2</code>.</li>
+<li>If multiple clients are blocked for the same key, the first client to be served is the one that was waiting for more time (the first that blocked for the key). Once a client is unblocked it does not retain any priority, when it blocks again with the next call to <code>BLPOP</code> it will be served accordingly to the number of clients already blocked for the same key, that will all be served before it (from the first to the last that blocked).</li>
+<li>When a client is blocking for multiple keys at the same time, and elements are available at the same time in multiple keys (because of a transaction or a Lua script added elements to multiple lists), the client will be unblocked using the first key that received a push operation (assuming it has enough elements to serve our client, as there may be other clients as well waiting for this key). Basically after the execution of every command Valkey will run a list of all the keys that received data AND that have at least a client blocked. The list is ordered by new element arrival time, from the first key that received data to the last. For every key processed, Valkey will serve all the clients waiting for that key in a FIFO fashion, as long as there are elements in this key. When the key is empty or there are no longer clients waiting for this key, the next key that received new data in the previous command / transaction / script is processed, and so forth.</li>
+</ul>
+<h2 id="behavior-of-blpop-when-multiple-elements-are-pushed-inside-a-list">Behavior of <code>BLPOP</code> when multiple elements are pushed inside a list.</h2>
+<p>There are times when a list can receive multiple elements in the context of the same conceptual command:</p>
+<ul>
+<li>Variadic push operations such as <code>LPUSH mylist a b c</code>.</li>
+<li>After an <a href="/commands/exec"><code>EXEC</code></a> of a <a href="/commands/multi"><code>MULTI</code></a> block with multiple push operations against the same list.</li>
+<li>Executing a Lua Script.</li>
+</ul>
+<p>What happens is that the command performing multiple pushes is executed, and <em>only after</em> the execution of the command the blocked clients are served. Consider this sequence of commands.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>Client A:   BLPOP foo 0</span></span>
+<span class="giallo-l"><span>Client B:   LPUSH foo a b c</span></span></code></pre>
+<p>If the above condition happens using a Redis OSS 2.6 server or greater, Client <strong>A</strong> will be served with the <code>c</code> element, because after the <code>LPUSH</code> command the list contains <code>c,b,a</code>, so taking an element from the left means to return <code>c</code>.</p>
+<p>Note that for the same reason a Lua script or a <code>MULTI/EXEC</code> block may push elements into a list and afterward <strong>delete the list</strong>. In this case the blocked clients will not be served at all and will continue to be blocked as long as no data is present on the list after the execution of a single command, transaction, or script.</p>
+<h2 id="blpop-inside-a-multi-exec-transaction"><code>BLPOP</code> inside a <code>MULTI</code> / <code>EXEC</code> transaction</h2>
+<p><code>BLPOP</code> can be used with pipelining (sending multiple commands and
+reading the replies in batch), however this setup makes sense almost solely
+when it is the last command of the pipeline.</p>
+<p>Using <code>BLPOP</code> inside a <code>MULTI</code>/<code>EXEC</code> block does not make a lot of sense
+as it would require blocking the entire server in order to execute the block
+atomically, which in turn does not allow other clients to perform a push
+operation. For this reason the behavior of <code>BLPOP</code> inside <code>MULTI</code> / <code>EXEC</code> when the list is empty is to return a <code>nil</code> multi-bulk reply, which is the same
+thing that happens when the timeout is reached.</p>
+<p>If you like science fiction, think of time flowing at infinite speed inside a
+<code>MULTI</code> / <code>EXEC</code> block...</p>
+<h2 id="examples">Examples</h2>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; DEL list1 list2</span></span>
+<span class="giallo-l"><span>(integer) 0</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; RPUSH list1 a b c</span></span>
+<span class="giallo-l"><span>(integer) 3</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; BLPOP list1 list2 0</span></span>
+<span class="giallo-l"><span>1) &quot;list1&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;a&quot;</span></span></code></pre><h2 id="reliable-queues">Reliable queues</h2>
+<p>When <code>BLPOP</code> returns an element to the client, it also removes the element from the list. This means that the element only exists in the context of the client: if the client crashes while processing the returned element, it is lost forever.</p>
+<p>This can be a problem with some application where we want a more reliable messaging system. When this is the case, please check the <a href="/commands/brpoplpush"><code>BRPOPLPUSH</code></a> command, that is a variant of <code>BLPOP</code> that adds the returned element to a target list before returning it to the client.</p>
+<h2 id="pattern-event-notification">Pattern: Event notification</h2>
+<p>Using blocking list operations it is possible to mount different blocking
+primitives.
+For instance for some application you may need to block waiting for elements
+into a Set, so that as far as a new element is added to the Set, it is
+possible to retrieve it without resort to polling.
+This would require a blocking version of <a href="/commands/spop"><code>SPOP</code></a> that is not available, but using
+blocking list operations we can easily accomplish this task.</p>
+<p>The consumer will do:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>LOOP forever</span></span>
+<span class="giallo-l"><span>    WHILE SPOP(key) returns elements</span></span>
+<span class="giallo-l"><span>        ... process elements ...</span></span>
+<span class="giallo-l"><span>    END</span></span>
+<span class="giallo-l"><span>    BRPOP helper_key</span></span>
+<span class="giallo-l"><span>END</span></span></code></pre>
+<p>While in the producer side we'll use simply:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MULTI</span></span>
+<span class="giallo-l"><span>SADD key element</span></span>
+<span class="giallo-l"><span>LPUSH helper_key x</span></span>
+<span class="giallo-l"><span>EXEC</span></span></code></pre>
+
+
+
+            <h3>RESP2 Reply</h3>
+                <p>One of the following:</p>
+<ul>
+<li>
+<p><a href="/topics/protocol#bulk-strings">Nil reply</a>: no element could be popped and the timeout expired</p>
+</li>
+<li>
+<p><a href="/topics/protocol#arrays">Array reply</a>: the key from which the element was popped and the value of the popped element.</p>
+</li>
+</ul>
+
+            <h3>RESP3 Reply</h3>
+                <p>One of the following:</p>
+<ul>
+<li>
+<p><a href="/topics/protocol#nulls">Null reply</a>: no element could be popped and the timeout expired</p>
+</li>
+<li>
+<p><a href="/topics/protocol#arrays">Array reply</a>: the key from which the element was popped and the value of the popped element.</p>
+</li>
+</ul>
+
+            
+<h3>History</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Version</th>
+            <th>Change</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+        
+        <tr>
+            <td>6.0.0</td>
+            <td><p><code>timeout</code> is interpreted as a double instead of an integer.</p>
+</td>
+        </tr>
+        
+
+    </tbody>
+</table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+
+
+
+
+<div class="sb-search-container">
+    <input type="search" id="sidebar-search-box" placeholder="Search all commands..." autocomplete="off" aria-label="Search all commands" />
+</div>
+
+<!-- No results message for sidebar search -->
+<div id="sidebar-no-results-message" class="no-results-message" hidden>
+    <span>&lt;/&gt;</span>
+    <h4>No commands found</h4>
+    <p>Check your spelling or try different keywords</p>
+</div>
+
+<h2 id="command-list-title">Similar commands</h2>
+<ul id="command-list" class="sb-command-list"></ul>
+<div class="sb-command-list-footer">
+    <button type="button" id="sidebar-show-more" class="command-show-more" hidden>Show more</button>
+    
+    <p id="sidebar-command-status" class="command-list-status" aria-live="polite"></p>
+    <p><a href="/commands/">Browse the full command reference</a></p>
+</div>
+
+<script src="/assets/js/command-reference.js"></script>
+<script>
+(() => {
+    const CR = window.ValkeyCommandReference;
+    const PAGE_SIZE = 10;
+    const CURRENT_SLUG = "blpop";
+    const groups = {
+    "bitmap": { name: "Bitmap", description: "Operations on the Bitmap data type" },
+    "bloom": { name: "Bloom filter", description: "Operations on the Bloom filter data type" },
+    "search": { name: "Search", description: "Vector Similarity Search engine optimized for AI-driven workloads" },
+    "cluster": { name: "Cluster", description: "Valkey Cluster management" },
+    "connection": { name: "Connection", description: "Client connections management" },
+    "generic": { name: "Generic", description: "Generic commands" },
+    "geo": { name: "Geospatial indices", description: "Operations on the Geospatial Index data type" },
+    "hash": { name: "Hash", description: "Operations on the Hash data type" },
+    "hyperloglog": { name: "HyperLogLog", description: "Operations on the HyperLogLog data type" },
+    "json": { name: "JSON", description: "Operations on the JSON data type" },
+    "list": { name: "List", description: "Operations on the List data type" },
+    "pubsub": { name: "Pub/Sub", description: "Pub/Sub commands" },
+    "scripting": { name: "Scripting and Functions", description: "Valkey server-side scripting and functions" },
+    "sentinel": { name: "Sentinel", description: "Valkey Sentinel commands" },
+    "server": { name: "Server", description: "Server management commands" },
+    "set": { name: "Set", description: "Operations on the Set data type" },
+    "sorted-set": { name: "Sorted Set", description: "Operations on the Sorted Set data type" },
+    "stream": { name: "Stream", description: "Operations on the Stream data type" },
+    "string": { name: "String", description: "Operations on the String data type" },
+    "transactions": { name: "Transactions", description: "Valkey Transaction management" }
+};
+    const groupNames = Object.fromEntries(Object.entries(groups).map(([key, g]) => [key, g.name]));
+
+    const listEl = document.getElementById("command-list");
+    const searchBox = document.getElementById("sidebar-search-box");
+    const title = document.getElementById("command-list-title");
+    const showMore = document.getElementById("sidebar-show-more");
+    const status = document.getElementById("sidebar-command-status");
+    const noResults = document.getElementById("sidebar-no-results-message");
+
+    let entries = [];
+    let current = null;
+    let similar = [];
+    const state = { query: "", shown: PAGE_SIZE };
+    const setStatus = CR.liveStatus(status);
+
+    // `typing` debounces the live status so screen readers aren't interrupted on every keystroke.
+    function render(typing) {
+        const query = CR.normalizeQuery(state.query);
+        const matches = query ? CR.search(entries, query) : similar;
+        const visible = matches.slice(0, state.shown);
+        CR.showEntries(listEl, entries, visible);
+        if (current) current.el.classList.add("is-current");
+
+        title.textContent = query ? `${matches.length} ${matches.length === 1 ? "result" : "results"}` : "Similar commands";
+        title.hidden = query !== "" && matches.length === 0;
+        noResults.hidden = matches.length !== 0;
+
+        const remaining = matches.length - visible.length;
+        CR.updateShowMore(showMore, remaining, PAGE_SIZE);
+        let message;
+        if (!matches.length) {
+            message = query ? "No commands found." : "";
+        } else if (!query && remaining <= 0) {
+            message = `Can't find it? Search above to look through all ${entries.length} commands.`;
+        } else {
+            message = `Showing ${visible.length} of ${matches.length}.`;
+        }
+        setStatus(message, !typing);
+    }
+
+    function init(html) {
+        listEl.innerHTML = html;
+        entries = Array.from(listEl.querySelectorAll(".command-list-item"), (el) => CR.parseEntry(el, groupNames));
+        current = entries.find((e) => e.slug === CURRENT_SLUG) || null;
+        similar = current
+            ? CR.mostSimilar(entries, current)
+            // Unknown command: fall back to the most popular ones.
+            : entries.filter((e) => e.rank !== Infinity).sort((a, b) => a.rank - b.rank);
+        render();
+    }
+
+    searchBox.addEventListener("input", () => {
+        state.query = searchBox.value;
+        state.shown = PAGE_SIZE;
+        render(true);
+    });
+    CR.bindSearchKeys(searchBox, listEl);
+    // No "/" shortcut here: on long doc pages it would override the browser's quick find.
+    showMore.addEventListener("click", () => {
+        state.shown += PAGE_SIZE;
+        render();
+    });
+
+    fetch("/command-list/")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(init)
+        .catch(() => {
+            title.hidden = true;
+            showMore.hidden = true;
+            status.textContent = "";
+            listEl.innerHTML = "<li>Could not load the command list.</li>";
+        });
+})();
+</script>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

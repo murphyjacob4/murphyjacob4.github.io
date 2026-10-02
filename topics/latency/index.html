@@ -1,0 +1,769 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Diagnosing latency issues</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Diagnosing latency issues">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Diagnosing latency issues</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Diagnosing latency issues
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+<p><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review. 
+    In the future it may change substantially or be removed entirely.</p>
+<hr />
+
+    <p>This document will help you understand what the problem could be if you
+are experiencing latency problems with Valkey.</p>
+<p>In this context <em>latency</em> is the maximum delay between the time a client
+issues a command and the time the reply to the command is received by the
+client. Usually Valkey processing time is extremely low, in the sub microsecond
+range, but there are certain conditions leading to higher latency figures.</p>
+<h2 id="i-ve-little-time-give-me-the-checklist">I've little time, give me the checklist</h2>
+<p>The following documentation is very important in order to run Valkey in
+a low latency fashion. However I understand that we are busy people, so
+let's start with a quick checklist. If you fail following these steps, please
+return here to read the full documentation.</p>
+<ol>
+<li>Make sure you are not running slow commands that are blocking the server. Use the Valkey <a href="/commands/slowlog">Slow Log feature</a> to check this.</li>
+<li>For EC2 users, make sure you use HVM based modern EC2 instances, like m3.medium. Otherwise fork() is too slow.</li>
+<li>Transparent huge pages must be disabled from your kernel. Use <code>echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</code> to disable them, and restart your Valkey process.</li>
+<li>If you are using a virtual machine, it is possible that you have an intrinsic latency that has nothing to do with Valkey. Check the minimum latency you can expect from your runtime environment using <code>./valkey-cli --intrinsic-latency 100</code>. Note: you need to run this command in <em>the server</em> not in the client.</li>
+<li>Enable and use the <a href="/topics/latency-monitor">Latency monitor</a> feature of Valkey in order to get a human readable description of the latency events and causes in your Valkey instance.</li>
+</ol>
+<p>In general, use the following table for durability VS latency/performance tradeoffs, ordered from stronger safety to better latency.</p>
+<ol>
+<li>AOF + fsync always: this is very slow, you should use it only if you know what you are doing.</li>
+<li>AOF + fsync every second: this is a good compromise.</li>
+<li>AOF + fsync every second + no-appendfsync-on-rewrite option set to yes: this is as the above, but avoids to fsync during rewrites to lower the disk pressure.</li>
+<li>AOF + fsync never. Fsyncing is up to the kernel in this setup, even less disk pressure and risk of latency spikes.</li>
+<li>RDB. Here you have a vast spectrum of tradeoffs depending on the save triggers you configure.</li>
+</ol>
+<p>And now for people with 15 minutes to spend, the details...</p>
+<h2 id="measuring-latency">Measuring latency</h2>
+<p>If you are experiencing latency problems, you probably know how to measure
+it in the context of your application, or maybe your latency problem is very
+evident even macroscopically. However valkey-cli can be used to measure the
+latency of a Valkey server in milliseconds, just try:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>valkey-cli --latency -h `host` -p `port`</span></span></code></pre><h2 id="using-the-internal-valkey-latency-monitoring-subsystem">Using the internal Valkey latency monitoring subsystem</h2>
+<p>Valkey provides latency monitoring capabilities that
+are able to sample different execution paths to understand where the
+server is blocking. This makes debugging of the problems illustrated in
+this documentation much simpler, so we suggest enabling latency monitoring
+ASAP. Please refer to the <a href="/topics/latency-monitor">Latency monitor documentation</a>.</p>
+<p>While the latency monitoring sampling and reporting capabilities will make
+it simpler to understand the source of latency in your Valkey system, it is still
+advised that you read this documentation extensively to better understand
+the topic of Valkey and latency spikes.</p>
+<h2 id="latency-baseline">Latency baseline</h2>
+<p>There is a kind of latency that is inherently part of the environment where
+you run Valkey, that is the latency provided by your operating system kernel
+and, if you are using virtualization, by the hypervisor you are using.</p>
+<p>While this latency can't be removed it is important to study it because
+it is the baseline, or in other words, you won't be able to achieve a Valkey
+latency that is better than the latency that every process running in your
+environment will experience because of the kernel or hypervisor implementation
+or setup.</p>
+<p>We call this kind of latency <strong>intrinsic latency</strong>, and <code>valkey-cli</code>
+is able to measure it. This is an example run.</p>
+<p>Note: the argument <code>100</code> is the number of seconds the test will be executed.
+The more time we run the test, the more likely we'll be able to spot
+latency spikes. 100 seconds is usually appropriate, however you may want
+to perform a few runs at different times. Please note that the test is CPU
+intensive and will likely saturate a single core in your system.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ ./valkey-cli --intrinsic-latency 100</span></span>
+<span class="giallo-l"><span>Max latency so far: 1 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 16 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 50 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 53 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 83 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 115 microseconds.</span></span></code></pre>
+<p>Note: valkey-cli in this special case needs to <strong>run in the server</strong> where you run or plan to run Valkey, not in the client. In this special mode valkey-cli does not connect to a Valkey server at all: it will just try to measure the largest time the kernel does not provide CPU time to run to the valkey-cli process itself.</p>
+<p>In the above example, the intrinsic latency of the system is just 0.115
+milliseconds (or 115 microseconds), which is a good news, however keep in mind
+that the intrinsic latency may change over time depending on the load of the
+system.</p>
+<p>In a virtualized environments with high load or if there are noisy neighbors,
+you may get numbers like these:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ ./valkey-cli --intrinsic-latency 100</span></span>
+<span class="giallo-l"><span>Max latency so far: 573 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 695 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 919 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 1606 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 3191 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 9243 microseconds.</span></span>
+<span class="giallo-l"><span>Max latency so far: 9671 microseconds.</span></span></code></pre>
+<p>Here we have an intrinsic latency of 9.7 milliseconds: this means that we can't ask better than that to Valkey. However other runs at different times in different virtualization environments with higher load or with noisy neighbors can easily show even worse values. We were able to measure up to 40 milliseconds in
+systems otherwise apparently running normally.</p>
+<h2 id="latency-induced-by-network-and-communication">Latency induced by network and communication</h2>
+<p>Clients connect to Valkey using a TCP/IP connection or a Unix domain connection.
+The typical latency of a 1 Gbit/s network is about 200 us, while the latency
+with a Unix domain socket can be as low as 30 us. It actually depends on your
+network and system hardware. On top of the communication itself, the system
+adds some more latency (due to thread scheduling, CPU caches, NUMA placement,
+etc ...). System induced latencies are significantly higher on a virtualized
+environment than on a physical machine.</p>
+<p>The consequence is even if Valkey processes most commands in sub microsecond
+range, a client performing many roundtrips to the server will have to pay
+for these network and system related latencies.</p>
+<p>An efficient client will therefore try to limit the number of roundtrips by
+pipelining several commands together. This is fully supported by the servers
+and most clients. Aggregated commands like MSET/MGET can be also used for
+that purpose. A number of commands also support
+variadic parameters for all data types.</p>
+<p>Here are some guidelines:</p>
+<ul>
+<li>If you can afford it, prefer a physical machine over a VM to host the server.</li>
+<li>Do not systematically connect/disconnect to the server (especially true
+for web based applications). Keep your connections as long lived as possible.</li>
+<li>If your client is on the same host than the server, use Unix domain sockets.</li>
+<li>Prefer to use aggregated commands (MSET/MGET), or commands with variadic
+parameters (if possible) over pipelining.</li>
+<li>Prefer to use pipelining (if possible) over sequence of roundtrips.</li>
+<li>Valkey supports Lua server-side scripting to cover cases that are not suitable
+for raw pipelining (for instance when the result of a command is an input for
+the following commands).</li>
+</ul>
+<p>On Linux, some people can achieve better latencies by playing with process
+placement (taskset), cgroups, real-time priorities (chrt), NUMA
+configuration (numactl), or by using a low-latency kernel. Please note
+vanilla Valkey is not really suitable to be bound on a <strong>single</strong> CPU core.
+Valkey can fork background tasks that can be extremely CPU consuming
+like <code>BGSAVE</code> or <code>BGREWRITEAOF</code>. These tasks must <strong>never</strong> run on the same core
+as the main event loop.</p>
+<p>In most situations, these kind of system level optimizations are not needed.
+Only do them if you require them, and if you are familiar with them.</p>
+<h2 id="valkey-sequential-command-execution">Valkey sequential command execution</h2>
+<p>Valkey uses a <em>mostly</em> single threaded design for command execution. This means that a single process
+executes all the client commands sequentially, using a technique called <strong>multiplexing</strong>.
+While multiple commands can have their I/O operations processed concurrently in the background,
+only one command can be executed at any given moment. This is similar to how Node.js
+works as well. However, both products are not often perceived as being slow.
+This is caused in part by the small amount of time to complete a single command execution,
+but primarily because these products are designed to not block on system calls,
+such as reading data from or writing data to a socket.</p>
+<h2 id="latency-generated-by-slow-commands">Latency generated by slow commands</h2>
+<p>A consequence of being single thread is that when a request is slow to serve
+all the other clients will wait for this request to be served. When executing
+normal commands, like <code>GET</code> or <code>SET</code> or <code>LPUSH</code> this is not a problem
+at all since these commands are executed in constant (and very small) time.
+However there are commands operating on many elements, like <code>SORT</code>, <code>LREM</code>,
+<code>SUNION</code> and others. For instance taking the intersection of two big sets
+can take a considerable amount of time.</p>
+<p>The algorithmic complexity of all commands is documented. A good practice
+is to systematically check it when using commands you are not familiar with.</p>
+<p>If you have latency concerns you should either not use slow commands against
+values composed of many elements, or you should run a replica using Valkey
+replication where you run all your slow queries.</p>
+<p>It is possible to monitor slow commands using the Valkey
+<a href="/commands/slowlog">Slow Log feature</a>.</p>
+<p>Additionally, you can use your favorite per-process monitoring program
+(top, htop, prstat, etc ...) to quickly check the CPU consumption of the
+main Valkey process. If it is high while the traffic is not, it is usually
+a sign that slow commands are used.</p>
+<p><strong>IMPORTANT NOTE</strong>: a VERY common source of latency generated by the execution
+of slow commands is the use of the <code>KEYS</code> command in production environments.
+<code>KEYS</code>, as documented in the Valkey documentation, should only be used for
+debugging purposes. To
+iterate the key space and other large collections incrementally, please check
+the <code>SCAN</code>, <code>SSCAN</code>, <code>HSCAN</code> and <code>ZSCAN</code> commands for more information.</p>
+<h2 id="latency-generated-by-fork">Latency generated by fork</h2>
+<p>In order to generate the RDB file in background, or to rewrite the Append Only File if AOF persistence is enabled, Valkey has to fork background processes.
+The fork operation (running in the main thread) can induce latency by itself.</p>
+<p>Forking is an expensive operation on most Unix-like systems, since it involves
+copying a good number of objects linked to the process. This is especially
+true for the page table associated to the virtual memory mechanism.</p>
+<p>For instance on a Linux/AMD64 system, the memory is divided in 4 kB pages.
+To convert virtual addresses to physical addresses, each process stores
+a page table (actually represented as a tree) containing at least a pointer
+per page of the address space of the process. So a large 24 GB Valkey instance
+requires a page table of 24 GB / 4 kB * 8 = 48 MB.</p>
+<p>When a background save is performed, this instance will have to be forked,
+which will involve allocating and copying 48 MB of memory. It takes time
+and CPU, especially on virtual machines where allocation and initialization
+of a large memory chunk can be expensive.</p>
+<h2 id="fork-time-in-different-systems">Fork time in different systems</h2>
+<p>Modern hardware is pretty fast at copying the page table.
+So are modern hardware-assisted virtualized environments,
+but fork can be really slow in older virtualized environments without hardware support.
+As of 2024, this is hardly a problem.</p>
+<p>You can measure the fork time for a Valkey instance by
+performing a BGSAVE and looking at the <code>latest_fork_usec</code> field in the <code>INFO</code> command output.</p>
+<h2 id="latency-induced-by-transparent-huge-pages">Latency induced by transparent huge pages</h2>
+<p>Unfortunately when a Linux kernel has transparent huge pages enabled, Valkey
+incurs to a big latency penalty after the <code>fork</code> call is used in order to
+persist on disk. Huge pages are the cause of the following issue:</p>
+<ol>
+<li>Fork is called, two processes with shared huge pages are created.</li>
+<li>In a busy instance, a few event loops runs will cause commands to target a few thousand of pages, causing the copy on write of almost the whole process memory.</li>
+<li>This will result in big latency and big memory usage.</li>
+</ol>
+<p>Make sure to <strong>disable transparent huge pages</strong> using the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</span></span></code></pre><h2 id="latency-induced-by-swapping-operating-system-paging">Latency induced by swapping (operating system paging)</h2>
+<p>Linux (and many other modern operating systems) is able to relocate memory
+pages from the memory to the disk, and vice versa, in order to use the
+system memory efficiently.</p>
+<p>If a Valkey page is moved by the kernel from the memory to the swap file, when
+the data stored in this memory page is used by Valkey (for example accessing
+a key stored into this memory page) the kernel will stop the Valkey process
+in order to move the page back into the main memory. This is a slow operation
+involving random I/Os (compared to accessing a page that is already in memory)
+and will result into anomalous latency experienced by Valkey clients.</p>
+<p>The kernel relocates Valkey memory pages on disk mainly because of three reasons:</p>
+<ul>
+<li>The system is under memory pressure since the running processes are demanding
+more physical memory than the amount that is available. The simplest instance of
+this problem is simply Valkey using more memory than is available.</li>
+<li>The Valkey instance data set, or part of the data set, is mostly completely idle
+(never accessed by clients), so the kernel could swap idle memory pages on disk.
+This problem is very rare since even a moderately slow instance will touch all
+the memory pages often, forcing the kernel to retain all the pages in memory.</li>
+<li>Some processes are generating massive read or write I/Os on the system. Because
+files are generally cached, it tends to put pressure on the kernel to increase
+the filesystem cache, and therefore generate swapping activity. Please note it
+includes Valkey RDB and/or AOF background threads which can produce large files.</li>
+</ul>
+<p>Fortunately Linux offers good tools to investigate the problem, so the simplest
+thing to do is when latency due to swapping is suspected is just to check if
+this is the case.</p>
+<p>The first thing to do is to checking the amount of Valkey memory that is swapped
+on disk. In order to do so you need to obtain the Valkey instance pid:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-cli info | grep process_id</span></span>
+<span class="giallo-l"><span>process_id:5454</span></span></code></pre>
+<p>Now enter the /proc file system directory for this process:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ cd /proc/5454</span></span></code></pre>
+<p>Here you'll find a file called <strong>smaps</strong> that describes the memory layout of
+the Valkey process (assuming you are using Linux 2.6.16 or newer).
+This file contains very detailed information about our process memory maps,
+and one field called <strong>Swap</strong> is exactly what we are looking for. However
+there is not just a single swap field since the smaps file contains the
+different memory maps of our Valkey process (The memory layout of a process
+is more complex than a simple linear array of pages).</p>
+<p>Since we are interested in all the memory swapped by our process the first thing
+to do is to grep for the Swap field across all the file:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ cat smaps | grep &#39;Swap:&#39;</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                 12 kB</span></span>
+<span class="giallo-l"><span>Swap:                156 kB</span></span>
+<span class="giallo-l"><span>Swap:                  8 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span></code></pre>
+<p>If everything is 0 kB, or if there are sporadic 4k entries, everything is
+perfectly normal. Actually in our example instance (the one of a real web
+site running Valkey and serving hundreds of users every second) there are a
+few entries that show more swapped pages. To investigate if this is a serious
+problem or not we change our command in order to also print the size of the
+memory map:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ cat smaps | egrep &#39;^(Swap|Size)&#39;</span></span>
+<span class="giallo-l"><span>Size:                316 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  8 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                 40 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                132 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:             720896 kB</span></span>
+<span class="giallo-l"><span>Swap:                 12 kB</span></span>
+<span class="giallo-l"><span>Size:               4096 kB</span></span>
+<span class="giallo-l"><span>Swap:                156 kB</span></span>
+<span class="giallo-l"><span>Size:               4096 kB</span></span>
+<span class="giallo-l"><span>Swap:                  8 kB</span></span>
+<span class="giallo-l"><span>Size:               4096 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:               1272 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  8 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                 16 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                 84 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  8 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Size:                  8 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Size:                144 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Size:                 12 kB</span></span>
+<span class="giallo-l"><span>Swap:                  4 kB</span></span>
+<span class="giallo-l"><span>Size:                108 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                272 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span>
+<span class="giallo-l"><span>Size:                  4 kB</span></span>
+<span class="giallo-l"><span>Swap:                  0 kB</span></span></code></pre>
+<p>As you can see from the output, there is a map of 720896 kB
+(with just 12 kB swapped) and 156 kB more swapped in another map:
+basically a very small amount of our memory is swapped so this is not
+going to create any problem at all.</p>
+<p>If instead a non trivial amount of the process memory is swapped on disk your
+latency problems are likely related to swapping. If this is the case with your
+Valkey instance you can further verify it using the <strong>vmstat</strong> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ vmstat 1</span></span>
+<span class="giallo-l"><span>procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----</span></span>
+<span class="giallo-l"><span> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa</span></span>
+<span class="giallo-l"><span> 0  0   3980 697932 147180 1406456    0    0     2     2    2    0  4  4 91  0</span></span>
+<span class="giallo-l"><span> 0  0   3980 697428 147180 1406580    0    0     0     0 19088 16104  9  6 84  0</span></span>
+<span class="giallo-l"><span> 0  0   3980 697296 147180 1406616    0    0     0    28 18936 16193  7  6 87  0</span></span>
+<span class="giallo-l"><span> 0  0   3980 697048 147180 1406640    0    0     0     0 18613 15987  6  6 88  0</span></span>
+<span class="giallo-l"><span> 2  0   3980 696924 147180 1406656    0    0     0     0 18744 16299  6  5 88  0</span></span>
+<span class="giallo-l"><span> 0  0   3980 697048 147180 1406688    0    0     0     4 18520 15974  6  6 88  0</span></span>
+<span class="giallo-l"><span>^C</span></span></code></pre>
+<p>The interesting part of the output for our needs are the two columns <strong>si</strong>
+and <strong>so</strong>, that counts the amount of memory swapped from/to the swap file. If
+you see non zero counts in those two columns then there is swapping activity
+in your system.</p>
+<p>Finally, the <strong>iostat</strong> command can be used to check the global I/O activity of
+the system.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ iostat -xk 1</span></span>
+<span class="giallo-l"><span>avg-cpu:  %user   %nice %system %iowait  %steal   %idle</span></span>
+<span class="giallo-l"><span>          13.55    0.04    2.92    0.53    0.00   82.95</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await  svctm  %util</span></span>
+<span class="giallo-l"><span>sda               0.77     0.00    0.01    0.00     0.40     0.00    73.65     0.00    3.62   2.58   0.00</span></span>
+<span class="giallo-l"><span>sdb               1.27     4.75    0.82    3.54    38.00    32.32    32.19     0.11   24.80   4.24   1.85</span></span></code></pre>
+<p>If your latency problem is due to Valkey memory being swapped on disk you need
+to lower the memory pressure in your system, either adding more RAM if Valkey
+is using more memory than the available, or avoiding running other memory
+hungry processes in the same system.</p>
+<h2 id="latency-due-to-aof-and-disk-i-o">Latency due to AOF and disk I/O</h2>
+<p>Another source of latency is due to the Append Only File support on Valkey.
+The AOF basically uses two system calls to accomplish its work. One is
+write(2) that is used in order to write data to the append only file, and
+the other one is fdatasync(2) that is used in order to flush the kernel
+file buffer on disk in order to ensure the durability level specified by
+the user.</p>
+<p>Both the write(2) and fdatasync(2) calls can be source of latency.
+For instance write(2) can block both when there is a system wide sync
+in progress, or when the output buffers are full and the kernel requires
+to flush on disk in order to accept new writes.</p>
+<p>The fdatasync(2) call is a worse source of latency as with many combinations
+of kernels and file systems used it can take from a few milliseconds to
+a few seconds to complete, especially in the case of some other process
+doing I/O. For this reason when possible Valkey does the fdatasync(2) call
+in a different thread.</p>
+<p>We'll see how configuration can affect the amount and source of latency
+when using the AOF file.</p>
+<p>The AOF can be configured to perform a fsync on disk in three different
+ways using the <strong>appendfsync</strong> configuration option (this setting can be
+modified at runtime using the <strong>CONFIG SET</strong> command).</p>
+<ul>
+<li>
+<p>When appendfsync is set to the value of <strong>no</strong> Valkey performs no fsync.
+In this configuration the only source of latency can be write(2).
+When this happens usually there is no solution since simply the disk can't
+cope with the speed at which Valkey is receiving data, however this is
+uncommon if the disk is not seriously slowed down by other processes doing
+I/O.</p>
+</li>
+<li>
+<p>When appendfsync is set to the value of <strong>everysec</strong> Valkey performs a
+fsync every second. It uses a different thread, and if the fsync is still
+in progress Valkey uses a buffer to delay the write(2) call up to two seconds
+(since write would block on Linux if a fsync is in progress against the
+same file). However if the fsync is taking too long Valkey will eventually
+perform the write(2) call even if the fsync is still in progress, and this
+can be a source of latency.</p>
+</li>
+<li>
+<p>When appendfsync is set to the value of <strong>always</strong> a fsync is performed
+at every write operation before replying back to the client with an OK code
+(actually Valkey will try to cluster many commands executed at the same time
+into a single fsync). In this mode performances are very low in general and
+it is strongly recommended to use a fast disk and a file system implementation
+that can perform the fsync in short time.</p>
+</li>
+</ul>
+<p>Most Valkey users will use either the <strong>no</strong> or <strong>everysec</strong> setting for the
+appendfsync configuration directive. The suggestion for minimum latency is
+to avoid other processes doing I/O in the same system.
+Using an SSD disk can help as well, but usually even non SSD disks perform
+well with the append only file if the disk is spare as Valkey writes
+to the append only file without performing any seek.</p>
+<p>If you want to investigate your latency issues related to the append only
+file you can use the strace command under Linux:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>sudo strace -p $(pidof valkey-server) -T -e trace=fdatasync</span></span></code></pre>
+<p>The above command will show all the fdatasync(2) system calls performed by
+Valkey in the main thread. With the above command you'll not see the
+fdatasync system calls performed by the background thread when the
+appendfsync config option is set to <strong>everysec</strong>. In order to do so
+just add the -f switch to strace.</p>
+<p>If you wish you can also see both fdatasync and write system calls with the
+following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>sudo strace -p $(pidof valkey-server) -T -e trace=fdatasync,write</span></span></code></pre>
+<p>However since write(2) is also used in order to write data to the client
+sockets this will likely show too many things unrelated to disk I/O.
+Apparently there is no way to tell strace to just show slow system calls so
+I use the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>sudo strace -f -p $(pidof valkey-server) -T -e trace=fdatasync,write 2&gt;&amp;1 | grep -v &#39;0.0&#39; | grep -v unfinished</span></span></code></pre><h2 id="latency-generated-by-expires">Latency generated by expires</h2>
+<p>Valkey evict expired keys in two ways:</p>
+<ul>
+<li>One <em>lazy</em> way expires a key when it is requested by a command, but it is found to be already expired.</li>
+<li>One <em>active</em> way expires a few keys every 100 milliseconds.</li>
+</ul>
+<p>The active expiring is designed to be adaptive. An expire cycle is started every 100 milliseconds (10 times per second), and will do the following:</p>
+<ul>
+<li>Sample <code>ACTIVE_EXPIRE_CYCLE_LOOKUPS_PER_LOOP</code> keys, evicting all the keys already expired.</li>
+<li>If the more than 25% of the keys were found expired, repeat.</li>
+</ul>
+<p>Given that <code>ACTIVE_EXPIRE_CYCLE_LOOKUPS_PER_LOOP</code> is set to 20 by default, and the process is performed ten times per second, usually just 200 keys per second are actively expired. This is enough to clean the DB fast enough even when already expired keys are not accessed for a long time, so that the <em>lazy</em> algorithm does not help. At the same time expiring just 200 keys per second has no effects in the latency a Valkey instance.</p>
+<p>However the algorithm is adaptive and will loop if it finds more than 25% of keys already expired in the set of sampled keys. But given that we run the algorithm ten times per second, this means that the unlucky event of more than 25% of the keys in our random sample are expiring at least <em>in the same second</em>.</p>
+<p>Basically this means that <strong>if the database has many, many keys expiring in the same second, and these make up at least 25% of the current population of keys with an expire set</strong>, Valkey can block in order to get the percentage of keys already expired below 25%.</p>
+<p>This approach is needed in order to avoid using too much memory for keys that are already expired, and usually is absolutely harmless since it's strange that a big number of keys are going to expire in the same exact second, but it is not impossible that the user used <code>EXPIREAT</code> extensively with the same Unix time.</p>
+<p>In short: be aware that many keys expiring at the same moment can be a source of latency.</p>
+<h2 id="valkey-software-watchdog">Valkey software watchdog</h2>
+<p>The <em>Valkey Software Watchdog</em> is a debugging tool
+designed to track those latency problems that for one reason or the other
+escaped an analysis using normal tools.</p>
+<p>The software watchdog is an experimental feature. While it is designed to
+be used in production environments care should be taken to backup the database
+before proceeding as it could possibly have unexpected interactions with the
+normal execution of the Valkey server.</p>
+<p>It is important to use it only as <em>last resort</em> when there is no way to track the issue by other means.</p>
+<p>This is how this feature works:</p>
+<ul>
+<li>The user enables the software watchdog using the <code>CONFIG SET</code> command.</li>
+<li>Valkey starts monitoring itself constantly.</li>
+<li>If Valkey detects that the server is blocked into some operation that is not returning fast enough, and that may be the source of the latency issue, a low level report about where the server is blocked is dumped on the log file.</li>
+<li>The user contacts the developers by opening an issue on GitHub, including the watchdog report in the message.</li>
+</ul>
+<p>Note that this feature cannot be enabled using the valkey.conf file, because it is designed to be enabled only in already running instances and only for debugging purposes.</p>
+<p>To enable the feature just use the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>CONFIG SET watchdog-period 500</span></span></code></pre>
+<p>The period is specified in milliseconds. In the above example I specified to log latency issues only if the server detects a delay of 500 milliseconds or greater. The minimum configurable period is 200 milliseconds.</p>
+<p>When you are done with the software watchdog you can turn it off setting the <code>watchdog-period</code> parameter to 0. <strong>Important:</strong> remember to do this because keeping the instance with the watchdog turned on for a longer time than needed is generally not a good idea.</p>
+<p>The following is an example of what you'll see printed in the log file once the software watchdog detects a delay longer than the configured one:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>[8547 | signal handler] (1333114359)</span></span>
+<span class="giallo-l"><span>--- WATCHDOG TIMER EXPIRED ---</span></span>
+<span class="giallo-l"><span>/lib/libc.so.6(nanosleep+0x2d) [0x7f16b5c2d39d]</span></span>
+<span class="giallo-l"><span>/lib/libpthread.so.0(+0xf8f0) [0x7f16b5f158f0]</span></span>
+<span class="giallo-l"><span>/lib/libc.so.6(nanosleep+0x2d) [0x7f16b5c2d39d]</span></span>
+<span class="giallo-l"><span>/lib/libc.so.6(usleep+0x34) [0x7f16b5c62844]</span></span>
+<span class="giallo-l"><span>./valkey-server(debugCommand+0x3e1) [0x43ab41]</span></span>
+<span class="giallo-l"><span>./valkey-server(call+0x5d) [0x415a9d]</span></span>
+<span class="giallo-l"><span>./valkey-server(processCommand+0x375) [0x415fc5]</span></span>
+<span class="giallo-l"><span>./valkey-server(processInputBuffer+0x4f) [0x4203cf]</span></span>
+<span class="giallo-l"><span>./valkey-server(readQueryFromClient+0xa0) [0x4204e0]</span></span>
+<span class="giallo-l"><span>./valkey-server(aeProcessEvents+0x128) [0x411b48]</span></span>
+<span class="giallo-l"><span>./valkey-server(aeMain+0x2b) [0x411dbb]</span></span>
+<span class="giallo-l"><span>./valkey-server(main+0x2b6) [0x418556]</span></span>
+<span class="giallo-l"><span>/lib/libc.so.6(__libc_start_main+0xfd) [0x7f16b5ba1c4d]</span></span>
+<span class="giallo-l"><span>./valkey-server() [0x411099]</span></span>
+<span class="giallo-l"><span>------</span></span></code></pre>
+<p>Note: in the example the <strong>DEBUG SLEEP</strong> command was used in order to block the server. The stack trace is different if the server blocks in a different context.</p>
+<p>If you happen to collect multiple watchdog stack traces you are encouraged to post everything in a GitHub issue.
+The more traces we obtain, the simpler it will be to understand what the problem with your instance is.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/latency.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

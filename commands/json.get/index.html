@@ -1,0 +1,548 @@
+
+
+
+
+
+
+
+
+    
+    
+    
+        
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Command &middot; JSON.GET</title>
+    <meta name="title" property="og:title" content="Valkey Command: JSON.GET">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+    
+        <div class="styled-title">
+            <h1 class="page-title">JSON.GET </h1>
+        </div>
+    
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/commands/" class="breadcrumb-link">Commands</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            JSON.GET
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <dl>
+        <dt>Usage:</dt>
+        <dd>
+            <code>
+             JSON.GET
+            
+            
+          key  
+        
+        [  INDENT&#x2F;NEWLINE&#x2F;SPACE  ]
+        
+        [  NOESCAPE  ]
+        
+        [  path  ]
+        
+            [ [  path  ] ... ]
+        
+            
+            </code>
+        </dd>
+    </dl>
+    
+    <dl>
+        <dt>Complexity:</dt>
+        <dd>O(N) where N is the number of paths</dd>
+    <dl>
+    
+    
+    <dl>
+        
+            <dt>Module:</dt>
+            <dd><a href=https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-json>valkey-json</a></dd>
+        
+    <dl>
+    <dl>
+        <dt>Since module version:</dt>
+        <dd>1.0.0</dd>
+    <dl>
+    
+    
+    
+    <dl>
+        <dt>ACL Categories:</dt>
+        <dd>
+            
+                @read, 
+            
+                @fast, 
+            
+                @json
+            
+        </dd>
+    <dl>
+    
+    </dl>
+
+
+
+
+
+
+<p>Get the serialized JSON at one or multiple paths.</p>
+<h2 id="examples">Examples</h2>
+<p>Enhanced path syntax:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.SET k1 . &#39;{&quot;firstName&quot;:&quot;John&quot;,&quot;lastName&quot;:&quot;Smith&quot;,&quot;age&quot;:27,&quot;weight&quot;:135.25,&quot;isAlive&quot;:true,&quot;address&quot;:{&quot;street&quot;:&quot;21 2nd Street&quot;,&quot;city&quot;:&quot;New York&quot;,&quot;state&quot;:&quot;NY&quot;,&quot;zipcode&quot;:&quot;10021-3100&quot;},&quot;phoneNumbers&quot;:[{&quot;type&quot;:&quot;home&quot;,&quot;number&quot;:&quot;212 555-1234&quot;},{&quot;type&quot;:&quot;office&quot;,&quot;number&quot;:&quot;646 555-4567&quot;}],&quot;children&quot;:[],&quot;spouse&quot;:null}&#39;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.GET k1</span><span> $</span><span style="color: #A5D6FF;">.address.</span><span style="color: #79C0FF;">*</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">&quot;[</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">21 2nd Street</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">New York</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">NY</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">10021-3100</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">]&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.GET k1 indent &quot;\t&quot; space &quot; &quot; NEWLINE &quot;\n&quot;</span><span> $</span><span style="color: #A5D6FF;">.address.</span><span style="color: #79C0FF;">*</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">&quot;[\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">21 2nd Street</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">New York</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">NY</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">10021-3100</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">\n]&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.GET k1</span><span> $</span><span style="color: #A5D6FF;">.firstName</span><span> $</span><span style="color: #A5D6FF;">.lastName</span><span> $</span><span style="color: #A5D6FF;">.age</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">&quot;{</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">$.firstName</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:[</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">John</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">],</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">$.lastName</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:[</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">Smith</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">],</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">$.age</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:[27]}&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.SET k2 . &#39;{&quot;a&quot;:{}, &quot;b&quot;:{&quot;a&quot;:1}, &quot;c&quot;:{&quot;a&quot;:1, &quot;b&quot;:2}}&#39;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> json.get k2</span><span> $</span><span style="color: #A5D6FF;">..</span><span style="color: #79C0FF;">*</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">&quot;[{},{</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">a</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:1},{</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">a</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:1,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">b</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:2},1,1,2]&quot;</span></span></code></pre>
+<p>Restricted path syntax:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.SET k1 . &#39;{&quot;firstName&quot;:&quot;John&quot;,&quot;lastName&quot;:&quot;Smith&quot;,&quot;age&quot;:27,&quot;weight&quot;:135.25,&quot;isAlive&quot;:true,&quot;address&quot;:{&quot;street&quot;:&quot;21 2nd Street&quot;,&quot;city&quot;:&quot;New York&quot;,&quot;state&quot;:&quot;NY&quot;,&quot;zipcode&quot;:&quot;10021-3100&quot;},&quot;phoneNumbers&quot;:[{&quot;type&quot;:&quot;home&quot;,&quot;number&quot;:&quot;212 555-1234&quot;},{&quot;type&quot;:&quot;office&quot;,&quot;number&quot;:&quot;646 555-4567&quot;}],&quot;children&quot;:[],&quot;spouse&quot;:null}&#39;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.GET k1 .address</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">&quot;{</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">street</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">21 2nd Street</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">city</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">New York</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">state</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">NY</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">zipcode</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">10021-3100</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">}&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.GET k1 indent &quot;\t&quot; space &quot; &quot; NEWLINE &quot;\n&quot; .address</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">&quot;{\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">street</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">: </span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">21 2nd Street</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">city</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">: </span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">New York</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">state</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">: </span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">NY</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,\n\t</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">zipcode</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">: </span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">10021-3100</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">\n}&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">127.0.0.1:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> JSON.GET k1 .firstName .lastName .age</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">&quot;{</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">.firstName</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">John</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">.lastName</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">Smith</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">,</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">.age</span><span style="color: #FF7B72;">\&quot;</span><span style="color: #FFA657;">:27}&quot;</span></span></code></pre>
+
+
+<h3>RESP2/RESP3 Reply</h3>
+            <ul>
+<li>
+<p>For enhanced path syntax:</p>
+<ul>
+<li>
+<p>If one path is given:</p>
+<ul>
+<li>
+<p><a href="/topics/protocol#bulk-strings">Bulk string reply</a>: Serialized string of an array of values.</p>
+</li>
+<li>
+<p><a href="/topics/protocol#arrays">Array reply</a>: Empty array if no value is selected.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>If multiple paths are given:</p>
+<ul>
+<li>
+<p><a href="/topics/protocol#bulk-strings">Bulk string reply</a>: Stringified JSON object, where each path is a key.</p>
+</li>
+<li>
+<p>Result conforms to enhanced syntax if there are mixed enhanced and restricted path syntax.</p>
+</li>
+<li>
+<p><a href="/topics/protocol#arrays">Array reply</a>: Empty array for paths that do not exist.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>For restricted path syntax:</p>
+<ul>
+<li>
+<p>If one path is given:</p>
+<ul>
+<li>
+<p><a href="/topics/protocol#bulk-strings">Bulk string reply</a>: Serialized string of the value at the path.</p>
+</li>
+<li>
+<p><a href="/topics/protocol#bulk-strings">Bulk string reply</a>: First value if multiple values are selected.</p>
+</li>
+<li>
+<p><a href="/topics/protocol#simple-errors">Simple error reply</a>: If the path does not exist.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>If multiple paths are given:</p>
+<ul>
+<li>
+<p><a href="/topics/protocol#bulk-strings">Bulk string reply</a>: Stringified JSON object, where each path is a key.</p>
+</li>
+<li>
+<p>Result conforms to restricted syntax only if all paths are restricted.</p>
+</li>
+<li>
+<p><a href="/topics/protocol#simple-errors">Simple error reply</a>: If any path does not exist.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+
+
+
+
+<div class="sb-search-container">
+    <input type="search" id="sidebar-search-box" placeholder="Search all commands..." autocomplete="off" aria-label="Search all commands" />
+</div>
+
+<!-- No results message for sidebar search -->
+<div id="sidebar-no-results-message" class="no-results-message" hidden>
+    <span>&lt;/&gt;</span>
+    <h4>No commands found</h4>
+    <p>Check your spelling or try different keywords</p>
+</div>
+
+<h2 id="command-list-title">Similar commands</h2>
+<ul id="command-list" class="sb-command-list"></ul>
+<div class="sb-command-list-footer">
+    <button type="button" id="sidebar-show-more" class="command-show-more" hidden>Show more</button>
+    
+    <p id="sidebar-command-status" class="command-list-status" aria-live="polite"></p>
+    <p><a href="/commands/">Browse the full command reference</a></p>
+</div>
+
+<script src="/assets/js/command-reference.js"></script>
+<script>
+(() => {
+    const CR = window.ValkeyCommandReference;
+    const PAGE_SIZE = 10;
+    const CURRENT_SLUG = "json.get";
+    const groups = {
+    "bitmap": { name: "Bitmap", description: "Operations on the Bitmap data type" },
+    "bloom": { name: "Bloom filter", description: "Operations on the Bloom filter data type" },
+    "search": { name: "Search", description: "Vector Similarity Search engine optimized for AI-driven workloads" },
+    "cluster": { name: "Cluster", description: "Valkey Cluster management" },
+    "connection": { name: "Connection", description: "Client connections management" },
+    "generic": { name: "Generic", description: "Generic commands" },
+    "geo": { name: "Geospatial indices", description: "Operations on the Geospatial Index data type" },
+    "hash": { name: "Hash", description: "Operations on the Hash data type" },
+    "hyperloglog": { name: "HyperLogLog", description: "Operations on the HyperLogLog data type" },
+    "json": { name: "JSON", description: "Operations on the JSON data type" },
+    "list": { name: "List", description: "Operations on the List data type" },
+    "pubsub": { name: "Pub/Sub", description: "Pub/Sub commands" },
+    "scripting": { name: "Scripting and Functions", description: "Valkey server-side scripting and functions" },
+    "sentinel": { name: "Sentinel", description: "Valkey Sentinel commands" },
+    "server": { name: "Server", description: "Server management commands" },
+    "set": { name: "Set", description: "Operations on the Set data type" },
+    "sorted-set": { name: "Sorted Set", description: "Operations on the Sorted Set data type" },
+    "stream": { name: "Stream", description: "Operations on the Stream data type" },
+    "string": { name: "String", description: "Operations on the String data type" },
+    "transactions": { name: "Transactions", description: "Valkey Transaction management" }
+};
+    const groupNames = Object.fromEntries(Object.entries(groups).map(([key, g]) => [key, g.name]));
+
+    const listEl = document.getElementById("command-list");
+    const searchBox = document.getElementById("sidebar-search-box");
+    const title = document.getElementById("command-list-title");
+    const showMore = document.getElementById("sidebar-show-more");
+    const status = document.getElementById("sidebar-command-status");
+    const noResults = document.getElementById("sidebar-no-results-message");
+
+    let entries = [];
+    let current = null;
+    let similar = [];
+    const state = { query: "", shown: PAGE_SIZE };
+    const setStatus = CR.liveStatus(status);
+
+    // `typing` debounces the live status so screen readers aren't interrupted on every keystroke.
+    function render(typing) {
+        const query = CR.normalizeQuery(state.query);
+        const matches = query ? CR.search(entries, query) : similar;
+        const visible = matches.slice(0, state.shown);
+        CR.showEntries(listEl, entries, visible);
+        if (current) current.el.classList.add("is-current");
+
+        title.textContent = query ? `${matches.length} ${matches.length === 1 ? "result" : "results"}` : "Similar commands";
+        title.hidden = query !== "" && matches.length === 0;
+        noResults.hidden = matches.length !== 0;
+
+        const remaining = matches.length - visible.length;
+        CR.updateShowMore(showMore, remaining, PAGE_SIZE);
+        let message;
+        if (!matches.length) {
+            message = query ? "No commands found." : "";
+        } else if (!query && remaining <= 0) {
+            message = `Can't find it? Search above to look through all ${entries.length} commands.`;
+        } else {
+            message = `Showing ${visible.length} of ${matches.length}.`;
+        }
+        setStatus(message, !typing);
+    }
+
+    function init(html) {
+        listEl.innerHTML = html;
+        entries = Array.from(listEl.querySelectorAll(".command-list-item"), (el) => CR.parseEntry(el, groupNames));
+        current = entries.find((e) => e.slug === CURRENT_SLUG) || null;
+        similar = current
+            ? CR.mostSimilar(entries, current)
+            // Unknown command: fall back to the most popular ones.
+            : entries.filter((e) => e.rank !== Infinity).sort((a, b) => a.rank - b.rank);
+        render();
+    }
+
+    searchBox.addEventListener("input", () => {
+        state.query = searchBox.value;
+        state.shown = PAGE_SIZE;
+        render(true);
+    });
+    CR.bindSearchKeys(searchBox, listEl);
+    // No "/" shortcut here: on long doc pages it would override the browser's quick find.
+    showMore.addEventListener("click", () => {
+        state.shown += PAGE_SIZE;
+        render();
+    });
+
+    fetch("/command-list/")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(init)
+        .catch(() => {
+            title.hidden = true;
+            showMore.hidden = true;
+            status.textContent = "";
+            listEl.innerHTML = "<li>Could not load the command list.</li>";
+        });
+})();
+</script>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

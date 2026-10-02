@@ -1,0 +1,458 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Debugging Lua scripts</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Debugging Lua scripts">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Debugging Lua scripts</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Debugging Lua scripts
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey includes a complete Lua debugger, that can be
+used to make the task of writing complex Lua scripts much simpler.</p>
+<p>The Valkey Lua debugger, codenamed LDB, has the following important features:</p>
+<ul>
+<li>It uses a server-client model, so it's a remote debugger.
+The Valkey server acts as the debugging server, while the default client is <code>valkey-cli</code>.
+However other clients can be developed by following the simple protocol implemented by the server.</li>
+<li>By default every new debugging session is a forked session.
+It means that while the Valkey Lua script is being debugged, the server does not block and is usable for development or in order to execute multiple debugging sessions in parallel.
+This also means that changes are <strong>rolled back</strong> after the script debugging session finished, so that's possible to restart a new debugging session again, using exactly the same Valkey data set as the previous debugging session.</li>
+<li>An alternative synchronous (non forked) debugging model is available on demand, so that changes to the dataset can be retained.
+In this mode the server blocks for the time the debugging session is active.</li>
+<li>Support for step by step execution.</li>
+<li>Support for static and dynamic breakpoints.</li>
+<li>Support from logging the debugged script into the debugger console.</li>
+<li>Inspection of Lua variables.</li>
+<li>Tracing of Valkey commands executed by the script.</li>
+<li>Pretty printing of Valkey and Lua values.</li>
+<li>Infinite loops and long execution detection, which simulates a breakpoint.</li>
+</ul>
+<h2 id="quick-start">Quick start</h2>
+<p>A simple way to get started with the Lua debugger is to watch this video
+introduction:</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IMvRfStaoyM" frameborder="0" allowfullscreen></iframe>
+<blockquote>
+<p>Important Note:  please make sure to avoid debugging Lua scripts using your Valkey production server.
+Use a development server instead.
+Also note that using the synchronous debugging mode (which is NOT the default) results in the Valkey server blocking for all the time the debugging session lasts.</p>
+</blockquote>
+<p>To start a new debugging session using <code>valkey-cli</code> do the following:</p>
+<ol>
+<li>
+<p>Create your script in some file with your preferred editor. Let's assume you are editing your Valkey Lua script located at <code>/tmp/script.lua</code>.</p>
+</li>
+<li>
+<p>Start a debugging session with:</p>
+<p>./valkey-cli --ldb --eval /tmp/script.lua</p>
+</li>
+</ol>
+<p>Note that with the <code>--eval</code> option of <code>valkey-cli</code> you can pass key names and arguments to the script, separated by a comma, like in the following example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>./valkey-cli --ldb --eval /tmp/script.lua mykey somekey , arg1 arg2</span></span></code></pre>
+<p>You'll enter a special mode where <code>valkey-cli</code> no longer accepts its normal
+commands, but instead prints a help screen and passes the unmodified debugging
+commands directly to Valkey.</p>
+<p>The only commands which are not passed to the Valkey debugger are:</p>
+<ul>
+<li><code>quit</code> -- this will terminate the debugging session.
+It's like removing all the breakpoints and using the <code>continue</code> debugging command.
+Moreover the command will exit from <code>valkey-cli</code>.</li>
+<li><code>restart</code> -- the debugging session will restart from scratch, <strong>reloading the new version of the script from the file</strong>.
+So a normal debugging cycle involves modifying the script after some debugging, and calling <code>restart</code> in order to start debugging again with the new script changes.</li>
+<li><code>help</code> -- this command is passed to the Valkey Lua debugger, that will print a list of commands like the following:</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>lua debugger&gt; help</span></span>
+<span class="giallo-l"><span>Valkey Lua debugger help:</span></span>
+<span class="giallo-l"><span>[h]elp               Show this help.</span></span>
+<span class="giallo-l"><span>[s]tep               Run current line and stop again.</span></span>
+<span class="giallo-l"><span>[n]ext               Alias for step.</span></span>
+<span class="giallo-l"><span>[c]ontinue           Run till next breakpoint.</span></span>
+<span class="giallo-l"><span>[l]ist               List source code around current line.</span></span>
+<span class="giallo-l"><span>[l]ist [line]        List source code around [line].</span></span>
+<span class="giallo-l"><span>                     line = 0 means: current position.</span></span>
+<span class="giallo-l"><span>[l]ist [line] [ctx]  In this form [ctx] specifies how many lines</span></span>
+<span class="giallo-l"><span>                     to show before/after [line].</span></span>
+<span class="giallo-l"><span>[w]hole              List all source code. Alias for &#39;list 1 1000000&#39;.</span></span>
+<span class="giallo-l"><span>[p]rint              Show all the local variables.</span></span>
+<span class="giallo-l"><span>[p]rint &lt;var&gt;        Show the value of the specified variable.</span></span>
+<span class="giallo-l"><span>                     Can also show global vars KEYS and ARGV.</span></span>
+<span class="giallo-l"><span>[b]reak              Show all breakpoints.</span></span>
+<span class="giallo-l"><span>[b]reak &lt;line&gt;       Add a breakpoint to the specified line.</span></span>
+<span class="giallo-l"><span>[b]reak -&lt;line&gt;      Remove breakpoint from the specified line.</span></span>
+<span class="giallo-l"><span>[b]reak 0            Remove all breakpoints.</span></span>
+<span class="giallo-l"><span>[t]race              Show a backtrace.</span></span>
+<span class="giallo-l"><span>[e]val &lt;code&gt;        Execute some Lua code (in a different callframe).</span></span>
+<span class="giallo-l"><span>[r]edis &lt;cmd&gt;        Execute a Valkey command.</span></span>
+<span class="giallo-l"><span>[m]axlen [len]       Trim logged Valkey replies and Lua var dumps to len.</span></span>
+<span class="giallo-l"><span>                     Specifying zero as &lt;len&gt; means unlimited.</span></span>
+<span class="giallo-l"><span>[a]bort              Stop the execution of the script. In sync</span></span>
+<span class="giallo-l"><span>                     mode dataset changes will be retained.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Debugger functions you can call from Lua scripts:</span></span>
+<span class="giallo-l"><span>server.debug()        Produce logs in the debugger console.</span></span>
+<span class="giallo-l"><span>server.breakpoint()   Stop execution as if there was a breakpoint in the</span></span>
+<span class="giallo-l"><span>                     next line of code.</span></span></code></pre>
+<p>Note that when you start the debugger it will start in <strong>stepping mode</strong>.
+It will stop at the first line of the script that actually does something before executing it.</p>
+<p>From this point you usually call <code>step</code> in order to execute the line and go to the next line.
+While you step Valkey will show all the commands executed by the server like in the following example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>* Stopped at 1, stop reason = step over</span></span>
+<span class="giallo-l"><span>-&gt; 1   server.call(&#39;ping&#39;)</span></span>
+<span class="giallo-l"><span>lua debugger&gt; step</span></span>
+<span class="giallo-l"><span>&lt;redis&gt; ping</span></span>
+<span class="giallo-l"><span>&lt;reply&gt; &quot;+PONG&quot;</span></span>
+<span class="giallo-l"><span>* Stopped at 2, stop reason = step over</span></span></code></pre>
+<p>The <code>&lt;redis&gt;</code> and <code>&lt;reply&gt;</code> lines show the command executed by the line just
+executed, and the reply from the server. Note that this happens only in stepping mode.
+If you use <code>continue</code> in order to execute the script till the next breakpoint, commands will not be dumped on the screen to prevent too much output.</p>
+<h2 id="termination-of-the-debugging-session">Termination of the debugging session</h2>
+<p>When the scripts terminates naturally, the debugging session ends and
+<code>valkey-cli</code> returns in its normal non-debugging mode. You can restart the
+session using the <code>restart</code> command as usual.</p>
+<p>Another way to stop a debugging session is just interrupting <code>valkey-cli</code>
+manually by pressing <code>Ctrl+C</code>. Note that also any event breaking the
+connection between <code>valkey-cli</code> and the <code>valkey-server</code> will interrupt the
+debugging session.</p>
+<p>All the forked debugging sessions are terminated when the server is shut
+down.</p>
+<h2 id="abbreviating-debugging-commands">Abbreviating debugging commands</h2>
+<p>Debugging can be a very repetitive task. For this reason every Valkey
+debugger command starts with a different character, and you can use the single
+initial character in order to refer to the command.</p>
+<p>So for example instead of typing <code>step</code> you can just type <code>s</code>.</p>
+<h2 id="breakpoints">Breakpoints</h2>
+<p>Adding and removing breakpoints is trivial as described in the online help.
+Just use <code>b 1 2 3 4</code> to add a breakpoint in line 1, 2, 3, 4.
+The command <code>b 0</code> removes all the breakpoints. Selected breakpoints can be
+removed using as argument the line where the breakpoint we want to remove is, but prefixed by a minus sign.
+So for example <code>b -3</code> removes the breakpoint from line 3.</p>
+<p>Note that adding breakpoints to lines that Lua never executes, like declaration of local variables or comments, will not work.
+The breakpoint will be added but since this part of the script will never be executed, the program will never stop.</p>
+<h2 id="dynamic-breakpoints">Dynamic breakpoints</h2>
+<p>Using the <code>breakpoint</code> command it is possible to add breakpoints into specific
+lines. However sometimes we want to stop the execution of the program only
+when something special happens. In order to do so, you can use the
+<code>server.breakpoint()</code> function inside your Lua script. When called it simulates
+a breakpoint in the next line that will be executed.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>if counter &gt; 10 then server.breakpoint() end</span></span></code></pre>
+<p>This feature is extremely useful when debugging, so that we can avoid
+continuing the script execution manually multiple times until a given condition
+is encountered.</p>
+<h2 id="synchronous-mode">Synchronous mode</h2>
+<p>As explained previously, but default LDB uses forked sessions with rollback
+of all the data changes operated by the script while it has being debugged.
+Determinism is usually a good thing to have during debugging, so that successive
+debugging sessions can be started without having to reset the database content
+to its original state.</p>
+<p>However for tracking certain bugs, you may want to retain the changes performed
+to the key space by each debugging session. When this is a good idea you
+should start the debugger using a special option, <code>ldb-sync-mode</code>, in <code>valkey-cli</code>.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>./valkey-cli --ldb-sync-mode --eval /tmp/script.lua</span></span></code></pre>
+<blockquote>
+<p>Note: Valkey server will be unreachable during the debugging session in this mode, so use with care.</p>
+</blockquote>
+<p>In this special mode, the <code>abort</code> command can stop the script half-way taking the changes operated to the dataset.
+Note that this is different compared to ending the debugging session normally.
+If you just interrupt <code>valkey-cli</code> the script will be fully executed and then the session terminated.
+Instead with <code>abort</code> you can interrupt the script execution in the middle and start a new debugging session if needed.</p>
+<h2 id="logging-from-scripts">Logging from scripts</h2>
+<p>The <code>server.debug()</code> command is a powerful debugging facility that can be
+called inside the Valkey Lua script in order to log things into the debug
+console:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>lua debugger&gt; list</span></span>
+<span class="giallo-l"><span>-&gt; 1   local a = {1,2,3}</span></span>
+<span class="giallo-l"><span>   2   local b = false</span></span>
+<span class="giallo-l"><span>   3   server.debug(a,b)</span></span>
+<span class="giallo-l"><span>lua debugger&gt; continue</span></span>
+<span class="giallo-l"><span>&lt;debug&gt; line 3: {1; 2; 3}, false</span></span></code></pre>
+<p>If the script is executed outside of a debugging session, <code>server.debug()</code> has no effects at all.
+Note that the function accepts multiple arguments, that are separated by a comma and a space in the output.</p>
+<p>Tables and nested tables are displayed correctly in order to make values simple to observe for the programmer debugging the script.</p>
+<h2 id="inspecting-the-program-state-with-print-and-eval">Inspecting the program state with <code>print</code> and <code>eval</code></h2>
+<p>While the <code>server.debug()</code> function can be used in order to print values
+directly from within the Lua script, often it is useful to observe the local
+variables of a program while stepping or when stopped into a breakpoint.</p>
+<p>The <code>print</code> command does just that, and performs lookup in the call frames
+starting from the current one back to the previous ones, up to top-level.
+This means that even if we are into a nested function inside a Lua script,
+we can still use <code>print foo</code> to look at the value of <code>foo</code> in the context
+of the calling function. When called without a variable name, <code>print</code> will
+print all variables and their respective values.</p>
+<p>The <code>eval</code> command executes small pieces of Lua scripts <strong>outside the context of the current call frame</strong> (evaluating inside the context of the current call frame is not possible with the current Lua internals).
+However you can use this command in order to test Lua functions.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>lua debugger&gt; e server.sha1hex(&#39;foo&#39;)</span></span>
+<span class="giallo-l"><span>&lt;retval&gt; &quot;0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33&quot;</span></span></code></pre><h2 id="debugging-clients">Debugging clients</h2>
+<p>LDB uses the client-server model where the Valkey server acts as a debugging server that communicates using <a href="/topics/protocol">RESP</a>. While <code>valkey-cli</code> is the default debug client, any <a href="../clients/">client</a> can be used for debugging as long as it meets one of the following conditions:</p>
+<ol>
+<li>The client provides a native interface for setting the debug mode and controlling the debug session.</li>
+<li>The client provides an interface for sending arbitrary commands over RESP.</li>
+<li>The client allows sending raw messages to the Valkey server.</li>
+</ol>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/ldb.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

@@ -1,0 +1,401 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; History</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: History">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: History</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            History
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+<p><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review. 
+    In the future it may change substantially or be removed entirely.</p>
+<hr />
+
+    <p>Valkey is a fork of the open-source Redis (REmote DIctionary Server) database
+created in 2009 by the Italian hacker Salvatore “antirez” Sanfilippo. He
+announced it on <a rel="external" href="https://news.ycombinator.com/item?id=494649">Hacker News</a> on Feb 25, 2009. <a rel="external" href="https://github.blog/2009-11-03-introducing-resque/">GitHub</a> and
+<a rel="external" href="https://instagram-engineering.com/storing-hundreds-of-millions-of-simple-key-value-pairs-in-redis-1091ae80f74c">Instagram</a> were among the early adopters.</p>
+<h2 id="early-works-of-salvatore-sanfilippo">Early works of Salvatore Sanfilippo</h2>
+<p>At the time, Salvatore “antirez” was already known for inventing the <a rel="external" href="https://en.wikipedia.org/wiki/Idle_scan">Idle
+scan</a> port scanning technique, the <a rel="external" href="https://en.wikipedia.org/wiki/Hping">Hping</a> TCP/IP packet
+generator and analyzer, the <a rel="external" href="https://jim.tcl-lang.org/index.html/doc/www/www/about/">Jim</a> TCL interpreter and the <a rel="external" href="https://github.com/antirez/lloogg/blob/master/README.md">LLOOGG</a>
+real-time log analyzer. To improve it, he created an in-memory database called
+called <a rel="external" href="https://gist.github.com/antirez/6ca04dd191bdb82aad9fb241013e88a8">LLOOGG Memory DB</a>, which was a proof-of-concept of what later
+became Redis and Valkey.</p>
+<h2 id="early-contributions-and-sponsorships">Early contributions and sponsorships</h2>
+<p>During 2009, Engine Yard contributed blocking POP (BLPOP) and part of the
+Virtual Memory implementation (later deleted), Hitmeister contributed part of
+the Cluster implementation and Citrusbyte contributed part of Virtual Memory
+implementation. In 2010, Slicehost (acquired by Rackspace) provided Virtual
+Machines for testing in a virtualized environment and Linode provided virtual
+machines for testing in a virtualized environment. Also thanks to the following
+people or organizations that donated to the Project: Emil Vladev, <a rel="external" href="https://bradjasper.com/">Brad
+Jasper</a> and <a rel="external" href="http://mrkris.com/">Mrkris</a>. The
+<a rel="external" href="https://en.wikipedia.org/wiki/Shuttleworth_Foundation">Shuttleworth Foundation</a>
+donated 5000 USD to the project in form of a flash grant.</p>
+<p>Pieter Noordhuis and Matt Stancliff provided a significant amount of code and
+ideas to the core and client libraries.</p>
+<h2 id="the-time-with-vmware">The time with VMware</h2>
+<p>In March, 2010, Sanfilippo was hired by <a rel="external" href="https://vmware.com">VMware</a> to work on
+Redis and Redis Tools. In his blog post <a rel="external" href="https://web.archive.org/web/20241017012850/http://oldblog.antirez.com/post/vmware-the-new-redis-home.html">VMware: the new Redis
+home</a>, he writes:</p>
+<blockquote>
+<p>Not only Redis will remain a totally open source project, but Redis Tools will
+be open sourced also (and this was an idea I got from VMware itself!).</p>
+<p>This is why I'm truly excited about joining VMware: together we'll build a
+better, free Redis, bringing Redis development to another level.</p>
+</blockquote>
+<p>VMware, and later Pivotal (a VMware spin-off), provided a 24 GB RAM workstation
+for Salvatore to run the Redis CI test and other long running tests. Later,
+Salvatore equipped the server with an SSD drive in order to test in the same
+hardware with rotating and flash drives. VMware sponsored the project until May
+2013, with the work of Salvatore Sanfilippo and Pieter Noordhuis. From May 2013
+to June 2015, Salvatore's work was sponsored by Pivotal.</p>
+<h2 id="the-redis-labs-era">The Redis Labs era</h2>
+<p>In 2011, a company called Garantia Data was founded and started providing
+database services based on Redis. In 2013, Garantia Data was changing its name
+to RedisDB, but <a rel="external" href="https://www.forbes.com/sites/benkepes/2013/11/04/was-garantia-is-now-redisdb-either-way-nosql-is-hot/">decided to withdraw the change</a> after complaints by
+Sanfilippo:</p>
+<blockquote>
+<p>If this is true, it is not a good thing as the current informal rule was: use
+"Redis" in company names that are selling Redis services, but in a way that
+makes it distinguishable from Redis as a project. There are many examples like
+OpenRedis, RedisToGo, and so forth. However "RedisDB" is different as it is
+more like "We are Redis", (I even own the "redis-db.com" domain name since
+2009! you can WHOIS it to check). So in my opinion calling the company
+"RedisDB" is wrong, especially since I and Garantia Data from time to time
+have friendly conversations as we are both part of the "Redis ecosystem", but
+I did not received any prior question about this issue.</p>
+</blockquote>
+<p>The following year, 2014, Garantia Data <a rel="external" href="https://techcrunch.com/2014/01/29/database-provider-garantia-data-makes-another-name-change-this-time-to-redis-labs/">changed its name to Redis Labs</a>.</p>
+<p>In 2015, Salvatore left Pivotal for Redis Labs. He writes in his blog post
+<a rel="external" href="https://web.archive.org/web/20241123010805/http://antirez.com/news/91">Thanks Pivotal, Hello Redis Labs</a>:</p>
+<blockquote>
+<p>Redis Labs was willing to continue what VMware and Pivotal started. I'll be
+able to work as I do currently, spending all my time in the open source side
+of the project, while Redis Labs continues to provide Redis users with an
+hassles-free Redis experience of managed instances and products.</p>
+</blockquote>
+<p>In 2018, Redis Labs changed the license of some of its modules from AGPL to a
+source-available license. The license prevents competing cloud providers from
+offering these modules to customers and does therefore not fulfill the criteria
+for an open source license.</p>
+<p>This was interpreted by some as if Redis is no longer open source. Sanfilippo
+clarified on his blog <a rel="external" href="https://web.archive.org/web/20241111062719/http://antirez.com/news/120">Redis will remain BSD licensed</a>.</p>
+<p>Yiftach Shoolman, CTO and co-founder of Redis Labs, also clarified in in the
+company's blog that <a rel="external" href="https://redis.io/blog/redis-license-bsd-will-remain-bsd/">Redis' License is BSD and will remain
+BSD</a>. He repeated this promise in <a rel="external" href="https://news.ycombinator.com/item?id=17819392">a comment on Hacker
+News</a>, writing “let me assure you that Redis remains and always
+will remain, open source, BSD license”.</p>
+<p>In 2020, Salvatore Sanfilippo announced in his blog post <a rel="external" href="https://web.archive.org/web/20241123005834/http://antirez.com/news/133">The end of the Redis
+adventure</a> that he was stepping back as the Redis
+maintainer, handing over the maintenance to Yossi Gottlieb and Oran Agra at
+Redis Labs. The two created a “core team” to maintain the project and invited
+Itamar Haber from Redis Labs, Zhao Zhao from Alibaba and Madelyn Olson from
+Amazon. The members were selected “based on demonstrated, long-term personal
+involvement and contributions”. This was described in the projects
+<a rel="external" href="https://web.archive.org/web/20200709170526/https://redis.io/topics/governance">Governance</a> page which was the inspiration for the current
+<a rel="external" href="https://github.com/valkey-io/valkey/blob/unstable/GOVERNANCE.md">Valkey governance</a>.</p>
+<p>In 2021, the Redis Labs changed its name to Redis Ltd. or just Redis. In this
+article, we're using the name Redis Ltd. when referring to the company to avoid
+confusion. By this time, Redis Ltd. had acquired the trademark rights to the
+name Redis and the logo from Sanfilippo.</p>
+<h2 id="the-end-of-open-source-redis">The end of open source Redis</h2>
+<p>In 2024, Redis Ltd. changed the license of Redis from the open source BSD
+license to dual source-available licenses. This was announced in a blog post
+<a rel="external" href="https://redis.io/blog/redis-adopts-dual-source-available-licensing/">Redis Adopts Dual Source-Available Licensing</a> and the
+license change was <a rel="external" href="https://github.com/redis/redis/pull/13157">committed to the repository</a> the same day.</p>
+<p>Neither of the licenses, Redis Source Available License (RSALv2) nor the Server
+Side Public License (SSPLv1), are open source licenses, as neither meet the
+criteria of an open source license.</p>
+<p>RSALv2 forbids the use of the software in database products, to prevent their
+competitors from providing database products and services. Such a restriction is
+not in line with <a rel="external" href="https://opensource.org/osd">The Open Source Definition</a>, criterion #6 “The license
+must not restrict anyone from making use of the program in a specific field of
+endeavor” by the Open Source Initiative, nor “the freedom to run the program as
+you wish, for any purpose (freedom 0)” in the Free Software Foundation's
+definition of Free Software. The SSPL has similar restrictions, explained in the
+<a rel="external" href="https://en.wikipedia.org/wiki/Server_Side_Public_License">SSPL article on Wikipedia</a>.</p>
+<h2 id="the-birth-of-valkey">The birth of Valkey</h2>
+<p>Many contributors, including companies providing hosted Redis-derived or
+Redis-compatible database services, just like Redis Ltd. does, have been using
+and contributing to Redis just as long as Redis Ltd. has existed. It was
+therefore and easy decision for many of them to continue the open source
+development as usual under the BSD license.</p>
+<p>As Redis Ltd. owns the trademark rights to the name Redis, the open source
+project needed to continue under a different name. A group of six active
+contributors (one from each of Alibaba, Amazon, Ericsson, Google, Huawei and
+Tencent) with the support from several other companies launched Valkey as a
+Linux Foundation project. It was announced in a <a rel="external" href="https://www.linuxfoundation.org/press/linux-foundation-launches-open-source-valkey-community">press release</a> only
+eight days after Redis' license change. Three weeks later, a <a rel="external" href="https://www.linuxfoundation.org/press/valkey-community-announces-release-candidate-amid-growing-support-for-open-source-data-store">second press
+release</a> announced seven more companies joining and the first
+release, Valkey 7.2.5.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/history.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Releases and versioning schema</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Releases and versioning schema">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Releases and versioning schema</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Releases and versioning schema
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey is usually among the most critical pieces of a software stack.
+For this reason, Valkey's release cycle prioritizes highly stable releases at the cost of slower release cycles.</p>
+<p>All Valkey releases are published in the <a rel="external" href="https://github.com/valkey-io/valkey/releases">Valkey GitHub repository</a>.</p>
+<h2 id="versioning">Versioning</h2>
+<p>Valkey stable releases will generally follow <code>major.minor.patch</code> <a rel="external" href="https://semver.org/">semantic versioning schema</a>.
+We follow semantic versioning to provide explicit guarantees regarding backward compatibility.</p>
+<p>When discussing compatibility, we refer to the following API contracts:</p>
+<ol>
+<li>Valkey commands including their inputs, outputs, and defined behavior</li>
+<li>The functions and APIs that can be executed from a Lua script</li>
+<li>The RDB version</li>
+<li>The protocol used to establish and replicate data from primaries to replicas</li>
+<li>The protocol between nodes within a Valkey cluster</li>
+<li>The Valkey Module API interface</li>
+<li>The AOF on disk format</li>
+</ol>
+<h3 id="patch-versions">Patch versions</h3>
+<p><em>Patch</em> versions are released with backwards compatible bug fixes and should not introduce new features.</p>
+<p>Upgrading from a previous patch version should be safe and seamless.
+It should be safe to run a primary-replica pair or a Valkey cluster with servers running on different patch versions.</p>
+<p><em>Patch</em> versions may also introduce small improvements such as performance or memory optimizations that are easy to verify as safe.</p>
+<h3 id="minor-versions">Minor versions</h3>
+<p><em>Minor</em> versions are released with new functionality that is added in a backward compatible manner.
+Examples of new functionality include new commands, info fields, or configuration parameters.</p>
+<p>Upgrading from a previous minor version should be safe, and will not introduce incompatibilities between servers in the cluster when default server configurations are used.</p>
+<p><strong>NOTE:</strong> Minor releases may include new commands and data types that can introduce incompatibility between servers in the cluster, but users need to opt-in to these features to cause this type of incompatibility.
+For this reason, it is not recommended to run a Valkey cluster with servers running on different minor versions.
+Users should avoid new features until all servers in the cluster have been upgraded.</p>
+<p>Commands may also be marked as <strong>deprecated</strong> in minor versions.
+Deprecated commands are not removed, instead a replacement command or an alternative to using the command will be defined in the same minor version.</p>
+<h3 id="major-versions">Major versions</h3>
+<p><em>Major</em> versions are released with significant functionality that may break backwards compatibility or alter key performance characteristics.
+Examples of significant functionality includes altering the behavior of an existing command, removing previously deprecated commands, changing the default value of configs, and significant refactoring for performance improvements.</p>
+<p>Upgrading from a previous major version is intended to be safe, but should be approached with caution.
+You should carefully read the release notes before performing a major version upgrade.
+Although Major versions can introduce breaking changes, data replicated from primaries to replicas will always be sent in a backward compatible format.
+You should always upgrade replicas before upgrading primaries in order to ensure data consistency.</p>
+<p>The Valkey community strives to make as few backwards breaking changes as possible.
+When breaking changes are required, we will also strive to provide a way to mitigate the impact without incurring downtime to your application.</p>
+<h2 id="release-schedule">Release schedule</h2>
+<p>The Valkey community typically releases a stable major version once each year.
+Stable minor versions are introduced as needed between major releases,
+with at least one minor version published annually.</p>
+<h3 id="release-candidate">Release candidate</h3>
+<p>New minor and major versions of Valkey begin by branching off the <code>unstable</code> branch as an initial release candidate branch with a name that takes the form of <em><code>major.minor</code></em>, example <code>7.2</code>.
+The first release candidate, or rc1, is released once it can be used for development purposes and for testing the new version.
+Release candidate versions will start with a patch version of "0" and will take the form <em><code>major.minor.patch-rcN</code></em>, example <code>7.2.0-rc1</code> followed by <code>7.2.0-rc2</code>.
+At this stage, most of the new features and changes in the new version are ready for review, and the version is released for the purpose of collecting public feedback.
+Subsequent release candidates are released every couple of weeks, primarily for fixing bugs and refining features based off of user input.</p>
+<h3 id="stable-release">Stable release</h3>
+<p>Once development has ended and the feedback for release candidate slows down, it is ready for the final release.
+At this point, the release is marked as stable and is released with "0" as its patch-level version.</p>
+<p>Patches are released as needed to fix high-urgency issues, or once a stable version accumulates enough fixes to justify it.</p>
+<h2 id="support">Support</h2>
+<p>The latest stable release is always fully supported and maintained.</p>
+<p>The Valkey community will provide maintenance support, providing patch releases for bug fixes and all security fixes, for 3 years from when a minor version was first released.</p>
+<p>The Valkey community will also provide extended security support for the latest minor version of each major version for 5 years from when a version was first released.
+The minor version to be used for this extended security support will be decided once the next major version has been launched.
+The Valkey community will only patch security issues we believe to be possible to exploit, which will be up to the discretion of the TSC.</p>
+<p>For contacting the TSC on sensitive matters and security issues, please see <a rel="external" href="https://github.com/valkey-io/valkey/blob/unstable/SECURITY.md">SECURITY.md</a>.</p>
+<h3 id="list-of-supported-versions">List of supported versions</h3>
+<table><thead><tr><th>Version</th><th>Initial release</th><th>Maintenance support end</th><th>Security support end</th></tr></thead><tbody>
+<tr><td>9.1</td><td>2026-05-19</td><td>2029-05-19</td><td>2031-05-19</td></tr>
+<tr><td>9.0</td><td>2025-10-21</td><td>2028-10-21</td><td>2028-10-21</td></tr>
+<tr><td>8.1</td><td>2025-03-31</td><td>2028-03-31</td><td>2030-03-31</td></tr>
+<tr><td>8.0</td><td>2024-09-15</td><td>2027-09-15</td><td>2027-09-15</td></tr>
+<tr><td>7.2</td><td>2024-04-16</td><td>2027-04-16</td><td>2029-04-16</td></tr>
+</tbody></table>
+<h2 id="unstable-tree">Unstable tree</h2>
+<p>The development tree of Valkey is located in the <code>unstable</code> branch in the <a rel="external" href="https://github.com/valkey-io/valkey">Valkey GitHub repository</a>.</p>
+<p>This branch is the source tree where most of the new features are under development.
+<code>unstable</code> is not considered production-ready: it may contain critical bugs, incomplete features, and is potentially unstable.</p>
+<p>However, we try hard to make sure that even the unstable branch is usable most of the time in a development environment without significant issues.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/releases.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

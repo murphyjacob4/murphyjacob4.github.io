@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey</title>
+    <meta name="title" property="og:title" content="Valkey">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+   class="homepage"
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+<div class="hero-section">
+    <div class="hero-content">
+        
+        <h1 class="hero-heading">FAST. RELIABLE.</h1>
+        
+        <h1 class="hero-heading">OPEN SOURCE, FOREVER.</h1>
+        
+        <p class="hero-subtitle">
+            Valkey is an open source (BSD) high-performance key&#x2F;value datastore that supports a variety of workloads such as caching, message queues, and can act as a primary database. The project is backed by the Linux Foundation, ensuring it will remain open source forever.
+        </p>
+        <a href="&#x2F;topics&#x2F;quickstart" class="hero-button">GET STARTED</a>
+    </div>
+</div>
+
+
+<div class="whats-new-section">
+        <div class="whats-new-inner row">
+            <div class="col col-6">   
+                
+                
+                
+                
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                    
+                        
+                    
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                <h3> Version 9.x.x </h3>
+                <div class="inner-card">
+                    <strong>Release Date:</strong>  2026-09-01 <br/> 
+<strong>GitHub Release:</strong> <a href="https://github.com/valkey-io/valkey/releases/tag/9.1.2">9.1.2</a><br />
+<hr />
+
+
+    <h4>Docker Hub <small>(<a href="https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;valkey&#x2F;valkey&#x2F;">valkey&#x2F;valkey</a>)</small></h4>
+    <p>Tags:</p>
+    <ul>
+        
+            <li><code>valkey&#x2F;valkey:9.1.2</code></li>
+            
+                
+            
+        
+            <li><code>valkey&#x2F;valkey:9.1.2-trixie</code></li>
+            
+        
+            <li><code>valkey&#x2F;valkey:9.1.2-alpine</code></li>
+            
+        
+            <li><code>valkey&#x2F;valkey:9.1.2-alpine3.24</code></li>
+            
+        
+    </ul>
+    <p>Example: <code>docker run --rm valkey&#x2F;valkey:9.1.2</code></p>
+    <hr />
+
+
+
+<h4>Binary Artifacts</h4>
+
+
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-jammy-arm64.tar.gz">arm64 / jammy</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-jammy-arm64.tar.gz.sha256">sha256</a>)</small><br />
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-jammy-x86_64.tar.gz">x86_64 / jammy</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-jammy-x86_64.tar.gz.sha256">sha256</a>)</small><br />
+    
+
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-noble-arm64.tar.gz">arm64 / noble</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-noble-arm64.tar.gz.sha256">sha256</a>)</small><br />
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-noble-x86_64.tar.gz">x86_64 / noble</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-9.1.2-noble-x86_64.tar.gz.sha256">sha256</a>)</small><br />
+    
+
+
+
+                </div>
+
+                <h3> Latest supported version of past releases</h3>
+                
+                <div class="inner-card">
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                            
+                            
+                            <h4> Version 8.x.x </h4>
+                            <strong>Release Date:</strong>  2026-09-01 <br/> 
+<strong>GitHub Release:</strong> <a href="https://github.com/valkey-io/valkey/releases/tag/8.1.10">8.1.10</a><br />
+<hr />
+
+
+    <h4>Docker Hub <small>(<a href="https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;valkey&#x2F;valkey&#x2F;">valkey&#x2F;valkey</a>)</small></h4>
+    <p>Tags:</p>
+    <ul>
+        
+            <li><code>valkey&#x2F;valkey:8.1.10</code></li>
+            
+                
+            
+        
+            <li><code>valkey&#x2F;valkey:8.1.10-trixie</code></li>
+            
+        
+            <li><code>valkey&#x2F;valkey:8.1.10-alpine</code></li>
+            
+        
+            <li><code>valkey&#x2F;valkey:8.1.10-alpine3.24</code></li>
+            
+        
+    </ul>
+    <p>Example: <code>docker run --rm valkey&#x2F;valkey:8.1.10</code></p>
+    <hr />
+
+
+
+<h4>Binary Artifacts</h4>
+
+
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-jammy-arm64.tar.gz">arm64 / jammy</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-jammy-arm64.tar.gz.sha256">sha256</a>)</small><br />
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-jammy-x86_64.tar.gz">x86_64 / jammy</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-jammy-x86_64.tar.gz.sha256">sha256</a>)</small><br />
+    
+
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-noble-arm64.tar.gz">arm64 / noble</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-noble-arm64.tar.gz.sha256">sha256</a>)</small><br />
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-noble-x86_64.tar.gz">x86_64 / noble</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-8.1.10-noble-x86_64.tar.gz.sha256">sha256</a>)</small><br />
+    
+
+
+
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                            
+                            
+                            <h4> Version 7.x.x </h4>
+                            <strong>Release Date:</strong>  2026-09-01 <br/> 
+<strong>GitHub Release:</strong> <a href="https://github.com/valkey-io/valkey/releases/tag/7.2.14">7.2.14</a><br />
+<hr />
+
+
+    <h4>Docker Hub <small>(<a href="https:&#x2F;&#x2F;hub.docker.com&#x2F;r&#x2F;valkey&#x2F;valkey&#x2F;">valkey&#x2F;valkey</a>)</small></h4>
+    <p>Tags:</p>
+    <ul>
+        
+            <li><code>valkey&#x2F;valkey:7.2.14</code></li>
+            
+                
+            
+        
+            <li><code>valkey&#x2F;valkey:7.2.14-trixie</code></li>
+            
+        
+            <li><code>valkey&#x2F;valkey:7.2.14-alpine</code></li>
+            
+        
+            <li><code>valkey&#x2F;valkey:7.2.14-alpine3.24</code></li>
+            
+        
+    </ul>
+    <p>Example: <code>docker run --rm valkey&#x2F;valkey:7.2.14</code></p>
+    <hr />
+
+
+
+<h4>Binary Artifacts</h4>
+
+
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-jammy-arm64.tar.gz">arm64 / jammy</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-jammy-arm64.tar.gz.sha256">sha256</a>)</small><br />
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-jammy-x86_64.tar.gz">x86_64 / jammy</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-jammy-x86_64.tar.gz.sha256">sha256</a>)</small><br />
+    
+
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-noble-arm64.tar.gz">arm64 / noble</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-noble-arm64.tar.gz.sha256">sha256</a>)</small><br />
+    
+        
+        
+        <a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-noble-x86_64.tar.gz">x86_64 / noble</a> <small>(<a href="https:&#x2F;&#x2F;download.valkey.io&#x2F;releases&#x2F;valkey-7.2.14-noble-x86_64.tar.gz.sha256">sha256</a>)</small><br />
+    
+
+
+
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                        
+                        
+                        
+                    
+                </div>                   
+            </div>        
+            <div class="col col-3"> 
+                <h3>Performance</h3>
+                <div class="homepage-performance-section">
+                    
+                    
+                    <div class="homepage-performance-card">
+                        <div class="homepage-performance-card-content">
+                            <h4><a href="&#x2F;performance&#x2F;"><p>Valkey Performance Dashboards</p>
+</a></h4>
+                            <p>Valkey Performance Dashboards provide a consolidated view of throughput trends across versions, helping teams validate improvements and identify regressions.</p>
+
+                            <a href="&#x2F;performance&#x2F;" class="view-dashboard">Explore</a>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                
+            </div>
+            <div class="col col-3">   
+                <h3>Latest Blog Posts</h3>
+                <div class="homepage-blog-section">
+                    
+                    
+                    
+                        <div class="homepage-blog-card">
+                            <div class="homepage-blog-card-content">
+                                <h4 class="homepage-blog-card-title"><a href="https:&#x2F;&#x2F;murphyjacob4.github.io&#x2F;blog&#x2F;monitoring-valkey-with-prometheus&#x2F;">Monitoring Valkey with Prometheus</a></h4>
+                                <p class="homepage-blog-card-description">Learn how to expose Valkey metrics to Prometheus, visualize them in Grafana, and choose the right exporter for your deployment.</p>
+                                <a href="https:&#x2F;&#x2F;murphyjacob4.github.io&#x2F;blog&#x2F;monitoring-valkey-with-prometheus&#x2F;" class="homepage-blog-card-readmore">Read More</a>
+                            </div>
+                        </div>
+                    
+                        <div class="homepage-blog-card">
+                            <div class="homepage-blog-card-content">
+                                <h4 class="homepage-blog-card-title"><a href="https:&#x2F;&#x2F;murphyjacob4.github.io&#x2F;blog&#x2F;browsing-a-valkey-keyspace-safely&#x2F;">Browsing a Valkey keyspace safely: SCAN, INFO, and a read-only ACL user</a></h4>
+                                <p class="homepage-blog-card-description">Pointing a graphical client at a Valkey server that is taking traffic raises two questions: how to safely collect data from the server, and how to properly authorize the access. This post covers how LibreDB Studio answers the first and best practices for the second.</p>
+                                <a href="https:&#x2F;&#x2F;murphyjacob4.github.io&#x2F;blog&#x2F;browsing-a-valkey-keyspace-safely&#x2F;" class="homepage-blog-card-readmore">Read More</a>
+                            </div>
+                        </div>
+                    
+                </div>
+
+
+
+                
+            </div>        
+    </div>
+</div>
+
+<div class="documentation-section">
+    <div class="row">
+        <div class="col">
+            <h2 id="documentation">Documentation</h2>
+<p>Valkey can run as either a <strong>standalone</strong> daemon or in a <strong>cluster</strong>, with options for <strong>replication</strong> and <strong>high availability</strong>. Valkey natively supports a rich collection of datatypes, including <strong>strings</strong>, <strong>numbers</strong>, <strong>hashes</strong>, <strong>lists</strong>, <strong>sets</strong>, <strong>sorted sets</strong>, <strong>bitmaps</strong>, <strong>hyperloglogs</strong> and more.
+You can operate on data structures in-place with an expressive collection of commands.
+Valkey also supports native extensibility with built-in scripting support for <strong>Lua</strong> and supports <strong>module</strong> plugins to create new commands, data types, and more.</p>
+
+        </div>
+    </div>
+    <div class="row documentation-card-grid">
+        
+            
+            <div class="col col-3">
+                <div class="documentation-card">
+                    <h3>Install</h3>
+                    <p>Step-by-step instructions on how to install and configure Valkey for first-time users.</p>
+                    
+                    <a class="btn" href="&#x2F;topics&#x2F;installation">See Installation Guide</a>
+                </div>
+            </div>
+            
+            <div class="col col-3">
+                <div class="documentation-card">
+                    <h3>Usage guide</h3>
+                    <p>Detailed documentation on the various datatype supported by Valkey and best practices.</p>
+                    
+                    <a class="btn" href="&#x2F;topics&#x2F;">Documentation by topic</a>
+                </div>
+            </div>
+            
+            <div class="col col-3">
+                <div class="documentation-card">
+                    <h3>Valkey API</h3>
+                    <p>View the full list of Valkey commands including first party modules.</p>
+                    
+                    <a class="btn" href="&#x2F;commands">Command Reference</a>
+                </div>
+            </div>
+            
+            <div class="col col-3">
+                <div class="documentation-card">
+                    <h3>Clients</h3>
+                    <p>Official Valkey client libraries include support for:</p>
+                    
+                    <ul>
+                        
+                        <li>Python</li>
+                        
+                        <li>Java</li>
+                        
+                        <li>Go</li>
+                        
+                        <li>Node.js</li>
+                        
+                        <li>PHP</li>
+                        
+                        <li>C#</li>
+                        
+                        <li>Ruby</li>
+                        
+                    </ul>
+                    
+                    <a class="btn" href="&#x2F;clients">Learn More</a>
+                </div>
+            </div>
+            
+        
+    </div>
+</div>
+
+
+
+<section class="homepage-participants-section">
+    <div class="homepage-participants-container">
+        <div class="homepage-participants-header">
+            <h2 class="homepage-participants-title">Participants</h2>
+            <p class="homepage-participants-description">
+                The Valkey project participants are a diverse group of organizations that have come together to maintain and contribute to the project. Valkey participants are more than vendors, they are dedicated to continuously strengthening the long-term health and viability of this project so that everyone can benefit from it. Since its inception Valkey has enjoyed steady adoption demonstrating the industry's desire for an open, community-driven database solution. We look forward to seeing our list of participants grow as more companies work on our project.
+            </p>
+        </div>
+        
+        
+        
+        <div class="homepage-participants-carousel-container">
+            <div class="homepage-participants-carousel" id="homepageParticipantsCarousel">
+                <div class="homepage-participants-track" id="homepageParticipantsTrack">
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.percona.com&#x2F;valkey-redis&#x2F;support&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Percona website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;percona.svg" alt="Percona Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Pe…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Percona</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Valkey expertise, where and when you need it.
+From day-to-day operational support to hands-on assistance for complex projects, Percona can meet your Valkey database needs.  We offer offering support and project-based consulting, so together, we can tackle any challenge and continue to keep open source, open.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.alibabacloud.com&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Alibaba Cloud website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;alibaba.png" alt="Alibaba Cloud Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Al…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Alibaba Cloud</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Established in 2009, Alibaba Cloud offers a complete suite of cloud services to customers worldwide, including elastic computing, database, storage, machine learning and artificial intelligence (AI) services, etc. Alibaba has been recognized as the leading public cloud IaaS provider in Asia-Pacific (Gartner) and globally (IDC) since 2018.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;aiven.io&#x2F;valkey', '_blank')" role="button" tabindex="0" aria-label="Visit Aiven website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;aiven.svg" alt="Aiven Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Ai…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Aiven</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Aiven for Valkey is a managed, in-memory NoSQL database with a small footprint and big performance. It is built on open source Valkey and compatible with legacy Redis® OSS.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;upcloud.com&#x2F;valkey', '_blank')" role="button" tabindex="0" aria-label="Visit UpCloud website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;upcloud.svg" alt="UpCloud Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Up…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">UpCloud</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Valkey on UpCloud simplifies database management with a fully managed service hosted on our GDPR-compliant cloud. Enjoy seamless deployment, expert maintenance, and high performance with minimal downtime.  Backed by UpCloud’s global reach, Valkey ensures reliability and scalability, freeing developers to focus on building great applications.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;aws.amazon.com&#x2F;elasticache&#x2F;redis&#x2F;?nc=sn&amp;loc=0', '_blank')" role="button" tabindex="0" aria-label="Visit Amazon Web Services website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;aws.svg" alt="AWS logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Am…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Amazon Web Services</h3>
+                        
+                        <div class="homepage-participant-offering"><p><a rel="external" href="https://aws.amazon.com/elasticache/redis/?nc=sn&amp;loc=0">Amazon ElastiCache</a> is a fully managed, Valkey-compatible service delivering real-time, cost-optimized performance. ElastiCache scales to millions of operations per second with microsecond latency and enterprise-level security and reliability. With ElastiCache, you combine the speed, simplicity, and versatility of Valkey with the manageability, security, and scalability from Amazon to power the most demanding data-driven applications in Gaming, Ad-Tech, E-Commerce, Healthcare, Financial Services, and IoT.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;cloud.google.com&#x2F;memorystore', '_blank')" role="button" tabindex="0" aria-label="Visit Google Cloud website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;gcp.svg" alt="Google Cloud logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Go…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Google Cloud</h3>
+                        
+                        <div class="homepage-participant-offering"><p><a rel="external" href="https://cloud.google.com/memorystore">Google Cloud Memorystore</a> is a versatile, fully-managed, in-memory database service for Valkey, offering sub-millisecond data access, scalability, and high availability.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.ericsson.com&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Ericsson website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;ericsson.svg" alt="Ericsson logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Er…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Ericsson</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Founded in 1876, Ericsson is a Swedish communication technology and services provider. The company offers software, services, and infrastructure for information and communications technology used by telecommunications operators, including traditional telecommunications, Internet Protocol networking equipment and business support solutions. Ericsson is headquartered in Stockholm, Sweden.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.oracle.com&#x2F;cloud&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Oracle Cloud Infrastructure website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;Oracle.svg" alt="Oracle logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Or…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Oracle Cloud Infrastructure</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Achieve sub-millisecond latency with <a rel="external" href="https://www.oracle.com/cloud/cache/">Oracle Cloud Infrastructure (OCI) Cache</a>.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.instaclustr.com&#x2F;platform&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit NetApp Instaclustr website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;netapp_instaclustr.svg" alt="NetApp Instaclustr logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Ne…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">NetApp Instaclustr</h3>
+                        
+                        <div class="homepage-participant-offering"><p><a rel="external" href="https://www.instaclustr.com/platform/managed-valkey/">NetApp® Instaclustr for Valkey™</a> gives you a powerful combination of automated features within our platform, 24x7 expert support, and enterprise-grade processes that can handle the most demanding customer requirements.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.bytedance.com', '_blank')" role="button" tabindex="0" aria-label="Visit ByteDance website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;bytedance.svg" alt="ByteDance logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">By…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">ByteDance</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Founded in 2012, ByteDance's mission is to inspire creativity and enrich life. With a suite of more than a dozen products, including TikTok, CapCut, Lark, and Pico, as well as platforms specific to the China market, including Toutiao, Douyin, Fanqie Novel and Xigua Video, ByteDance has made it easier and more fun for people to connect with, consume, and create content.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;k0rdent.io', '_blank')" role="button" tabindex="0" aria-label="Visit k0rdent website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;k0rdent.svg" alt="K0rdent Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">k0…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">k0rdent</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Valkey is now available as a <a rel="external" href="https://catalog.k0rdent.io/latest/apps/valkey/">service template on the k0rdent application catalog</a>. The application catalog features a selection of best-in-class solutions designed to enhance k0rdent managed clusters. These services have been validated on k0rdents clusters and have existing templates for easy deployment.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.gomomento.com&#x2F;platform&#x2F;cache&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Momento website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;momento.svg" alt="Momento Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Mo…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Momento</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Momento expertly tunes the Valkey storage engine for performance and compatibility without the operational burden. Momento Cache is a globally resilient, zero-operations service built for real-time applications at any scale. It ensures enterprises can instantly handle unpredictable load spikes and distributed workloads with high-throughput, guaranteed low latency, and the complete freedom to focus on innovation, not cluster maintenance.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.heroku.com&#x2F;key-value-store&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Heroku - Salesforce website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;heroku.svg" alt="Heroku Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">He…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Heroku - Salesforce</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Heroku Key-Value Store delivers a robust, scalable, and developer-friendly in-memory datastore, powered by Valkey and compatible with Redis® OSS. It brings enhanced performance and greater efficiency to supercharge your applications. Heroku Key-Value Store lets you gain greater visibility into performance and better manage your instances with a powerful CLI.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.digitalocean.com&#x2F;products&#x2F;managed-databases-valkey&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit DigitalOcean website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;digitalocean.svg" alt="DigitalOcean Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Di…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">DigitalOcean</h3>
+                        
+                        <div class="homepage-participant-offering"><p>DigitalOcean offers a managed database service for Valkey, known as DigitalOcean Managed Caching for Valkey. This service provides a fully managed, high-performance, in-memory key-value datastore.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;betterdb.com', '_blank')" role="button" tabindex="0" aria-label="Visit BetterDB website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;betterdb.svg" alt="BetterDB Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Be…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">BetterDB</h3>
+                        
+                        <div class="homepage-participant-offering"><p>BetterDB is the first monitoring platform built specifically for Valkey. It persists the operational data Valkey exposes but doesn't retain - COMMANDLOG, per-slot metrics, per-thread I/O, and more - then actively analyzes client activity and ACL audit trails to surface anomalies, so teams can debug what happened at 3am, understand what's happening now, and forecast what will come next. It works both ways with OpenTelemetry, exports to Prometheus, and fires webhooks on anomalies - correlating your app's traces with live Valkey state. Migrate freely between Redis and Valkey, from self-hosted to cloud, or vice versa. Run it <a rel="external" href="https://hub.docker.com/r/betterdb/monitor">self-hosted</a>, including fully air-gapped, or as <a rel="external" href="https://betterdb.com/login">managed cloud</a>.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;anynines.com&#x2F;products&#x2F;a9s-keyvalue&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit anynines website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;anynines.svg" alt="anynines logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">an…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">anynines</h3>
+                        
+                        <div class="homepage-participant-offering"><p><a rel="external" href="https://anynines.com/products/a9s-keyvalue/">a9s KeyValue</a> is a managed in-memory NoSQL database that delivers high-performance data storage with minimal overhead. Delivered by <a rel="external" href="https://anynines.com/">anynines</a>, it is built on open-source Valkey and fully compatible with legacy Redis® OSS.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('http:&#x2F;&#x2F;www.cloud.tencent.com&#x2F;product&#x2F;tcdc', '_blank')" role="button" tabindex="0" aria-label="Visit Tencent Cloud website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;tencent-cloud.svg" alt="Tencent Cloud" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Te…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Tencent Cloud</h3>
+                        
+                        <div class="homepage-participant-offering"><p><a rel="external" href="https://www.cloud.tencent.com/product/tcdc">Tencent Cloud Distributed Cache</a> (<a rel="external" href="https://www.tencentcloud.com/products/tcdc">English</a>) is a caching and storage service developed by Tencent Cloud, compatible with Redis® OSS, Valkey, and Memcached engines.  Its rich data structures help you develop various business scenarios.  It supports primary-replica hot standby and provides a full suite of database services including automatic disaster recovery failover, data backup, fault migration, instance monitoring, online scaling, and data rollback.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.vultr.com&#x2F;products&#x2F;managed-databases&#x2F;valkey&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Vultr website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;vultr.svg" alt="Vultr Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Vu…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Vultr</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Vultr Managed Databases for Valkey provides a fully managed, It is built on open source Valkey and compatible with legacy Redis® OSS-compatible Valkey service with automated provisioning, high availability, automated backups, monitoring, and point-in-time recovery, enabling developers to deploy and operate production-ready Valkey clusters without managing the underlying infrastructure.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;www.freshworks.com', '_blank')" role="button" tabindex="0" aria-label="Visit Freshworks website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;freshworks.png" alt="Freshworks Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">Fr…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Freshworks</h3>
+                        
+                        <div class="homepage-participant-offering"><p>Freshworks (NASDAQ: FRSH) is a leading provider of uncomplicated, AI-powered software that delivers exceptional employee and customer experiences. Its service, IT, and CRM solutions are designed to be quick to deploy and easy to use, and are trusted by organizations of all sizes worldwide.
+Freshworks authored <a rel="external" href="https://github.com/valkey-io/valkey-glide-ruby">valkey-glide-ruby</a> (gem: <code>valkey-rb</code>), the official Ruby client for Valkey GLIDE, and contributed to the underlying GLIDE Rust core that powers it. Built on the same valkey-glide Rust FFI foundation as the Python, Java, Node.js, and Go clients, the Ruby client offers a redis-rb-compatible API, standalone and cluster modes, TLS/SSL, native OpenTelemetry tracing and metrics, client statistics, and comprehensive command coverage.
+Beyond Ruby, Freshworks has contributed across the GLIDE ecosystem, extending the Java client and its Jedis compatibility layer, the Go client, and shared Rust core capabilities. After rigorous evaluation, Freshworks adopted Valkey in production for one of its major workloads.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;cloud.ionos.de', '_blank')" role="button" tabindex="0" aria-label="Visit IONOS Cloud website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;ionos-cloud.svg" alt="IONOS Cloud logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">IO…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">IONOS Cloud</h3>
+                        
+                        <div class="homepage-participant-offering"><p><a rel="external" href="https://cloud.ionos.de/managed/dbaas/in-memory-db">IONOS Cloud In-Memory DB</a> now runs on Valkey, supporting versions 8, 8.1, and 9, while staying compatible with legacy Redis® OSS. It is a fully managed key-value store for caching, real-time data, and session management, with data persistence and TLS-secured connections.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                    
+                    <div class="homepage-participant-card" onclick="window.open('https:&#x2F;&#x2F;solanica.io&#x2F;', '_blank')" role="button" tabindex="0" aria-label="Visit Solanica website">
+                        <div class="homepage-participant-image-container">
+                            
+                            <img src="&#x2F;img&#x2F;solanica.svg" alt="Solanica Logo" class="homepage-participant-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="homepage-participant-image-placeholder" style="display: none;">So…</div>
+                            
+                        </div>
+                        <h3 class="homepage-participant-name">Solanica</h3>
+                        
+                        <div class="homepage-participant-offering"><p>With the Solanica Platform, you can run your Valkey workloads on any Kubernetes cluster without pain. No more struggling with day-2 operations: you can now deploy, provision, and manage your instances, and you don’t have to worry about backups, monitoring, etc.; everything can be controlled from one GUI. <a rel="external" href="https://solanica.io/platform">Learn more</a>.</p>
+</div>
+                        
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div class="homepage-participants-navigation" aria-label="Participant carousel navigation">
+            <div class="homepage-participants-dots" id="homepageParticipantsDots">
+                
+                
+                                    
+                        
+                        <button class="homepage-participant-dot" data-slide="0" aria-label="Go to slide 1" aria-current="false"></button>
+                        
+                        <button class="homepage-participant-dot" data-slide="1" aria-label="Go to slide 2" aria-current="false"></button>
+                        
+                        <button class="homepage-participant-dot" data-slide="2" aria-label="Go to slide 3" aria-current="false"></button>
+                        
+                        <button class="homepage-participant-dot" data-slide="3" aria-label="Go to slide 4" aria-current="false"></button>
+                        
+                        <button class="homepage-participant-dot" data-slide="4" aria-label="Go to slide 5" aria-current="false"></button>
+                        
+                        <button class="homepage-participant-dot" data-slide="5" aria-label="Go to slide 6" aria-current="false"></button>
+                        
+                        <button class="homepage-participant-dot" data-slide="6" aria-label="Go to slide 7" aria-current="false"></button>
+                        
+                    
+            </div>
+        </div>
+        
+    </div>
+
+</section>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

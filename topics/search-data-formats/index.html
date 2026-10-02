@@ -1,0 +1,453 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Valkey Search - Data Formats</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Valkey Search - Data Formats">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Valkey Search - Data Formats</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Valkey Search - Data Formats
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>This document describes the data formats accepted by the search module for each field type during ingestion (when keys are created or modified) and how those values are processed before being stored in the index.</p>
+<h1 id="tag-fields">Tag Fields</h1>
+<p>For both HASH and JSON index types, the incoming data for a tag field is a single UTF-8 string. A tag field can contain one or more tag values within a single string.</p>
+<h2 id="tag-ingestion">Tag Ingestion</h2>
+<p>On ingestion, the input string is split using the declared <code>SEPARATOR</code> character into individual tags. The default separator is <code>,</code> (comma). A different separator can be specified when the field is declared with <a href="/commands/ft.create"><code>FT.CREATE</code></a>:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx SCHEMA color TAG SEPARATOR &quot;|&quot;</span></span></code></pre>
+<p>The valid separator characters are: <code>,.&lt;&gt;{}[]"':;!@#$%^&amp;*()-+=~</code></p>
+<p>After splitting, each tag is processed as follows:</p>
+<ol>
+<li>Leading and trailing ASCII whitespace is stripped from each tag.</li>
+<li>Empty tags (those that are empty or whitespace only after trimming) are silently discarded.</li>
+<li>Duplicate tags within a single field value are deduplicated.</li>
+</ol>
+<p>If the field value produces no valid tags after processing, the key is tracked but not indexed for that field.</p>
+<h3 id="case-sensitivity">Case Sensitivity</h3>
+<p>By default, tag matching is case-insensitive. The <code>CASESENSITIVE</code> option on <code>FT.CREATE</code> changes this behavior:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx SCHEMA color TAG CASESENSITIVE</span></span></code></pre>
+<p>When <code>CASESENSITIVE</code> is not set, tags like <code>"Blue"</code> and <code>"blue"</code> are treated as equivalent during search. When <code>CASESENSITIVE</code> is set, they are treated as distinct values.</p>
+<h3 id="ingestion-separator-vs-query-separator">Ingestion Separator vs. Query Separator</h3>
+<p>The separator specified in <code>FT.CREATE</code> applies only during data ingestion. In query expressions (<code>FT.SEARCH</code>), the separator between tags is always <code>|</code> (pipe), regardless of the ingestion separator. See the <a href="/topics/search-query#tag-match">query documentation</a> for details.</p>
+<h2 id="examples-of-tag-values">Examples of Tag Values</h2>
+<p>Given <code>FT.CREATE idx SCHEMA color TAG</code> (default separator <code>,</code>):</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>HSET doc:1 color &quot;blue&quot;                       --&gt; tags: {&quot;blue&quot;}</span></span>
+<span class="giallo-l"><span>HSET doc:2 color &quot;blue,red&quot;                   --&gt; tags: {&quot;blue&quot;, &quot;red&quot;}</span></span>
+<span class="giallo-l"><span>HSET doc:3 color &quot; blue , red &quot;               --&gt; tags: {&quot;blue&quot;, &quot;red&quot;}</span></span>
+<span class="giallo-l"><span>HSET doc:4 color &quot;blue,,red&quot;                  --&gt; tags: {&quot;blue&quot;, &quot;red&quot;}</span></span>
+<span class="giallo-l"><span>HSET doc:5 color &quot;hello world, green is nice&quot; --&gt; tags: {&quot;hello world&quot;, &quot;green is nice&quot;}</span></span>
+<span class="giallo-l"><span>HSET doc:6 color &quot;  &quot;                         --&gt; no tags (key is untracked)</span></span></code></pre>
+<p>Note that spaces within a tag are preserved. In the example above, <code>"hello world"</code> is a single tag containing a space.</p>
+<p>Given <code>FT.CREATE idx SCHEMA skills TAG SEPARATOR "|"</code>:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>HSET doc:1 skills &quot;python|java|go&quot;    --&gt; tags: {&quot;python&quot;, &quot;java&quot;, &quot;go&quot;}</span></span>
+<span class="giallo-l"><span>HSET doc:2 skills &quot;python | java&quot;     --&gt; tags: {&quot;python&quot;, &quot;java&quot;}</span></span></code></pre><h1 id="numeric-fields">Numeric Fields</h1>
+<p>A numeric field contains a single number. On ingestion, the field value is parsed as a 64-bit IEEE 754 double-precision floating-point number.</p>
+<h2 id="accepted-formats">Accepted Formats</h2>
+<p>The following formats are accepted on ingestion:</p>
+<ul>
+<li><strong>Integers</strong>: <code>"42"</code>, <code>"-100"</code>, <code>"0"</code></li>
+<li><strong>Floating-point</strong>: <code>"3.14"</code>, <code>"-0.5"</code>, <code>"2.0"</code></li>
+<li><strong>Scientific notation</strong>: <code>"1e2"</code>, <code>"3.14e-5"</code></li>
+<li><strong>Positive infinity</strong>: <code>"inf"</code>, <code>"Inf"</code>, <code>"+inf"</code></li>
+<li><strong>Negative infinity</strong>: <code>"-inf"</code>, <code>"-Inf"</code></li>
+</ul>
+<p>The following are rejected:</p>
+<ul>
+<li><strong>NaN</strong>: <code>"nan"</code>, <code>"NaN"</code>, <code>"NAN"</code> -- explicitly rejected on ingestion.</li>
+<li><strong>Non-numeric strings</strong>: <code>"hello"</code>, <code>""</code> -- the key becomes untracked for this field.</li>
+</ul>
+<p>When a value is rejected, the key is not indexed for that field. This is not treated as an error; the key simply does not appear in numeric range queries.</p>
+<h2 id="precision-and-range">Precision and Range</h2>
+<p>All numeric values are stored internally as 64-bit double-precision floating-point numbers:</p>
+<ul>
+<li><strong>Range</strong>: approximately +/-1.7976931348623157 x 10^308</li>
+<li><strong>Integer precision</strong>: integers up to 2^53 (9,007,199,254,740,992) are represented exactly; larger integers may lose precision.</li>
+<li><strong>Decimal precision</strong>: approximately 15-17 significant decimal digits.</li>
+</ul>
+<h2 id="examples-of-numeric-values">Examples of Numeric Values</h2>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>HSET product:1 price &quot;999.99&quot;     --&gt; stored as 999.99</span></span>
+<span class="giallo-l"><span>HSET product:2 price &quot;42&quot;         --&gt; stored as 42.0</span></span>
+<span class="giallo-l"><span>HSET product:3 price &quot;-100&quot;       --&gt; stored as -100.0</span></span>
+<span class="giallo-l"><span>HSET product:4 price &quot;1e2&quot;        --&gt; stored as 100.0</span></span>
+<span class="giallo-l"><span>HSET product:5 price &quot;inf&quot;        --&gt; stored as +infinity</span></span>
+<span class="giallo-l"><span>HSET product:6 price &quot;nan&quot;        --&gt; rejected (key untracked for this field)</span></span>
+<span class="giallo-l"><span>HSET product:7 price &quot;hello&quot;      --&gt; rejected (key untracked for this field)</span></span></code></pre>
+<p>See the <a href="/topics/search-query#numeric-range-match">query documentation</a> for details on querying numeric ranges.</p>
+<h1 id="vector-fields">Vector Fields</h1>
+<p>A vector field contains a fixed-length array of floating-point numbers. The data format differs between HASH and JSON index types.</p>
+<h2 id="supported-data-type">Supported Data Type</h2>
+<p>Currently, only <code>FLOAT32</code> (32-bit IEEE 754 single-precision floating-point) is supported. The data type is specified as a required parameter in the <a href="/commands/ft.create"><code>FT.CREATE</code></a> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx SCHEMA embedding VECTOR HNSW 6 TYPE FLOAT32 DIM 3 DISTANCE_METRIC L2</span></span></code></pre><h2 id="hash-vector-format">HASH Vector Format</h2>
+<p>For HASH-type indexes, vectors are stored as raw binary blobs. Each element is a 32-bit IEEE 754 single-precision float in little-endian byte order. The total blob size must be exactly <code>DIM * 4</code> bytes.</p>
+<p>For example, a 3-dimensional FLOAT32 vector <code>[0.0, 0.0, 1.0]</code> is stored as 12 bytes:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>\x00\x00\x00\x00   (0.0 as little-endian FLOAT32)</span></span>
+<span class="giallo-l"><span>\x00\x00\x00\x00   (0.0 as little-endian FLOAT32)</span></span>
+<span class="giallo-l"><span>\x00\x00\x80\x3f   (1.0 as little-endian FLOAT32)</span></span></code></pre>
+<p>In Python, a HASH vector can be created with:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="python"><span class="giallo-l"><span style="color: #FF7B72;">import</span><span> numpy</span><span style="color: #FF7B72;"> as</span><span> np</span></span>
+<span class="giallo-l"><span>vector</span><span style="color: #FF7B72;"> =</span><span> np.array([</span><span style="color: #79C0FF;">0.0</span><span>,</span><span style="color: #79C0FF;"> 0.0</span><span>,</span><span style="color: #79C0FF;"> 1.0</span><span>],</span><span style="color: #FFA657;"> dtype</span><span style="color: #FF7B72;">=</span><span>np.float32).tobytes()</span></span>
+<span class="giallo-l"><span>client.hset(</span><span style="color: #A5D6FF;">&quot;doc:1&quot;</span><span>,</span><span style="color: #FFA657;"> mapping</span><span style="color: #FF7B72;">=</span><span>{</span><span style="color: #A5D6FF;">&quot;embedding&quot;</span><span>: vector})</span></span></code></pre>
+<p>Or equivalently with <code>struct</code>:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="python"><span class="giallo-l"><span style="color: #FF7B72;">import</span><span> struct</span></span>
+<span class="giallo-l"><span>vector</span><span style="color: #FF7B72;"> =</span><span> struct.pack(</span><span style="color: #A5D6FF;">&quot;&lt;3f&quot;</span><span>,</span><span style="color: #79C0FF;"> 0.0</span><span>,</span><span style="color: #79C0FF;"> 0.0</span><span>,</span><span style="color: #79C0FF;"> 1.0</span><span>)</span><span style="color: #8B949E;">  # &#39;&lt;&#39; = little-endian, &#39;f&#39; = float32</span></span>
+<span class="giallo-l"><span>client.hset(</span><span style="color: #A5D6FF;">&quot;doc:1&quot;</span><span>,</span><span style="color: #FFA657;"> mapping</span><span style="color: #FF7B72;">=</span><span>{</span><span style="color: #A5D6FF;">&quot;embedding&quot;</span><span>: vector})</span></span></code></pre>
+<p>If the blob size does not match the expected <code>DIM * 4</code> bytes, the vector is rejected and the key is not indexed for that field.</p>
+<h2 id="json-vector-format">JSON Vector Format</h2>
+<p>For JSON type indexes, vectors are stored as a JSON string containing a bracketed, comma-separated list of floating-point values:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>JSON.SET doc:1 $ &#39;{&quot;embedding&quot;: &quot;[1.0, 0.0, 0.0]&quot;]: &#39;</span></span></code></pre>
+<p>Note that the vector is a JSON <strong>string value</strong> (enclosed in quotes), not a native JSON array. The search module parses this string internally, splitting on commas (with whitespace skipped) and converting each element to a 32-bit float.</p>
+<p>In Python:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="python"><span class="giallo-l"><span style="color: #FF7B72;">import</span><span> json</span></span>
+<span class="giallo-l"><span>vector</span><span style="color: #FF7B72;"> =</span><span> [</span><span style="color: #79C0FF;">1.0</span><span>,</span><span style="color: #79C0FF;"> 0.0</span><span>,</span><span style="color: #79C0FF;"> 0.0</span><span>]</span></span>
+<span class="giallo-l"><span>vector_str</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &quot;[&quot;</span><span style="color: #FF7B72;"> +</span><span style="color: #A5D6FF;"> &quot;,&quot;</span><span>.join(</span><span style="color: #79C0FF;">str</span><span>(v)</span><span style="color: #FF7B72;"> for</span><span> v</span><span style="color: #FF7B72;"> in</span><span> vector)</span><span style="color: #FF7B72;"> +</span><span style="color: #A5D6FF;"> &quot;]&quot;</span></span>
+<span class="giallo-l"><span>client.json().set(</span><span style="color: #A5D6FF;">&quot;doc:1&quot;</span><span>,</span><span style="color: #A5D6FF;"> &quot;$&quot;</span><span>, {</span><span style="color: #A5D6FF;">&quot;embedding&quot;</span><span>: vector_str})</span></span></code></pre>
+<p>The parser is flexible about whitespace and extra commas:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&quot;[0.1, 0.2, 0.3]&quot;       --&gt; valid</span></span>
+<span class="giallo-l"><span>&quot;[ 0.1, ,0.2,0.3,]&quot;     --&gt; valid (extra commas and spaces are tolerated)</span></span>
+<span class="giallo-l"><span>&quot;[0.1, 0.2, a]&quot;          --&gt; rejected (non-numeric element)</span></span></code></pre><h2 id="query-vectors">Query Vectors</h2>
+<p>Regardless of whether the index is on HASH or JSON keys, query vectors provided via <code>PARAMS</code> to <code>FT.SEARCH</code> must always use the binary blob format (the same format as HASH vectors).</p>
+<h2 id="examples-of-vector-field-values">Examples of Vector Field Values</h2>
+<p>A 3-dimensional vector with HASH storage:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx ON HASH SCHEMA vec VECTOR FLAT 6 TYPE FLOAT32 DIM 3 DISTANCE_METRIC L2</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>HSET doc:1 vec &quot;\x00\x00\x80?\x00\x00\x00\x00\x00\x00\x00\x00&quot;</span></span></code></pre>
+<p>A 3-dimensional vector with JSON storage:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx ON JSON SCHEMA $.vec AS vec VECTOR FLAT 6 TYPE FLOAT32 DIM 3 DISTANCE_METRIC L2</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>JSON.SET doc:1 $ &#39;{&quot;vec&quot;: &quot;[1.0, 0.0, 0.0]&quot;]: &#39;</span></span></code></pre><h1 id="text-fields">Text Fields</h1>
+<p>A text field contains a string of words. On ingestion, the raw string passes through a multi-stage processing pipeline to produce a sequence of searchable tokens.</p>
+<h2 id="text-ingestion">Text Ingestion</h2>
+<p>The pipeline consists of four stages applied in order:</p>
+<ol>
+<li><strong>Lexical Analysis</strong> -- split text into words</li>
+<li><strong>Case Folding</strong> -- convert to lowercase</li>
+<li><strong>Stop Word Removal</strong> -- filter out common words</li>
+<li><strong>Stemming</strong> -- reduce words to root forms</li>
+</ol>
+<h3 id="lexical-analysis">Lexical Analysis</h3>
+<p>The input string is split into words based on punctuation characters and whitespace. A "word" is any contiguous sequence of characters that is not punctuation and not whitespace.</p>
+<p><strong>Whitespace characters</strong> always break words. This includes spaces, tabs, newlines, carriage returns, and control characters.</p>
+<p><strong>Punctuation characters</strong> are configurable. The default set is:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>,.&lt;&gt;{}[]&quot;&#39;:;!@#$%^&amp;*()-+=~/\|?</span></span></code></pre>
+<p>A custom punctuation set can be specified at index creation time:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx PUNCTUATION &quot;,.!?&quot; SCHEMA content TEXT</span></span></code></pre>
+<p>The punctuation set operates on individual bytes. Multi-byte UTF-8 characters (such as CJK characters or emoji) are not treated as punctuation and become part of the surrounding word.</p>
+<p><strong>Escape sequences</strong>: A backslash (<code>\</code>) before a punctuation character causes that character to be treated as part of the word rather than as a word boundary. For example, <code>hello\,world</code> produces the single token <code>hello,world</code>.</p>
+<p>The input must be valid UTF-8. Invalid UTF-8 sequences cause the record to be rejected.</p>
+<h3 id="case-folding">Case Folding</h3>
+<p>After tokenization, each word is converted to lowercase. For ASCII text, this uses standard ASCII lowercasing. For text containing non-ASCII characters, Unicode case folding (via ICU) is applied.</p>
+<h3 id="stop-word-removal">Stop Word Removal</h3>
+<p>Stop words are common words that are excluded from the index. The default stop word list for English is:</p>
+<blockquote>
+<p>a, an, and, are, as, at, be, but, by, for, if, in, into, is, it, no, not, of, on, or, such, that, their, then, there, these, they, this, to, was, will, with</p>
+</blockquote>
+<p>Stop words can be customized at index creation time:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx STOPWORDS 2 the a SCHEMA content TEXT</span></span>
+<span class="giallo-l"><span>FT.CREATE idx NOSTOPWORDS SCHEMA content TEXT</span></span></code></pre>
+<p><code>NOSTOPWORDS</code> or <code>STOPWORDS 0</code> disables stop word removal entirely.</p>
+<p>Removed stop words do not occupy a position in the token sequence. For example, <code>"the quick brown fox"</code> (where "the" is a stop word) produces positions: quick=0, brown=1, fox=2. This is relevant for phrase matching and proximity queries.</p>
+<h3 id="stemming">Stemming</h3>
+<p>Stemming reduces words to their root form so that morphological variants match each other. For example, "running", "runs", and "run" all have the same stem: "run". The stemming algorithm is language-specific; currently only English (Snowball stemmer) is supported.</p>
+<p>Stemming is controlled by these options:</p>
+<ul>
+<li><code>LANGUAGE ENGLISH</code> (schema-level): Specifies the stemming language. Currently only <code>ENGLISH</code> is supported.</li>
+<li><code>NOSTEM</code> (per-field): Disables stemming for a specific text field.</li>
+<li><code>MINSTEMSIZE &lt;size&gt;</code> (schema-level): Words shorter than this length are not stemmed. The default is 4.</li>
+</ul>
+<p>When stemming is enabled, the original word (not the stemmed form) is stored in the index. The stem mapping is recorded separately so that a search on a term expands to match all terms that share the same stem, as well as the stem itself.</p>
+<h2 id="text-ingestion-examples">Text Ingestion Examples</h2>
+<h3 id="lexical-processing-examples">Lexical Processing Examples</h3>
+<p>Given the default punctuation set:</p>
+<table><thead><tr><th style="text-align: left">Input</th><th style="text-align: left">Tokens</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>"hello world"</code></td><td style="text-align: left"><code>hello</code>, <code>world</code></td></tr>
+<tr><td style="text-align: left"><code>"hello, world!"</code></td><td style="text-align: left"><code>hello</code>, <code>world</code></td></tr>
+<tr><td style="text-align: left"><code>"it's a test"</code></td><td style="text-align: left"><code>it</code>, <code>s</code>, <code>a</code>, <code>test</code></td></tr>
+<tr><td style="text-align: left"><code>"hello-world"</code></td><td style="text-align: left"><code>hello</code>, <code>world</code></td></tr>
+<tr><td style="text-align: left"><code>"price: $100"</code></td><td style="text-align: left"><code>price</code>, <code>100</code></td></tr>
+<tr><td style="text-align: left"><code>"hello\,world"</code></td><td style="text-align: left"><code>hello,world</code> (escaped comma)</td></tr>
+</tbody></table>
+<h3 id="stop-word-removal-example">Stop Word Removal Example</h3>
+<p>Given the default stop word list and input <code>"the quick brown fox is not fast"</code>:</p>
+<table><thead><tr><th style="text-align: left">Stage</th><th style="text-align: left">Result</th></tr></thead><tbody>
+<tr><td style="text-align: left">After tokenization</td><td style="text-align: left"><code>the</code>, <code>quick</code>, <code>brown</code>, <code>fox</code>, <code>is</code>, <code>not</code>, <code>fast</code></td></tr>
+<tr><td style="text-align: left">After case folding</td><td style="text-align: left"><code>the</code>, <code>quick</code>, <code>brown</code>, <code>fox</code>, <code>is</code>, <code>not</code>, <code>fast</code></td></tr>
+<tr><td style="text-align: left">After stop word removal</td><td style="text-align: left"><code>quick</code>, <code>brown</code>, <code>fox</code>, <code>fast</code></td></tr>
+</tbody></table>
+<p>The stop words <code>the</code>, <code>is</code>, and <code>not</code> are removed. The remaining words have positions 0 through 3.</p>
+<h3 id="stemming-example">Stemming Example</h3>
+<p>Given English stemming with the default <code>MINSTEMSIZE</code> of 4 and input <code>"The Running Searches cat"</code>:</p>
+<table><thead><tr><th style="text-align: left">Stage</th><th style="text-align: left">Result</th></tr></thead><tbody>
+<tr><td style="text-align: left">After tokenization</td><td style="text-align: left"><code>The</code>, <code>Running</code>, <code>Searches</code>, <code>cat</code></td></tr>
+<tr><td style="text-align: left">After case folding</td><td style="text-align: left"><code>the</code>, <code>running</code>, <code>searches</code>, <code>cat</code></td></tr>
+<tr><td style="text-align: left">After stop word removal</td><td style="text-align: left"><code>running</code>, <code>searches</code>, <code>cat</code></td></tr>
+<tr><td style="text-align: left">Indexed tokens</td><td style="text-align: left"><code>running</code> (position 0), <code>searches</code> (position 1), <code>cat</code> (position 2)</td></tr>
+<tr><td style="text-align: left">Stem mappings</td><td style="text-align: left"><code>run</code> -&gt; {<code>running</code>}, <code>search</code> -&gt; {<code>searches</code>}</td></tr>
+</tbody></table>
+<p>The word <code>the</code> is removed as a stop word. The word <code>cat</code> (3 characters) is below the minimum stem size and is not stemmed. A search for <code>run</code> or <code>runs</code> will match <code>running</code> through the stem mapping.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/search-data-formats.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

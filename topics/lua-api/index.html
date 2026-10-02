@@ -1,0 +1,904 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Lua API reference</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Lua API reference">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Lua API reference</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Lua API reference
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+<p><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review. 
+    In the future it may change substantially or be removed entirely.</p>
+<hr />
+
+    <p>Valkey includes an embedded <a rel="external" href="https://www.lua.org/">Lua 5.1</a> interpreter.
+The interpreter runs user-defined <a href="/topics/eval-intro">ephemeral scripts</a> and <a href="/topics/functions-intro">functions</a>. Scripts run in a sandboxed context and can only access specific Lua packages. This page describes the packages and APIs available inside the execution's context.</p>
+<h2 id="sandbox-context">Sandbox context</h2>
+<p>The sandboxed Lua context attempts to prevent accidental misuse and reduce potential threats from the server's environment.</p>
+<p>Scripts should never try to access the Valkey server's underlying host systems.
+That includes the file system, network, and any other attempt to perform a system call other than those supported by the API.</p>
+<p>Scripts should operate solely on data stored in Valkey and data provided as arguments to their execution.</p>
+<h3 id="global-variables-and-functions">Global variables and functions</h3>
+<p>The sandboxed Lua execution context blocks the declaration of global variables and functions.
+The blocking of global variables is in place to ensure that scripts and functions don't attempt to maintain any runtime context other than the data stored in Valkey.
+In the (somewhat uncommon) use case that a context needs to be maintain between executions,
+you should store the context in Valkey' keyspace.</p>
+<p>Valkey will return an error when trying to execute the following snippet:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span>my_global_variable</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &#39;some value&#39;</span></span></code></pre>
+<p>And similarly for the following global function declaration:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #FF7B72;">function</span><span style="color: #D2A8FF;"> my_global_function</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">  -- Do something amazing</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span></code></pre>
+<p>You'll also get a similar error when your script attempts to access any global variables that are undefined in the runtime's context:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #8B949E;">-- The following will surely raise an error</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">return</span><span> an_undefined_global_variable</span></span></code></pre>
+<p>Instead, all variable and function definitions are required to be declared as local.
+To do so, you'll need to prepend the <a rel="external" href="https://www.lua.org/manual/5.1/manual.html#2.4.7"><code>local</code></a> keyword to your declarations.
+For example, the following snippet will be considered perfectly valid by Valkey:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #FF7B72;">local</span><span> my_local_variable</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &#39;some value&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">local function</span><span style="color: #D2A8FF;"> my_local_function</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">  -- Do something else, but equally amazing</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span></code></pre>
+<p><strong>Note:</strong>
+the sandbox attempts to prevent the use of globals.
+Using Lua's debugging functionality or other approaches such as altering the meta table used for implementing the globals' protection to circumvent the sandbox isn't hard.
+However, it is difficult to circumvent the protection by accident.
+If the user messes with the Lua global state, the consistency of AOF and replication can't be guaranteed.
+In other words, just don't do it.</p>
+<h3 id="imported-lua-modules">Imported Lua modules</h3>
+<p>Using imported Lua modules is not supported inside the sandboxed execution context.
+The sandboxed execution context prevents the loading modules by disabling Lua's <a rel="external" href="https://www.lua.org/pil/8.1.html"><code>require</code> function</a>.</p>
+<p>The only libraries that Valkey ships with and that you can use in scripts are listed under the <a href="#runtime-libraries">Runtime libraries</a> section.</p>
+<h2 id="runtime-globals">Runtime globals</h2>
+<p>While the sandbox prevents users from declaring globals, the execution context is pre-populated with several of these.</p>
+<p>For some of them, a "since version" is specified.
+The ones without "since version" specified are available in all maintained versions.</p>
+<h3 id="the-keys-global-variable"><a name="the-keys-global-variable"></a>The <code>KEYS</code> global variable</h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: no</li>
+</ul>
+<p><strong>Important:</strong>
+to ensure the correct execution of scripts, both in standalone and clustered deployments, all names of keys that a function accesses must be explicitly provided as input key arguments.
+The script <strong>should only</strong> access keys whose names are given as input arguments.
+Scripts <strong>should never</strong> access keys with programmatically-generated names or based on the contents of data structures stored in the database.</p>
+<p>The <code>KEYS</code> global variable is available only for <a href="/topics/eval-intro">ephemeral scripts</a>.
+It is pre-populated with all key name input arguments.</p>
+<h3 id="the-argv-global-variable"><a name="the-argv-global-variable"></a>The <code>ARGV</code> global variable</h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: no</li>
+</ul>
+<p>The <code>ARGV</code> global variable is available only in <a href="/topics/eval-intro">ephemeral scripts</a>.
+It is pre-populated with all regular input arguments.</p>
+<h3 id="the-server-singleton">The <code>server</code> singleton</h3>
+<ul>
+<li>Since version: 7.2.5</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>The <code>server</code> singleton is an object instance that's accessible from all scripts.
+It provides the API to interact with Valkey from scripts.
+Following is the API provided by the <code>server</code> object instance.</p>
+<p><strong>Note:</strong>
+For compatibility with Redis, Valkey also exposes a <code>redis</code> top-level object, that exposes the exact same set of APIs as the <code>server</code> object.
+Valkey does not intend to drop compatibility for this <code>redis</code> API, but it is recommended to use the <code>server</code> object for newly developed scripts.</p>
+<h2 id="server-object-fields-functions-and-variables"><a name="server_object"></a> <code>server</code> object fields (functions and variables)</h2>
+<h3 id="server-call-command-arg"><a name="server.call"></a> <code>server.call(command [,arg...])</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>The <code>server.call()</code> function calls a given Valkey command and returns its reply.
+Its inputs are the command and arguments, and once called, it executes the command in Valkey and returns the reply.</p>
+<p>For example, we can call the <code>ECHO</code> command from a script and return its reply like so:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #FF7B72;">return</span><span> server.</span><span style="color: #79C0FF;">call</span><span>(</span><span style="color: #A5D6FF;">&#39;ECHO&#39;</span><span>, </span><span style="color: #A5D6FF;">&#39;Echo, echo... eco... o...&#39;</span><span>)</span></span></code></pre>
+<p>If and when <code>server.call()</code> triggers a runtime exception, the raw exception is raised back to the user as an error, automatically.
+Therefore, attempting to execute the following ephemeral script will fail and generate a runtime exception because <code>ECHO</code> accepts exactly one argument:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #79C0FF;">127.0</span><span>.0.1:</span><span style="color: #79C0FF;">6379</span><span style="color: #FF7B72;">&gt;</span><span style="color: #79C0FF;"> EVAL</span><span style="color: #A5D6FF;"> &quot;return server.call(&#39;ECHO&#39;, &#39;Echo,&#39;, &#39;echo... &#39;, &#39;eco... &#39;, &#39;o...&#39;)&quot; </span><span style="color: #79C0FF;">0</span></span>
+<span class="giallo-l"><span>(</span><span style="color: #79C0FF;">error</span><span>) ERR Wrong number of args calling Valkey command from script</span><span style="color: #FFA657;"> script</span><span>: b0345693f4b77517a711221050e76d24ae60b7f7, on @</span><span style="color: #FFA657;">user_script</span><span>:</span><span style="color: #79C0FF;">1.</span></span></code></pre>
+<p>Note that the call can fail due to various reasons, see <a href="/topics/eval-intro#execution-under-low-memory-conditions">Execution under low memory conditions</a> and <a href="#script_flags">Script flags</a></p>
+<p>To handle Valkey runtime errors use <code>server.pcall()</code> instead.</p>
+<h3 id="server-pcall-command-arg"><a name="server.pcall"></a> <code>server.pcall(command [,arg...])</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This function enables handling runtime errors raised by the Valkey server.
+The <code>server.pcall()</code> function  behaves exactly like <a href="#server.call"><code>server.call()</code></a>, except that it:</p>
+<ul>
+<li>Always returns a reply.</li>
+<li>Never throws a runtime exception, and returns in its stead a <a href="#server.error_reply"><code>server.error_reply</code></a> in case that a runtime exception is thrown by the server.</li>
+</ul>
+<p>The following demonstrates how to use <code>server.pcall()</code> to intercept and handle runtime exceptions from within the context of an ephemeral script.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #FF7B72;">local</span><span> reply</span><span style="color: #FF7B72;"> =</span><span> server.</span><span style="color: #79C0FF;">pcall</span><span>(</span><span style="color: #A5D6FF;">&#39;ECHO&#39;</span><span>, </span><span style="color: #79C0FF;">unpack</span><span>(ARGV))</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">if</span><span> reply[</span><span style="color: #A5D6FF;">&#39;err&#39;</span><span>] </span><span style="color: #FF7B72;">~=</span><span style="color: #79C0FF;"> nil</span><span style="color: #FF7B72;"> then</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">  -- Handle the error sometime, but for now just log it</span></span>
+<span class="giallo-l"><span>  server.</span><span style="color: #79C0FF;">log</span><span>(server.</span><span style="color: #79C0FF;">LOG_WARNING</span><span>, reply[</span><span style="color: #A5D6FF;">&#39;err&#39;</span><span>])</span></span>
+<span class="giallo-l"><span>  reply[</span><span style="color: #A5D6FF;">&#39;err&#39;</span><span>] </span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;"> &#39;ERR Something is wrong, but no worries, everything is under control&#39;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">return</span><span> reply</span></span></code></pre>
+<p>Evaluating this script with more than one argument will return:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;...&quot; 0 hello world</span></span>
+<span class="giallo-l"><span>(error) ERR Something is wrong, but no worries, everything is under control</span></span></code></pre><h3 id="server-error-reply-x"><a name="server.error_reply"></a> <code>server.error_reply(x)</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This is a helper function that returns an <a href="/topics/protocol#simply-errors">error reply</a>.
+The helper accepts a single string argument and returns a Lua table with the <code>err</code> field set to that string.</p>
+<p>The outcome of the following code is that <code>error1</code> and <code>error2</code> are identical for all intents and purposes:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #FF7B72;">local</span><span> text</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &#39;ERR My very special error&#39;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">local</span><span> reply1</span><span style="color: #FF7B72;"> =</span><span> { err</span><span style="color: #FF7B72;"> =</span><span> text }</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">local</span><span> reply2</span><span style="color: #FF7B72;"> =</span><span> server.</span><span style="color: #79C0FF;">error_reply</span><span>(text)</span></span></code></pre>
+<p>Therefore, both forms are valid as means for returning an error reply from scripts:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return { err = &#39;ERR My very special table error&#39; }&quot; 0</span></span>
+<span class="giallo-l"><span>(error) ERR My very special table error</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return server.error_reply(&#39;ERR My very special reply error&#39;)&quot; 0</span></span>
+<span class="giallo-l"><span>(error) ERR My very special reply error</span></span></code></pre>
+<p>For returning Valkey status replies refer to <a href="#server.status_reply"><code>server.status_reply()</code></a>.
+Refer to the <a href="#data-type-conversion">Data type conversion</a> for returning other response types.</p>
+<p><strong>Note:</strong>
+By convention, Valkey uses the first word of an error string as a unique error code for specific errors or <code>ERR</code> for general-purpose errors.
+Scripts are advised to follow this convention, as shown in the example above, but this is not mandatory.</p>
+<h3 id="server-status-reply-x"><a name="server.status_reply"></a> <code>server.status_reply(x)</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This is a helper function that returns a <a href="/topics/protocol#simple-strings">simple string reply</a>.
+"OK" is an example of a standard Valkey status reply.
+The Lua API represents status replies as tables with a single field, <code>ok</code>, set with a simple status string.</p>
+<p>The outcome of the following code is that <code>status1</code> and <code>status2</code> are identical for all intents and purposes:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span style="color: #FF7B72;">local</span><span> text</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &#39;Frosty&#39;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">local</span><span> status1</span><span style="color: #FF7B72;"> =</span><span> { ok</span><span style="color: #FF7B72;"> =</span><span> text }</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">local</span><span> status2</span><span style="color: #FF7B72;"> =</span><span> server.</span><span style="color: #79C0FF;">status_reply</span><span>(text)</span></span></code></pre>
+<p>Therefore, both forms are valid as means for returning status replies from scripts:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return { ok = &#39;TICK&#39; }&quot; 0</span></span>
+<span class="giallo-l"><span>TICK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return server.status_reply(&#39;TOCK&#39;)&quot; 0</span></span>
+<span class="giallo-l"><span>TOCK</span></span></code></pre>
+<p>For returning Valkey error replies refer to <a href="#server.error_reply"><code>server.error_reply()</code></a>.
+Refer to the <a href="#data-type-conversion">Data type conversion</a> for returning other response types.</p>
+<h3 id="server-sha1hex-x"><a name="server.sha1hex"></a> <code>server.sha1hex(x)</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This function returns the SHA1 hexadecimal digest of its single string argument.</p>
+<p>You can, for example, obtain the empty string's SHA1 digest:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return server.sha1hex(&#39;&#39;)&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;da39a3ee5e6b4b0d3255bfef95601890afd80709&quot;</span></span></code></pre><h3 id="server-log-level-message"><a name="server.log"></a> <code>server.log(level, message)</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This function writes to the Valkey server log.</p>
+<p>It expects two input arguments: the log level and a message.
+The message is a string to write to the log file.
+Log level can be on of these:</p>
+<ul>
+<li><code>server.LOG_DEBUG</code></li>
+<li><code>server.LOG_VERBOSE</code></li>
+<li><code>server.LOG_NOTICE</code></li>
+<li><code>server.LOG_WARNING</code></li>
+</ul>
+<p>These levels map to the server's log levels.
+The log only records messages equal or greater in level than the server's <code>loglevel</code> configuration directive.</p>
+<p>The following snippet:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">log</span><span>(server.</span><span style="color: #79C0FF;">LOG_WARNING</span><span>, </span><span style="color: #A5D6FF;">&#39;Something is terribly wrong&#39;</span><span>)</span></span></code></pre>
+<p>will produce a line similar to the following in your server's log:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>[32343] 22 Mar 15:21:39 # Something is terribly wrong</span></span></code></pre><h3 id="server-setresp-x"><a name="server.setresp"></a> <code>server.setresp(x)</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This function allows the executing script to switch between <a href="/topics/protocol">RESP</a> protocol versions for the replies returned by <a href="#server.call"><code>server.call()</code></a> and <a href="#server.pcall"><code>server.pcall()</code></a>.
+It expects a single numerical argument as the protocol's version.
+The default protocol version is <em>2</em>, but it can be switched to version <em>3</em>.</p>
+<p>Here's an example of switching to RESP3 replies:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">setresp</span><span>(</span><span style="color: #79C0FF;">3</span><span>)</span></span></code></pre>
+<p>Please refer to the <a href="#data-type-conversion">Data type conversion</a> for more information about type conversions.</p>
+<h3 id="server-set-repl-x"><a name="server.set_repl"></a> <code>server.set_repl(x)</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: no</li>
+</ul>
+<p><strong>Note:</strong>
+Prior to Redis OSS 7.0, scripts were replicated verbatim by default.
+Since Redis OSS 7.0 (and Valkey), script effects replication is the only replication mode available.</p>
+<p>The <code>server.set_repl()</code> function instructs the server how to treat subsequent write commands in terms of replication.
+It accepts a single input argument that only be one of the following:</p>
+<ul>
+<li><code>server.REPL_ALL</code>: replicates the effects to the AOF and replicas.</li>
+<li><code>server.REPL_AOF</code>: replicates the effects to the AOF alone.</li>
+<li><code>server.REPL_REPLICA</code>: replicates the effects to the replicas alone.</li>
+<li><code>server.REPL_SLAVE</code>: same as <code>REPL_REPLICA</code>, maintained for backward compatibility.</li>
+<li><code>server.REPL_NONE</code>: disables effect replication entirely.</li>
+</ul>
+<p>By default, the scripting engine is initialized to the <code>server.REPL_ALL</code> setting when a script begins its execution.
+You can call the <code>server.set_repl()</code> function at any time during the script's execution to switch between the different replication modes.</p>
+<p>A simple example follows:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="lua"><span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">replicate_commands</span><span>() </span><span style="color: #8B949E;">-- Enable effects replication in versions lower than Redis OSS v7.0</span></span>
+<span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">call</span><span>(</span><span style="color: #A5D6FF;">&#39;SET&#39;</span><span>, KEYS[</span><span style="color: #79C0FF;">1</span><span>], ARGV[</span><span style="color: #79C0FF;">1</span><span>])</span></span>
+<span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">set_repl</span><span>(server.</span><span style="color: #79C0FF;">REPL_NONE</span><span>)</span></span>
+<span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">call</span><span>(</span><span style="color: #A5D6FF;">&#39;SET&#39;</span><span>, KEYS[</span><span style="color: #79C0FF;">2</span><span>], ARGV[</span><span style="color: #79C0FF;">2</span><span>])</span></span>
+<span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">set_repl</span><span>(server.</span><span style="color: #79C0FF;">REPL_ALL</span><span>)</span></span>
+<span class="giallo-l"><span>server.</span><span style="color: #79C0FF;">call</span><span>(</span><span style="color: #A5D6FF;">&#39;SET&#39;</span><span>, KEYS[</span><span style="color: #79C0FF;">3</span><span>], ARGV[</span><span style="color: #79C0FF;">3</span><span>])</span></span></code></pre>
+<p>If you run this script by calling <code>EVAL "..." 3 A B C 1 2 3</code>, the result will be that only the keys <em>A</em> and <em>C</em> are created on the replicas and AOF.</p>
+<h3 id="server-replicate-commands"><a name="server.replicate_commands"></a> <code>server.replicate_commands()</code></h3>
+<ul>
+<li>Until version: 7.0.0</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: no</li>
+</ul>
+<p>This function switches the script's replication mode from verbatim replication to effects replication.
+You can use it to override the default verbatim script replication mode used by Redis OSS until version 7.0.</p>
+<p><strong>Note:</strong>
+Verbatim script replication is no longer supported.
+The only script replication mode supported is script effects' replication.
+For more information, please refer to <a href="/topics/eval-intro#replicating-commands-instead-of-scripts"><code>Replicating commands instead of scripts</code></a></p>
+<h3 id="server-breakpoint"><a name="server.breakpoint"></a>  <code>server.breakpoint()</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: no</li>
+</ul>
+<p>This function triggers a breakpoint when using the <a href="/topics/ldb">Valkey Lua debugger</a>.</p>
+<h3 id="server-debug-x"><a name="server.debug"></a> <code>server.debug(x)</code></h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: no</li>
+</ul>
+<p>This function prints its argument in the <a href="/topics/ldb">Valkey Lua debugger</a> console.</p>
+<h3 id="server-acl-check-cmd-command-arg"><a name="server.acl_check_cmd"></a> <code>server.acl_check_cmd(command [,arg...])</code></h3>
+<ul>
+<li>Since version: 7.0.0</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This function is used for checking if the current user running the script has <a href="/topics/acl">ACL</a> permissions to execute the given command with the given arguments.</p>
+<p>The return value is a boolean <code>true</code> in case the current user has permissions to execute the command (via a call to <a href="#server.call">server.call</a> or <a href="#server.pcall">server.pcall</a>) or <code>false</code> in case they don't.</p>
+<p>The function will raise an error if the passed command or its arguments are invalid.</p>
+<h3 id="server-register-function"><a name="server.register_function"></a> <code>server.register_function</code></h3>
+<ul>
+<li>Since version: 7.0.0</li>
+<li>Available in scripts: no</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>This function is only available from the context of the <code>FUNCTION LOAD</code> command.
+When called, it registers a function to the loaded library.
+The function can be called either with positional or named arguments.</p>
+<h4 id="positional-arguments-server-register-function-name-callback"><a name="server.register_function_pos_args"></a> positional arguments: <code>server.register_function(name, callback)</code></h4>
+<p>The first argument to <code>server.register_function</code> is a Lua string representing the function name.
+The second argument to <code>server.register_function</code> is a Lua function.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; FUNCTION LOAD &quot;#!lua name=mylib\n server.register_function(&#39;noop&#39;, function() end)&quot;</span></span></code></pre><h4 id="named-arguments-server-register-function-function-name-name-callback-callback-flags-flag1-flag2-description-description"><a name="server.register_function_named_args"></a> Named arguments:  <code>server.register_function{function_name=name, callback=callback, flags={flag1, flag2, ..}, description=description}</code></h4>
+<p>The named arguments variant accepts the following arguments:</p>
+<ul>
+<li><em>function_name</em>: the function's name.</li>
+<li><em>callback</em>: the function's callback.</li>
+<li><em>flags</em>: an array of strings, each a function flag (optional).</li>
+<li><em>description</em>: function's description (optional).</li>
+</ul>
+<p>Both <em>function_name</em> and <em>callback</em> are mandatory.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; FUNCTION LOAD &quot;#!lua name=mylib\n server.register_function{function_name=&#39;noop&#39;, callback=function() end, flags={ &#39;no-writes&#39; }, description=&#39;Does nothing&#39;}&quot;</span></span></code></pre><h4 id="script-flags"><a name="script_flags"></a> Script flags</h4>
+<p><strong>Important:</strong>
+Use script flags with care, which may negatively impact if misused.
+Note that the default for Eval scripts are different than the default for functions that are mentioned below, see <a href="/topics/eval-intro#eval-flags">Eval Flags</a></p>
+<p>When you register a function or load an Eval script, the server does not know how it accesses the database.
+By default, Valkey assumes that all scripts read and write data.
+This results in the following behavior:</p>
+<ol>
+<li>They can read and write data.</li>
+<li>They can run in cluster mode, and are not able to run commands accessing keys of different hash slots.</li>
+<li>Execution against a stale replica is denied to avoid inconsistent reads.</li>
+<li>Execution under low memory is denied to avoid exceeding the configured threshold.</li>
+</ol>
+<p>You can use the following flags and instruct the server to treat the scripts' execution differently:</p>
+<ul>
+<li>
+<p><code>no-writes</code>: this flag indicates that the script only reads data but never writes.</p>
+<p>By default, Valkey will deny the execution of flagged scripts (Functions and Eval scripts with <a href="/topics/eval-intro#eval-flags">shebang</a>) against read-only replicas, as they may attempt to perform writes.
+Similarly, the server will not allow calling scripts with <code>FCALL_RO</code> / <code>EVAL_RO</code>.
+Lastly, when data persistence is at risk due to a disk error, execution is blocked as well.</p>
+<p>Using this flag allows executing the script:</p>
+<ol>
+<li>With <code>FCALL_RO</code> / <code>EVAL_RO</code></li>
+<li>On read-only replicas.</li>
+<li>Even if there's a disk error (Valkey is unable to persist so it rejects writes).</li>
+<li>When over the memory limit since it implies the script doesn't increase memory consumption (see <code>allow-oom</code> below)</li>
+</ol>
+<p>However, note that the server will return an error if the script attempts to call a write command.
+Also note that currently <code>PUBLISH</code>, <code>SPUBLISH</code> and <code>PFCOUNT</code> are also considered write commands in scripts, because they could attempt to propagate commands to replicas and AOF file.</p>
+<p>For more information please refer to <a href="/topics/programmability#read-only_scripts">Read-only scripts</a></p>
+</li>
+<li>
+<p><code>allow-oom</code>: use this flag to allow a script to execute when the server is out of memory (OOM).</p>
+<p>Unless used, Valkey will deny the execution of flagged scripts (Functions and Eval scripts with <a href="/topics/eval-intro#eval-flags">shebang</a>) when in an OOM state.
+Furthermore, when you use this flag, the script can call any Valkey command, including commands that aren't usually allowed in this state.
+Specifying <code>no-writes</code> or using <code>FCALL_RO</code> / <code>EVAL_RO</code> also implies the script can run in OOM state (without specifying <code>allow-oom</code>)</p>
+</li>
+<li>
+<p><code>allow-stale</code>: a flag that enables running the flagged scripts (Functions and Eval scripts with <a href="/topics/eval-intro#eval-flags">shebang</a>) against a stale replica when the <code>replica-serve-stale-data</code> config is set to <code>no</code> .</p>
+<p>Valkey can be set to prevent data consistency problems from using old data by having stale replicas return a runtime error.
+For scripts that do not access the data, this flag can be set to allow stale Valkey replicas to run the script.
+Note however that the script will still be unable to execute any command that accesses stale data.</p>
+</li>
+<li>
+<p><code>no-cluster</code>: the flag causes the script to return an error in Valkey cluster mode.</p>
+<p>Valkey allows scripts to be executed both in standalone and cluster modes.
+Setting this flag prevents executing the script against nodes in the cluster.</p>
+</li>
+<li>
+<p><code>allow-cross-slot-keys</code>: The flag that allows a script to access keys from multiple slots.</p>
+<p>Valkey typically prevents any single command from accessing keys that hash to multiple slots.
+This flag allows scripts to break this rule and access keys within the script that access multiple slots.
+Declared keys to the script are still always required to hash to a single slot.
+Accessing keys from multiple slots is discouraged as applications should be designed to only access keys from a single slot at a time, allowing slots to move between Valkey servers.</p>
+<p>This flag has no effect when cluster mode is disabled.</p>
+</li>
+</ul>
+<p>Please refer to <a href="/topics/functions-intro#function-flags">Function Flags</a> and <a href="/topics/eval-intro#eval-flags">Eval Flags</a> for a detailed example.</p>
+<h3 id="server-server-version"><a name="server.server_version"></a> <code>server.SERVER_VERSION</code></h3>
+<ul>
+<li>Since version: 7.2.5</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>Returns the current Valkey server version as a Lua string.
+The reply's format is <code>MM.mm.PP</code>, where:</p>
+<ul>
+<li><strong>MM:</strong> is the major version.</li>
+<li><strong>mm:</strong> is the minor version.</li>
+<li><strong>PP:</strong> is the patch level.</li>
+</ul>
+<h3 id="server-redis-version"><a name="server.redis_version"></a> <code>server.REDIS_VERSION</code></h3>
+<ul>
+<li>Since version: 7.0.0</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>Returns the current Redis compatibility version as a Lua string.
+The reply's format is <code>MM.mm.PP</code>, where:</p>
+<ul>
+<li><strong>MM:</strong> is the major version.</li>
+<li><strong>mm:</strong> is the minor version.</li>
+<li><strong>PP:</strong> is the patch level.</li>
+</ul>
+<h3 id="server-server-version-num"><a name="server.redis_version_num"></a> <code>server.SERVER_VERSION_NUM</code></h3>
+<ul>
+<li>Since version: 7.2.5</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>Returns the current Valkey server version as a number.
+The reply is a hexadecimal value structured as <code>0x00MMmmPP</code>, where:</p>
+<ul>
+<li><strong>MM:</strong> is the major version.</li>
+<li><strong>mm:</strong> is the minor version.</li>
+<li><strong>PP:</strong> is the patch level.</li>
+</ul>
+<h3 id="server-redis-version-num"><a name="server.redis_version_num"></a> <code>server.REDIS_VERSION_NUM</code></h3>
+<ul>
+<li>Since version: 7.0.0</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>Returns the current Redis compatibility version as a number.
+The reply is a hexadecimal value structured as <code>0x00MMmmPP</code>, where:</p>
+<ul>
+<li><strong>MM:</strong> is the major version.</li>
+<li><strong>mm:</strong> is the minor version.</li>
+<li><strong>PP:</strong> is the patch level.</li>
+</ul>
+<h2 id="data-type-conversion">Data type conversion</h2>
+<p>Unless a runtime exception is raised, <code>server.call()</code> and <code>server.pcall()</code> return the reply from the executed command to the Lua script.
+Valkey's replies from these functions are converted automatically into Lua's native data types.</p>
+<p>Similarly, when a Lua script returns a reply with the <code>return</code> keyword,
+that reply is automatically converted to RESP protocol.</p>
+<p>Put differently: There's a one-to-one mapping between Valkey's replies and Lua's data types and a one-to-one mapping between Lua's data types and the <a href="/topics/protocol">RESP Protocol</a> data types.
+The underlying design is such that if a RESP type is converted into a Lua type and converted back into a RESP type, the result is the same as the initial value.</p>
+<p>Type conversion from Valkey replies (i.e. the replies from <code>server.call()</code> and <code>server.pcall()</code>) to Lua data types depends on the RESP protocol version used by the script.
+The default protocol version during script executions is RESP2.
+The script may switch the replies' protocol versions by calling the <code>server.setresp()</code> function.</p>
+<p>Type conversion from a script's returned Lua data type depends on the user's choice of protocol (see the <code>HELLO</code> command).</p>
+<p>The following sections describe the type conversion rules between Lua and Valkey per the protocol's version.</p>
+<h3 id="resp2-to-lua-type-conversion">RESP2 to Lua type conversion</h3>
+<p>The following type conversion rules apply to the execution's context by default as well as after calling <code>server.setresp(2)</code>:</p>
+<ul>
+<li><a href="/topics/protocol#integers">RESP2 integer reply</a> -&gt; Lua number</li>
+<li><a href="/topics/protocol#bulk-strings">RESP2 bulk string reply</a> -&gt; Lua string</li>
+<li><a href="/topics/protocol#arrays">RESP2 array reply</a> -&gt; Lua table (may have other Valkey data types nested)</li>
+<li><a href="/topics/protocol#simple-strings">RESP2 status reply</a> -&gt; Lua table with a single <em>ok</em> field containing the status string</li>
+<li><a href="/topics/protocol#simple-errors">RESP2 error reply</a> -&gt; Lua table with a single <em>err</em> field containing the error string</li>
+<li><a href="/topics/protocol#nulls">RESP2 null bulk reply and null multi bulk reply</a> -&gt; Lua false boolean type</li>
+</ul>
+<h2 id="lua-to-resp2-type-conversion">Lua to RESP2 type conversion</h2>
+<p>The following type conversion rules apply by default as well as after the user had called <code>HELLO 2</code>:</p>
+<ul>
+<li>Lua number -&gt; <a href="/topics/protocol#integers">RESP2 integer reply</a> (the number is converted into an integer)</li>
+<li>Lua string -&gt; <a href="/topics/protocol#bulk-strings">RESP bulk string reply</a></li>
+<li>Lua table (indexed, non-associative array) -&gt; <a href="/topics/protocol#arrays">RESP2 array reply</a> (truncated at the first Lua <code>nil</code> value encountered in the table, if any)</li>
+<li>Lua table with a single <em>ok</em> field -&gt; <a href="/topics/protocol#simple-strings">RESP2 status reply</a></li>
+<li>Lua table with a single <em>err</em> field -&gt; <a href="/topics/protocol#simple-errors">RESP2 error reply</a></li>
+<li>Lua boolean false -&gt; <a href="/topics/protocol#nulls">RESP2 null bulk reply</a></li>
+</ul>
+<p>There is an additional Lua-to-Valkey conversion rule that has no corresponding Valkey-to-Lua conversion rule:</p>
+<ul>
+<li>Lua Boolean <code>true</code> -&gt; <a href="/topics/protocol#integers">RESP2 integer reply</a> with value of 1.</li>
+</ul>
+<p>There are three additional rules to note about converting Lua to Valkey data types:</p>
+<ul>
+<li>Lua has a single numerical type, Lua numbers.
+There is no distinction between integers and floats.
+So we always convert Lua numbers into integer replies, removing the decimal part of the number, if any.
+<strong>If you want to return a Lua float, it should be returned as a string</strong>,
+exactly like Valkey itself does (see, for instance, the <code>ZSCORE</code> command).</li>
+<li>There's <a rel="external" href="https://www.lua.org/pil/19.1.html">no simple way to have nils inside Lua arrays</a> due
+to Lua's table semantics.
+Therefore, when Valkey converts a Lua array to RESP, the conversion stops when it encounters a Lua <code>nil</code> value.</li>
+<li>When a Lua table is an associative array that contains keys and their respective values, the converted Valkey reply will <strong>not</strong> include them.</li>
+</ul>
+<p>Lua to RESP2 type conversion examples:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return 10&quot; 0</span></span>
+<span class="giallo-l"><span>(integer) 10</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return { 1, 2, { 3, &#39;Hello World!&#39; } }&quot; 0</span></span>
+<span class="giallo-l"><span>1) (integer) 1</span></span>
+<span class="giallo-l"><span>2) (integer) 2</span></span>
+<span class="giallo-l"><span>3) 1) (integer) 3</span></span>
+<span class="giallo-l"><span>   1) &quot;Hello World!&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return server.call(&#39;get&#39;,&#39;foo&#39;)&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;bar&quot;</span></span></code></pre>
+<p>The last example demonstrates receiving and returning the exact return value of <code>server.call()</code> (or <code>server.pcall()</code>) in Lua as it would be returned if the command had been called directly.</p>
+<p>The following example shows how floats and arrays that cont nils and keys are handled:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return { 1, 2, 3.3333, somekey = &#39;somevalue&#39;, &#39;foo&#39;, nil , &#39;bar&#39; }&quot; 0</span></span>
+<span class="giallo-l"><span>1) (integer) 1</span></span>
+<span class="giallo-l"><span>2) (integer) 2</span></span>
+<span class="giallo-l"><span>3) (integer) 3</span></span>
+<span class="giallo-l"><span>4) &quot;foo&quot;</span></span></code></pre>
+<p>As you can see, the float value of <em>3.333</em> gets converted to an integer <em>3</em>, the <em>somekey</em> key and its value are omitted, and the string "bar" isn't returned as there is a <code>nil</code> value that precedes it.</p>
+<h3 id="resp3-to-lua-type-conversion">RESP3 to Lua type conversion</h3>
+<p>RESP3 is a newer version of the <a href="/topics/protocol">protocol</a> used by Valkey.
+It is available as an opt-in choice.</p>
+<p>An executing script may call the <a href="#server.setresp"><code>server.setresp</code></a> function during its execution and switch the protocol version that's used for returning replies from Valkey's commands (that can be invoked via <a href="#server.call"><code>server.call()</code></a> or <a href="#server.pcall"><code>server.pcall()</code></a>).</p>
+<p>Once Valkey's replies are in RESP3 protocol, all of the <a href="#resp2-to-lua-type-conversion">RESP2 to Lua conversion</a> rules apply, with the following additions:</p>
+<ul>
+<li><a href="/topics/protocol#maps">Map reply</a> -&gt; Lua table with a single <em>map</em> field containing a Lua table representing the fields and values of the map.</li>
+<li><a href="/topics/protocol#sets">Set reply</a> -&gt; Lua table with a single <em>set</em> field containing a Lua table representing the elements of the set as fields, each with the Lua Boolean value of <code>true</code>.</li>
+<li><a href="/topics/protocol#nulls">Null</a> -&gt; Lua <code>nil</code>.</li>
+<li><a href="/topics/protocol#booleans">True reply</a> -&gt; Lua true boolean value.</li>
+<li><a href="/topics/protocol#booleans">False reply</a> -&gt; Lua false boolean value.</li>
+<li><a href="/topics/protocol#doubles">Double reply</a> -&gt; Lua table with a single <code>double</code> field containing a Lua number representing the double value.</li>
+<li><a href="/topics/protocol#big-numbers">Big number reply</a> -&gt; Lua table with a single <code>big_number</code> field containing a Lua string representing the big number value (since Redis OSS 7.0).</li>
+<li><a href="/topics/protocol#verbatim-strings">Verbatim string reply</a> -&gt; Lua table with a single <code>verbatim_string</code> field containing a Lua table with two fields, <code>string</code> and <code>format</code>, representing the verbatim string and its format, respectively (since Redis OSS 7.0).</li>
+</ul>
+<h3 id="lua-to-resp3-type-conversion">Lua to RESP3 type conversion</h3>
+<p>Regardless of the script's choice of protocol version set for replies with the [<code>server.setresp()</code> function] when it calls <code>server.call()</code> or <code>server.pcall()</code>, the user may opt-in to using RESP3 (with the <code>HELLO 3</code> command) for the connection.
+Although the default protocol for incoming client connections is RESP2, the script should honor the user's preference and return adequately-typed RESP3 replies, so the following rules apply on top of those specified in the <a href="#lua-to-resp2-type-conversion">Lua to RESP2 type conversion</a> section when that is the case.</p>
+<ul>
+<li>Lua Boolean -&gt; <a href="/topics/protocol#booleans">RESP3 Boolean reply</a> (note that this is a change compared to the RESP2, in which returning a Boolean Lua <code>true</code> returned the number 1 to the Valkey client, and returning a <code>false</code> used to return a <code>null</code>.</li>
+<li>Lua table with a single <code>map</code> field set to an associative Lua table -&gt; <a href="/topics/protocol#maps">RESP3 map reply</a>.</li>
+<li>Lua table with a single <code>set</code> field set to an associative Lua table -&gt; <a href="/topics/protocol#sets">RESP3 set reply</a>. Values can be set to anything and are discarded anyway.</li>
+<li>Lua table with a single <code>double</code> field to an associative Lua table -&gt; <a href="/topics/protocol#doubles">RESP3 double reply</a>.</li>
+<li>Lua nil -&gt; <a href="/topics/protocol#nulls">RESP3 null</a>.</li>
+</ul>
+<p>However, if the connection is set use the RESP2 protocol, and even if the script replies with RESP3-typed responses, Valkey will automatically perform a RESP3 to RESP2 conversion of the reply as is the case for regular commands.
+That means, for example, that returning the RESP3 map type to a RESP2 connection will result in the reply being converted to a flat RESP2 array that consists of alternating field names and their values, rather than a RESP3 map.</p>
+<h2 id="additional-notes-about-scripting">Additional notes about scripting</h2>
+<h3 id="using-select-inside-scripts">Using <code>SELECT</code> inside scripts</h3>
+<p>You can call the <code>SELECT</code> command from your Lua scripts, like you can with any normal client connection.
+The database selected by the Lua script only affects the execution context of the script, and does not modify the database that's selected by the client calling the script.</p>
+<h2 id="runtime-libraries">Runtime libraries</h2>
+<p>The Valkey Lua runtime context always comes with several pre-imported libraries.</p>
+<p>The following <a rel="external" href="https://www.lua.org/manual/5.1/manual.html#5">standard Lua libraries</a> are available to use:</p>
+<ul>
+<li>The <a rel="external" href="https://www.lua.org/manual/5.1/manual.html#5.4"><em>String Manipulation (string)</em> library</a></li>
+<li>The <a rel="external" href="https://www.lua.org/manual/5.1/manual.html#5.5"><em>Table Manipulation (table)</em> library</a></li>
+<li>The <a rel="external" href="https://www.lua.org/manual/5.1/manual.html#5.6"><em>Mathematical Functions (math)</em> library</a></li>
+<li>The <a href="#os-library"><em>Operating System Facilities (os)</em> library</a></li>
+</ul>
+<p>In addition, the following external libraries are loaded and accessible to scripts:</p>
+<ul>
+<li>The <a href="#struct-library"><em>struct</em> library</a></li>
+<li>The <a href="#cjson-library"><em>cjson</em> library</a></li>
+<li>The <a href="#cmsgpack-library"><em>cmsgpack</em> library</a></li>
+<li>The <a href="#bitop-library"><em>bitop</em> library</a></li>
+</ul>
+<h3 id="os-library"><a name="os-library"></a> <em>os</em> library</h3>
+<ul>
+<li>Since version: 8.0.0</li>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p><em>os</em> provides a set of functions for dealing with date, time, and system commands.
+More details can be found in the <a rel="external" href="https://www.lua.org/manual/5.1/manual.html#5.8">Operating System Facilities</a>.
+Note that for sandbox security, currently only the following os functions is exposed:</p>
+<ul>
+<li><code>os.clock()</code></li>
+</ul>
+<h3 id="struct-library"><a name="struct-library"></a> <em>struct</em> library</h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p><em>struct</em> is a library for packing and unpacking C-like structures in Lua.
+It provides the following functions:</p>
+<ul>
+<li><a href="#struct.pack"><code>struct.pack()</code></a></li>
+<li><a href="#struct.unpack"><code>struct.unpack()</code></a></li>
+<li><a href="#struct.size"><code>struct.size()</code></a></li>
+</ul>
+<p>All of <em>struct</em>'s functions expect their first argument to be a <a href="#struct-formats">format string</a>.</p>
+<h4 id="struct-formats"><a name="struct-formats"></a> <em>struct</em> formats</h4>
+<p>The following are valid format strings for <em>struct</em>'s functions:</p>
+<ul>
+<li><code>&gt;</code>: big endian</li>
+<li><code>&lt;</code>: little endian</li>
+<li><code>![num]</code>: alignment</li>
+<li><code>x</code>: padding</li>
+<li><code>b/B</code>: signed/unsigned byte</li>
+<li><code>h/H</code>: signed/unsigned short</li>
+<li><code>l/L</code>: signed/unsigned long</li>
+<li><code>T</code>: size_t</li>
+<li><code>i/In</code>: signed/unsigned integer with size <em>n</em> (defaults to the size of int)</li>
+<li><code>cn</code>: sequence of <em>n</em> chars (from/to a string); when packing, n == 0 means the
+whole string; when unpacking, n == 0 means use the previously read number as
+the string's length.</li>
+<li><code>s</code>: zero-terminated string</li>
+<li><code>f</code>: float</li>
+<li><code>d</code>: double</li>
+<li><code> </code> (space): ignored</li>
+</ul>
+<h4 id="struct-pack-x"><a name="struct.pack"></a> <code>struct.pack(x)</code></h4>
+<p>This function returns a struct-encoded string from values.
+It accepts a <a href="#struct-formats"><em>struct</em> format string</a> as its first argument, followed by the values that are to be encoded.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return struct.pack(&#39;HH&#39;, 1, 2)&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;\x01\x00\x02\x00&quot;</span></span></code></pre><h4 id="struct-unpack-x"><a name="struct.unpack"></a> <code>struct.unpack(x)</code></h4>
+<p>This function returns the decoded values from a struct.
+It accepts a <a href="#struct-formats"><em>struct</em> format string</a> as its first argument, followed by encoded struct's string.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return { struct.unpack(&#39;HH&#39;, ARGV[1]) ]: &quot; 0 &quot;\x01\x00\x02\x00&quot;</span></span>
+<span class="giallo-l"><span>1) (integer) 1</span></span>
+<span class="giallo-l"><span>2) (integer) 2</span></span>
+<span class="giallo-l"><span>3) (integer) 5</span></span></code></pre><h4 id="struct-size-x"><a name="struct.size"></a> <code>struct.size(x)</code></h4>
+<p>This function returns the size, in bytes, of a struct.
+It accepts a <a href="#struct-formats"><em>struct</em> format string</a> as its only argument.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return struct.size(&#39;HH&#39;)&quot; 0</span></span>
+<span class="giallo-l"><span>(integer) 4</span></span></code></pre><h3 id="cjson-library"><a name="cjson-library"></a> <em>cjson</em> library</h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>The <em>cjson</em> library provides fast <a rel="external" href="https://json.org">JSON</a> encoding and decoding from Lua.
+It provides these functions.</p>
+<h4 id="cjson-encode-x"><a name="cjson.encode()"></a> <code>cjson.encode(x)</code></h4>
+<p>This function returns a JSON-encoded string for the Lua data type provided as its argument.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return cjson.encode({ [&#39;foo&#39;] = &#39;bar&#39; ]: )&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;{\&quot;foo\&quot;:\&quot;bar\&quot;}&quot;</span></span></code></pre><h4 id="cjson-decode-x"><a name="cjson.decode()"></a> <code>cjson.decode(x)</code></h4>
+<p>This function returns a Lua data type from the JSON-encoded string provided as its argument.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return cjson.decode(ARGV[1])[&#39;foo&#39;]&quot; 0 &#39;{&quot;foo&quot;:&quot;bar&quot;]: &#39;</span></span>
+<span class="giallo-l"><span>&quot;bar&quot;</span></span></code></pre><h3 id="cmsgpack-library"><a name="cmsgpack-library"></a> <em>cmsgpack</em> library</h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>The <em>cmsgpack</em> library provides fast <a rel="external" href="https://msgpack.org/index.html">MessagePack</a> encoding and decoding from Lua.
+It provides these functions.</p>
+<h4 id="cmsgpack-pack-x"><a name="cmsgpack.pack()"></a> <code>cmsgpack.pack(x)</code></h4>
+<p>This function returns the packed string encoding of the Lua data type it is given as an argument.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return cmsgpack.pack({&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;})&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;\x93\xa3foo\xa3bar\xa3baz&quot;</span></span></code></pre><h4 id="cmsgpack-unpack-x"><a name="cmsgpack.unpack()"></a> <code>cmsgpack.unpack(x)</code></h4>
+<p>This function returns the unpacked values from decoding its input string argument.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return cmsgpack.unpack(ARGV[1])&quot; 0 &quot;\x93\xa3foo\xa3bar\xa3baz&quot;</span></span>
+<span class="giallo-l"><span>1) &quot;foo&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;bar&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;baz&quot;</span></span></code></pre><h3 id="bit-library"><a name="bitop-library"></a> <em>bit</em> library</h3>
+<ul>
+<li>Available in scripts: yes</li>
+<li>Available in functions: yes</li>
+</ul>
+<p>The <em>bit</em> library provides bitwise operations on numbers.
+Its documentation resides at <a rel="external" href="https://bitop.luajit.org/api.html">Lua BitOp documentation</a>
+It provides the following functions.</p>
+<h4 id="bit-tobit-x"><a name="bit.tobit()"></a> <code>bit.tobit(x)</code></h4>
+<p>Normalizes a number to the numeric range for bit operations and returns it.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &#39;return bit.tobit(1)&#39; 0</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span></code></pre><h4 id="bit-tohex-x-n"><a name="bit.tohex()"></a> <code>bit.tohex(x [,n])</code></h4>
+<p>Converts its first argument to a hex string. The number of hex digits is given by the absolute value of the optional second argument.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &#39;return bit.tohex(422342)&#39; 0</span></span>
+<span class="giallo-l"><span>&quot;000671c6&quot;</span></span></code></pre><h4 id="bit-bnot-x"><a name="bit.bnot()"></a> <code>bit.bnot(x)</code></h4>
+<p>Returns the bitwise <strong>not</strong> of its argument.</p>
+<h4 id="bit-bnot-x-bit-bor-x1-x2-bit-band-x1-x2-and-bit-bxor-x1-x2"><a name="bit.ops"></a> <code>bit.bnot(x)</code> <code>bit.bor(x1 [,x2...])</code>, <code>bit.band(x1 [,x2...])</code> and <code>bit.bxor(x1 [,x2...])</code></h4>
+<p>Returns either the bitwise <strong>or</strong>, bitwise <strong>and</strong>, or bitwise <strong>xor</strong> of all of its arguments.
+Note that more than two arguments are allowed.</p>
+<p>Usage example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &#39;return bit.bor(1,2,4,8,16,32,64,128)&#39; 0</span></span>
+<span class="giallo-l"><span>(integer) 255</span></span></code></pre><h4 id="bit-lshift-x-n-bit-rshift-x-n-and-bit-arshift-x-n"><a name="bit.shifts"></a> <code>bit.lshift(x, n)</code>, <code>bit.rshift(x, n)</code> and <code>bit.arshift(x, n)</code></h4>
+<p>Returns either the bitwise logical <strong>left-shift</strong>, bitwise logical <strong>right-shift</strong>, or bitwise <strong>arithmetic right-shift</strong> of its first argument by the number of bits given by the second argument.</p>
+<h4 id="bit-rol-x-n-and-bit-ror-x-n"><a name="bit.ro"></a> <code>bit.rol(x, n)</code> and <code>bit.ror(x, n)</code></h4>
+<p>Returns either the bitwise <strong>left rotation</strong>, or bitwise <strong>right rotation</strong> of its first argument by the number of bits given by the second argument.
+Bits shifted out on one side are shifted back in on the other side.</p>
+<h4 id="bit-bswap-x"><a name="bit.bswap()"></a> <code>bit.bswap(x)</code></h4>
+<p>Swaps the bytes of its argument and returns it.
+This can be used to convert little-endian 32-bit numbers to big-endian 32-bit numbers and vice versa.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/lua-api.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

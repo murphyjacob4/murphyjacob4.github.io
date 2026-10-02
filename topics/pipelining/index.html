@@ -1,0 +1,409 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Pipelining</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Pipelining">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Pipelining</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Pipelining
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey pipelining is a technique for improving performance by issuing multiple commands at once without waiting for the response to each individual command. Pipelining is supported by most Valkey clients. This document describes the problem that pipelining is designed to solve and how pipelining works in Valkey.</p>
+<h2 id="request-response-protocols-and-round-trip-time-rtt">Request/Response protocols and round-trip time (RTT)</h2>
+<p>Valkey is a TCP server using the client-server model and what is called a <em>Request/Response</em> protocol.</p>
+<p>This means that usually a request is accomplished with the following steps:</p>
+<ul>
+<li>The client sends a query to the server, and reads from the socket, usually in a blocking way, for the server response.</li>
+<li>The server processes the command and sends the response back to the client.</li>
+</ul>
+<p>So for instance a four commands sequence is something like this:</p>
+<ul>
+<li><em>Client:</em> INCR X</li>
+<li><em>Server:</em> 1</li>
+<li><em>Client:</em> INCR X</li>
+<li><em>Server:</em> 2</li>
+<li><em>Client:</em> INCR X</li>
+<li><em>Server:</em> 3</li>
+<li><em>Client:</em> INCR X</li>
+<li><em>Server:</em> 4</li>
+</ul>
+<p>Clients and Servers are connected via a network link.
+Such a link can be very fast (a loopback interface) or very slow (a connection established over the Internet with many hops between the two hosts).
+Whatever the network latency is, it takes time for the packets to travel from the client to the server, and back from the server to the client to carry the reply.</p>
+<p>This time is called RTT (Round Trip Time).
+It's easy to see how this can affect performance when a client needs to perform many requests in a row (for instance adding many elements to the same list, or populating a database with many keys).
+For instance if the RTT time is 250 milliseconds (in the case of a very slow link over the Internet), even if the server is able to process 100k requests per second, we'll be able to process at max four requests per second.</p>
+<p>If the interface used is a loopback interface, the RTT is much shorter, typically sub-millisecond, but even this will add up to a lot if you need to perform many writes in a row.</p>
+<p>Fortunately there is a way to improve this use case.</p>
+<h2 id="valkey-pipelining">Valkey Pipelining</h2>
+<p>A Request/Response server can be implemented so that it is able to process new requests even if the client hasn't already read the old responses.
+This way it is possible to send <em>multiple commands</em> to the server without waiting for the replies at all, and finally read the replies in a single step.</p>
+<p>This is called pipelining, and is a technique widely in use for many decades.
+For instance many POP3 protocol implementations already support this feature, dramatically speeding up the process of downloading new emails from the server.</p>
+<p>Valkey has supported pipelining since its early days, so whatever version you are running, you can use pipelining with Valkey.
+This is an example using the raw netcat utility:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">$</span><span> (printf</span><span style="color: #A5D6FF;"> &quot;PING\r\nPING\r\nPING\r\n&quot;</span><span>;</span><span style="color: #FFA657;"> sleep</span><span style="color: #79C0FF;"> 1</span><span>) </span><span style="color: #FF7B72;">|</span><span style="color: #FFA657;"> nc</span><span style="color: #A5D6FF;"> localhost</span><span style="color: #79C0FF;"> 6379</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">+PONG</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">+PONG</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">+PONG</span></span></code></pre>
+<p>This time we don't pay the cost of RTT for every call, but just once for the three commands.</p>
+<p>To be explicit, with pipelining the order of operations of our very first example will be the following:</p>
+<ul>
+<li><em>Client:</em> INCR X</li>
+<li><em>Client:</em> INCR X</li>
+<li><em>Client:</em> INCR X</li>
+<li><em>Client:</em> INCR X</li>
+<li><em>Server:</em> 1</li>
+<li><em>Server:</em> 2</li>
+<li><em>Server:</em> 3</li>
+<li><em>Server:</em> 4</li>
+</ul>
+<blockquote>
+<p><strong>IMPORTANT NOTE</strong>: While the client sends commands using pipelining, the server will be forced to queue the replies, using memory. So if you need to send a lot of commands with pipelining, it is better to send them as batches each containing a reasonable number, for instance 10k commands, read the replies, and then send another 10k commands again, and so forth. The speed will be nearly the same, but the additional memory used will be at most the amount needed to queue the replies for these 10k commands.</p>
+</blockquote>
+<h2 id="it-s-not-just-a-matter-of-rtt">It's not just a matter of RTT</h2>
+<p>Pipelining is not just a way to reduce the latency cost associated with the
+round trip time, it actually greatly improves the number of operations
+you can perform per second in a given Valkey server.
+This is because without using pipelining, serving each command is very cheap from
+the point of view of accessing the data structures and producing the reply,
+but it is very costly from the point of view of doing the socket I/O. This
+involves calling the <code>read()</code> and <code>write()</code> syscall, that means going from user
+land to kernel land.
+The context switch is a huge speed penalty.</p>
+<p>When pipelining is used, many commands are usually read with a single <code>read()</code>
+system call, and multiple replies are delivered with a single <code>write()</code> system
+call. Consequently, the number of total queries performed per second
+initially increases almost linearly with longer pipelines, and eventually
+reaches 10 times the baseline obtained without pipelining, as shown in this figure.</p>
+<p><img src="/topics/pipeline_iops.png" alt="Pipeline size and IOPs" /></p>
+<h2 id="a-real-world-code-example">A real world code example</h2>
+<p>In the following benchmark we'll use a Ruby client, supporting pipelining, to test the speed improvement due to pipelining:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="ruby"><span class="giallo-l"><span style="color: #FF7B72;">require</span><span style="color: #A5D6FF;"> &#39;rubygems&#39;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">require</span><span style="color: #A5D6FF;"> &#39;redis&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">def</span><span style="color: #D2A8FF;"> bench</span><span>(descr)</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">  start</span><span style="color: #FF7B72;"> =</span><span style="color: #79C0FF;"> Time</span><span>.</span><span style="color: #D2A8FF;">now</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">  yield</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">  puts</span><span style="color: #A5D6FF;"> &quot;</span><span style="color: #FF7B72;">#{</span><span style="color: #A5D6FF;">descr</span><span style="color: #FF7B72;">} #{</span><span style="color: #79C0FF;">Time</span><span style="color: #A5D6FF;">.</span><span style="color: #D2A8FF;">now</span><span style="color: #FF7B72;"> -</span><span style="color: #A5D6FF;"> start</span><span style="color: #FF7B72;">}</span><span style="color: #A5D6FF;"> seconds&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">def</span><span style="color: #D2A8FF;"> without_pipelining</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">  r</span><span style="color: #FF7B72;"> =</span><span style="color: #79C0FF;"> Redis</span><span>.</span><span style="color: #FF7B72;">new</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">  10_000</span><span>.</span><span style="color: #D2A8FF;">times</span><span style="color: #FF7B72;"> do</span></span>
+<span class="giallo-l"><span>    r.</span><span style="color: #D2A8FF;">ping</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">  end</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">def</span><span style="color: #D2A8FF;"> with_pipelining</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">  r</span><span style="color: #FF7B72;"> =</span><span style="color: #79C0FF;"> Redis</span><span>.</span><span style="color: #FF7B72;">new</span></span>
+<span class="giallo-l"><span>  r.</span><span style="color: #D2A8FF;">pipelined</span><span style="color: #FF7B72;"> do</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">    10_000</span><span>.</span><span style="color: #D2A8FF;">times</span><span style="color: #FF7B72;"> do</span></span>
+<span class="giallo-l"><span>      r.</span><span style="color: #D2A8FF;">ping</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    end</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">  end</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">bench</span><span>(</span><span style="color: #A5D6FF;">&#39;without pipelining&#39;</span><span>)</span><span style="color: #FF7B72;"> do</span></span>
+<span class="giallo-l"><span>  without_pipelining</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">bench</span><span>(</span><span style="color: #A5D6FF;">&#39;with pipelining&#39;</span><span>)</span><span style="color: #FF7B72;"> do</span></span>
+<span class="giallo-l"><span>  with_pipelining</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span></code></pre>
+<p>Running the above simple script yields the following figures on my MacOS system, running over the loopback interface, where pipelining will provide the smallest improvement as the RTT is already pretty low:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>without pipelining 1.185238 seconds</span></span>
+<span class="giallo-l"><span>with pipelining 0.250783 seconds</span></span></code></pre>
+<p>As you can see, using pipelining, we improved the transfer by a factor of five.</p>
+<h2 id="pipelining-vs-scripting">Pipelining vs Scripting</h2>
+<p>Using <a href="/commands/eval">Valkey scripting</a>, a number of use cases for pipelining can be addressed more efficiently using scripts that perform a lot of the work needed at the server side.
+A big advantage of scripting is that it is able to both read and write data with minimal latency, making operations like <em>read, compute, write</em> very fast (pipelining can't help in this scenario since the client needs the reply of the read command before it can call the write command).</p>
+<p>Sometimes the application may also want to send <code>EVAL</code> or <code>EVALSHA</code> commands in a pipeline.
+This is entirely possible and Valkey explicitly supports it with the <a href="/commands/script-load">SCRIPT LOAD</a> command (it guarantees that <code>EVALSHA</code> can be called without the risk of failing).</p>
+<h2 id="appendix-why-are-busy-loops-slow-even-on-the-loopback-interface">Appendix: Why are busy loops slow even on the loopback interface?</h2>
+<p>Even with all the background covered in this page, you may still wonder why
+a Valkey benchmark like the following (in pseudo code), is slow even when
+executed in the loopback interface, when the server and the client are running
+in the same physical machine:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">FOR-ONE-SECOND:</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">    Valkey.SET(&quot;foo&quot;,&quot;bar&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">END</span></span></code></pre>
+<p>After all, if both the Valkey process and the benchmark are running in the same
+box, isn't it just copying messages in memory from one place to another without
+any actual latency or networking involved?</p>
+<p>The reason is that processes in a system are not always running, actually it is
+the kernel scheduler that lets the process run.
+So, for instance, when the benchmark is allowed to run, it reads the reply from the Valkey server (related to the last command executed), and writes a new command.
+The command is now in the loopback interface buffer, but in order to be read by the server, the kernel should schedule the server process (currently blocked in a system call)
+to run, and so forth.
+So in practical terms the loopback interface still involves network-like latency, because of how the kernel scheduler works.</p>
+<p>Basically a busy loop benchmark is the silliest thing that can be done when
+metering performances on a networked server. The wise thing is just avoiding
+benchmarking in this way.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/pipelining.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

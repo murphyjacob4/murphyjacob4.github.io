@@ -1,0 +1,448 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; CPU profiling</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: CPU profiling">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: CPU profiling</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            CPU profiling
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <h2 id="filling-the-performance-checklist">Filling the performance checklist</h2>
+<p>Valkey is developed with a great emphasis on performance. We do our best with
+every release to make sure you'll experience a very stable and fast product.</p>
+<p>Nevertheless, if you're finding room to improve the efficiency of Valkey or
+are pursuing a performance regression investigation you will need a concise
+methodical way of monitoring and analyzing Valkey performance.</p>
+<p>To do so you can rely on different methodologies (some more suited than other
+depending on the class of issues/analysis we intend to make). A curated list
+of methodologies and their steps are enumerated by Brendan Greg at the
+<a rel="external" href="https://www.brendangregg.com/methodology.html">following link</a>.</p>
+<p>We recommend the Utilization Saturation and Errors (USE) Method for answering
+the question of what is your bottleneck. Check the following mapping between
+system resource, metric, and tools for a practical deep dive:
+<a rel="external" href="https://www.brendangregg.com/USEmethod/use-rosetta.html">USE method</a>.</p>
+<h3 id="ensuring-the-cpu-is-your-bottleneck">Ensuring the CPU is your bottleneck</h3>
+<p>This guide assumes you've followed one of the above methodologies to perform a
+complete check of system health, and identified the bottleneck being the CPU.
+<strong>If you have identified that most of the time is spent blocked on I/O, locks,
+timers, paging/swapping, etc., this guide is not for you</strong>.</p>
+<h3 id="build-prerequisites">Build Prerequisites</h3>
+<p>For a proper On-CPU analysis, Valkey (and any dynamically loaded library like
+Valkey Modules) requires stack traces to be available to tracers, which you may
+need to fix first.</p>
+<p>By default, Valkey is compiled with the <code>-O3</code> optimization flag (which we intent to keep
+during profiling). This means that compiler optimizations are enabled which significantly
+enhance the performance. Valkey is also compiled with the <code>-fno-omit-frame-pointer</code> flag
+by default, ensuring that the frame pointer is preserved across function calls.
+This combination allows for precise stack walking and call stack tracing,
+which is essential for accurate profiling and debugging. Keeping the frame pointer
+intact helps profiling tools like <code>perf</code>, <code>gdb</code>, and others correctly attribute on-CPU
+time to deeper call stack frames, leading to more reliable insights into performance bottlenecks
+and hotspots. This setup strikes a balance between maintaining a highly optimized executable
+and ensuring that profiling and tracing tools provide accurate and actionable data.</p>
+<p>It's important that you ensure that:</p>
+<ul>
+<li>we still run with optimizations to get an accurate representation of production run times, meaning we will keep: <code>-O3</code></li>
+</ul>
+<p>You can do it as follows within valkey main repo:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ make SERVER_CFLAGS=&quot;-g&quot;</span></span></code></pre><h2 id="a-set-of-instruments-to-identify-performance-regressions-and-or-potential-on-cpu-performance-improvements">A set of instruments to identify performance regressions and/or potential <strong>on-CPU performance</strong> improvements</h2>
+<p>This document focuses specifically on <strong>on-CPU</strong> resource bottlenecks analysis,
+meaning we're interested in understanding where threads are spending CPU cycles
+while running on-CPU and, as importantly, whether those cycles are effectively
+being used for computation or stalled waiting (not blocked!) for memory I/O,
+and cache misses, etc.</p>
+<p>For that we will rely on toolkits (perf, bcc tools), and hardware specific PMCs
+(Performance Monitoring Counters), to proceed with:</p>
+<ul>
+<li>
+<p>Hotspot analysis (perf or bcc tools): to profile code execution and determine which functions are consuming the most time and thus are targets for optimization. We'll present two options to collect, report, and visualize hotspots either with perf or bcc/BPF tracing tools.</p>
+</li>
+<li>
+<p>Call counts analysis: to count events including function calls, enabling us to correlate several calls/components at once, relying on bcc/BPF tracing tools.</p>
+</li>
+<li>
+<p>Hardware event sampling: crucial for understanding CPU behavior, including memory I/O, stall cycles, and cache misses.</p>
+</li>
+</ul>
+<h3 id="tool-prerequisites">Tool prerequisites</h3>
+<p>The following steps rely on Linux perf_events (aka <a rel="external" href="https://man7.org/linux/man-pages/man1/perf.1.html">"perf"</a>), <a rel="external" href="https://github.com/iovisor/bcc">bcc/BPF tracing tools</a>, and Brendan Greg’s <a rel="external" href="https://github.com/brendangregg/FlameGraph">FlameGraph repo</a>.</p>
+<p>We assume beforehand you have:</p>
+<ul>
+<li>Installed the perf tool on your system. Most Linux distributions will likely package this as a package related to the kernel. More information about the perf tool can be found at perf <a rel="external" href="https://perf.wiki.kernel.org/">wiki</a>.</li>
+<li>Followed the install <a rel="external" href="https://github.com/iovisor/bcc/blob/master/INSTALL.md#installing-bcc">bcc/BPF</a> instructions to install bcc toolkit on your machine.</li>
+<li>Cloned Brendan Greg’s <a rel="external" href="https://github.com/brendangregg/FlameGraph">FlameGraph repo</a> and made accessible the <code>difffolded.pl</code> and <code>flamegraph.pl</code> files, to generated the collapsed stack traces and Flame Graphs.</li>
+</ul>
+<h2 id="hotspot-analysis-with-perf-or-ebpf-stack-traces-sampling">Hotspot analysis with perf or eBPF (stack traces sampling)</h2>
+<p>Profiling CPU usage by sampling stack traces at a timed interval is a fast and
+easy way to identify performance-critical code sections (hotspots).</p>
+<h3 id="sampling-stack-traces-using-perf">Sampling stack traces using perf</h3>
+<p>To profile both user- and kernel-level stacks of valkey-server for a specific
+length of time, for example 60 seconds, at a sampling frequency of 999 samples
+per second:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ perf record -g --pid $(pgrep valkey-server) -F 999 -- sleep 60</span></span></code></pre><h4 id="displaying-the-recorded-profile-information-using-perf-report">Displaying the recorded profile information using perf report</h4>
+<p>By default perf record will generate a perf.data file in the current working
+directory.</p>
+<p>You can then report with a call-graph output (call chain, stack backtrace),
+with a minimum call graph inclusion threshold of 0.5%, with:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ perf report -g &quot;graph,0.5,caller&quot;</span></span></code></pre>
+<p>See the <a rel="external" href="https://man7.org/linux/man-pages/man1/perf-report.1.html">perf report</a>
+documentation for advanced filtering, sorting and aggregation capabilities.</p>
+<h4 id="visualizing-the-recorded-profile-information-using-flame-graphs">Visualizing the recorded profile information using Flame Graphs</h4>
+<p><a rel="external" href="https://www.brendangregg.com/flamegraphs.html">Flame graphs</a> allow for a quick
+and accurate visualization of frequent code-paths. They can be generated using
+Brendan Greg's open source programs on <a rel="external" href="https://github.com/brendangregg/FlameGraph">github</a>,
+which create interactive SVGs from folded stack files.</p>
+<p>Specifically, for perf we need to convert the generated perf.data into the
+captured stacks, and fold each of them into single lines. You can then render
+the on-CPU flame graph with:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ perf script &gt; valkey.perf.stacks</span></span>
+<span class="giallo-l"><span>$ stackcollapse-perf.pl valkey.perf.stacks &gt; valkey.folded.stacks</span></span>
+<span class="giallo-l"><span>$ flamegraph.pl valkey.folded.stacks &gt; valkey.svg</span></span></code></pre>
+<p>By default, perf script will generate a perf.data file in the current working
+directory. See the <a rel="external" href="https://linux.die.net/man/1/perf-script">perf script</a>
+documentation for advanced usage.</p>
+<p>See <a rel="external" href="https://github.com/brendangregg/FlameGraph#options">FlameGraph usage options</a>
+for more advanced stack trace visualizations (like the differential one).</p>
+<h4 id="archiving-and-sharing-recorded-profile-information">Archiving and sharing recorded profile information</h4>
+<p>So that analysis of the perf.data contents can be possible on a machine other
+than the one on which collection happened, you need to export along with the
+perf.data file all object files with build-ids found in the record data file.
+This can be easily done with the help of
+<a rel="external" href="https://github.com/torvalds/linux/blob/master/tools/perf/perf-archive.sh">perf-archive.sh</a>
+script:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ perf-archive.sh perf.data</span></span></code></pre>
+<p>Now please run:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ tar xvf perf.data.tar.bz2 -C ~/.debug</span></span></code></pre>
+<p>on the machine where you need to run <code>perf report</code>.</p>
+<h3 id="sampling-stack-traces-using-bcc-bpf-s-profile">Sampling stack traces using bcc/BPF's profile</h3>
+<p>Similarly to perf, as of Linux kernel 4.9, BPF-optimized profiling is now fully
+available with the promise of lower overhead on CPU (as stack traces are
+frequency counted in kernel context) and disk I/O resources during profiling.</p>
+<p>Apart from that, and relying solely on bcc/BPF's profile tool, we have also
+removed the perf.data and intermediate steps if stack traces analysis is our
+main goal. You can use bcc's profile tool to output folded format directly, for
+flame graph generation:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ /usr/share/bcc/tools/profile -F 999 -f --pid $(pgrep valkey-server) --duration 60 &gt; valkey.folded.stacks</span></span></code></pre>
+<p>In that manner, we've remove any preprocessing and can render the on-CPU flame
+graph with a single command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ flamegraph.pl valkey.folded.stacks &gt; valkey.svg</span></span></code></pre><h3 id="visualizing-the-recorded-profile-information-using-flame-graphs-1">Visualizing the recorded profile information using Flame Graphs</h3>
+<h2 id="call-counts-analysis-with-bcc-bpf">Call counts analysis with bcc/BPF</h2>
+<p>A function may consume significant CPU cycles either because its code is slow
+or because it's frequently called. To answer at what rate functions are being
+called, you can rely upon call counts analysis using BCC's <code>funccount</code> tool:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ /usr/share/bcc/tools/funccount &#39;valkey-server:(call*|*Read*|*Write*)&#39; --pid $(pgrep valkey-server) --duration 60</span></span>
+<span class="giallo-l"><span>Tracing 64 functions for &quot;valkey-server:(call*|*Read*|*Write*)&quot;... Hit Ctrl-C to end.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>FUNC                                    COUNT</span></span>
+<span class="giallo-l"><span>call                                      334</span></span>
+<span class="giallo-l"><span>handleClientsWithPendingWrites            388</span></span>
+<span class="giallo-l"><span>clientInstallWriteHandler                 388</span></span>
+<span class="giallo-l"><span>postponeClientRead                        514</span></span>
+<span class="giallo-l"><span>handleClientsWithPendingReadsUsingThreads      735</span></span>
+<span class="giallo-l"><span>handleClientsWithPendingWritesUsingThreads      735</span></span>
+<span class="giallo-l"><span>prepareClientToWrite                     1442</span></span>
+<span class="giallo-l"><span>Detaching...</span></span></code></pre>
+<p>The above output shows that, while tracing, the Valkey's call() function was
+called 334 times, handleClientsWithPendingWrites() 388 times, etc.</p>
+<h2 id="hardware-event-counting-with-performance-monitoring-counters-pmcs">Hardware event counting with Performance Monitoring Counters (PMCs)</h2>
+<p>Many modern processors contain a performance monitoring unit (PMU) exposing
+Performance Monitoring Counters (PMCs). PMCs are crucial for understanding CPU
+behavior, including memory I/O, stall cycles, and cache misses, and provide
+low-level CPU performance statistics that aren't available anywhere else.</p>
+<p>The design and functionality of a PMU is CPU-specific and you should assess
+your CPU supported counters and features by using <code>perf list</code>.</p>
+<p>To calculate the number of instructions per cycle, the number of micro ops
+executed, the number of cycles during which no micro ops were dispatched, the
+number stalled cycles on memory, including a per memory type stalls, for the
+duration of 60s, specifically for the valkey-server process:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ perf stat -e &quot;cpu-clock,cpu-cycles,instructions,uops_executed.core,uops_executed.stall_cycles,cache-references,cache-misses,cycle_activity.stalls_total,cycle_activity.stalls_mem_any,cycle_activity.stalls_l3_miss,cycle_activity.stalls_l2_miss,cycle_activity.stalls_l1d_miss&quot; --pid $(pgrep valkey-server) -- sleep 60</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Performance counter stats for process id &#39;3038&#39;:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>  60046.411437      cpu-clock (msec)          #    1.001 CPUs utilized          </span></span>
+<span class="giallo-l"><span>  168991975443      cpu-cycles                #    2.814 GHz                      (36.40%)</span></span>
+<span class="giallo-l"><span>  388248178431      instructions              #    2.30  insn per cycle           (45.50%)</span></span>
+<span class="giallo-l"><span>  443134227322      uops_executed.core        # 7379.862 M/sec                    (45.51%)</span></span>
+<span class="giallo-l"><span>   30317116399      uops_executed.stall_cycles #  504.895 M/sec                    (45.51%)</span></span>
+<span class="giallo-l"><span>     670821512      cache-references          #   11.172 M/sec                    (45.52%)</span></span>
+<span class="giallo-l"><span>      23727619      cache-misses              #    3.537 % of all cache refs      (45.43%)</span></span>
+<span class="giallo-l"><span>   30278479141      cycle_activity.stalls_total #  504.251 M/sec                    (36.33%)</span></span>
+<span class="giallo-l"><span>   19981138777      cycle_activity.stalls_mem_any #  332.762 M/sec                    (36.33%)</span></span>
+<span class="giallo-l"><span>     725708324      cycle_activity.stalls_l3_miss #   12.086 M/sec                    (36.33%)</span></span>
+<span class="giallo-l"><span>    8487905659      cycle_activity.stalls_l2_miss #  141.356 M/sec                    (36.32%)</span></span>
+<span class="giallo-l"><span>   10011909368      cycle_activity.stalls_l1d_miss #  166.736 M/sec                    (36.31%)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>  60.002765665 seconds time elapsed</span></span></code></pre>
+<p>It's important to know that there are two very different ways in which PMCs can
+be used (counting and sampling), and we've focused solely on PMCs counting for
+the sake of this analysis. Brendan Greg clearly explains it on the following
+<a rel="external" href="https://www.brendangregg.com/blog/2017-05-04/the-pmcs-of-ec2.html">link</a>.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/performance-on-cpu.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

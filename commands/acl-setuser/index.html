@@ -1,0 +1,591 @@
+
+
+
+
+
+
+
+
+    
+    
+    
+        
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Command &middot; ACL SETUSER</title>
+    <meta name="title" property="og:title" content="Valkey Command: ACL SETUSER">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+    
+        <div class="styled-title">
+            <h1 class="page-title">ACL SETUSER </h1>
+        </div>
+    
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/commands/" class="breadcrumb-link">Commands</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            ACL SETUSER
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <dl>
+        <dt>Usage:</dt>
+        <dd>
+            <code>
+            ACL SETUSER
+            
+            
+          username  
+        
+        [  rule  ]
+        
+            [ [  rule  ] ... ]
+        
+            
+            </code>
+        </dd>
+    </dl>
+    
+    <dl>
+        <dt>Complexity:</dt>
+        <dd>O(N). Where N is the number of rules provided.</dd>
+    <dl>
+    
+    
+    
+    <dl>
+        <dt>Since:</dt>
+        <dd>6.0.0</dd>
+    <dl>
+    
+    
+    <dl>
+        <dt>ACL Categories:</dt>
+        <dd>
+            
+                @admin, 
+            
+                @dangerous, 
+            
+                @slow
+            
+        </dd>
+    <dl>
+    
+    </dl>
+
+
+
+
+
+
+<p>Create an ACL user with the specified rules or modify the rules of an
+existing user.</p>
+<p>Manipulate Valkey ACL users interactively.
+If the username does not exist, the command creates the username without any privilege.
+It then reads from left to right all the <a href="#acl-rules">rules</a> provided as successive arguments, setting the user ACL rules as specified.
+If the user already exists, the provided ACL rules are simply applied
+<em>in addition</em> to the rules already set. For example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>ACL SETUSER virginia on allkeys +set</span></span></code></pre>
+<p>The above command creates a user called <code>virginia</code> who is active(the <em>on</em> rule), can access any key (<em>allkeys</em> rule), and can call the set command (<em>+set</em> rule).
+Then, you can use another <code>ACL SETUSER</code> call to modify the user rules:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>ACL SETUSER virginia +get</span></span></code></pre>
+<p>The above rule applies the new rule to the user <code>virginia</code>, so other than <a href="/commands/set"><code>SET</code></a>, the user <code>virginia</code> can now also use the <a href="/commands/get"><code>GET</code></a> command.</p>
+<p>ACL rules can also be grouped into multiple distinct sets of rules, called <em>selectors</em>.
+Selectors are added by wrapping the rules in parentheses and providing them just like any other rule.
+In order to execute a command, either the root permissions (rules defined outside of parenthesis) or any of the selectors (rules defined inside parenthesis) must match the given command.
+For example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>ACL SETUSER virginia on +GET allkeys (+SET ~app1*)</span></span></code></pre>
+<p>This sets a user with two sets of permissions, one defined on the user and one defined with a selector.
+The root user permissions only allow executing the get command, but can be executed on any keys.
+The selector then grants a secondary set of permissions: access to the <a href="/commands/set"><code>SET</code></a> command to be executed on any key that starts with <code>app1</code>.
+Using multiple selectors allows you to grant permissions that are different depending on what keys are being accessed.</p>
+<p>When we want to be sure to define a user from scratch, without caring if
+it had previously defined rules associated, we can use the special rule
+<code>reset</code> as first rule, in order to flush all the other existing rules:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>ACL SETUSER antirez reset [... other rules ...]</span></span></code></pre>
+<p>After resetting a user, its ACL rules revert to the default: inactive, passwordless, can't execute any command nor access any key or channel:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; ACL SETUSER antirez reset</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; ACL LIST</span></span>
+<span class="giallo-l"><span>1) &quot;user antirez off -@all&quot;</span></span></code></pre>
+<p>ACL rules are either words like "on", "off", "reset", "allkeys", or are
+special rules that start with a special character, and are followed by
+another string (without any space in between), like "+SET".</p>
+<p>The following documentation is a reference manual about the capabilities of this command, however our <a href="/topics/acl">ACL tutorial</a> may be a more gentle introduction to how the ACL system works in general.</p>
+<h2 id="acl-rules">ACL rules</h2>
+<p>Valkey ACL rules are split into two categories: rules that define command permissions or <em>command rules</em>, and rules that define the user state or <em>user management rules</em>.
+This is a list of all the supported Valkey ACL rules:</p>
+<h3 id="command-rules">Command rules</h3>
+<ul>
+<li><code>~&lt;pattern&gt;</code>: Adds the specified key pattern (glob style pattern, like in the <a href="/commands/keys"><code>KEYS</code></a> command), to the list of key patterns accessible by the user. This grants both read and write permissions to keys that match the pattern. You can add multiple key patterns to the same user. Example: <code>~objects:*</code></li>
+<li><code>%R~&lt;pattern&gt;</code>: Adds the specified read key pattern. This behaves similar to the regular key pattern but only grants permission to read from keys that match the given pattern. See <a href="/topics/acl#key-permissions">key permissions</a> for more information.</li>
+<li><code>%W~&lt;pattern&gt;</code>: Adds the specified write key pattern. This behaves similar to the regular key pattern but only grants permission to write to keys that match the given pattern. See <a href="/topics/acl#key-permissions">key permissions</a> for more information.</li>
+<li><code>%RW~&lt;pattern&gt;</code>: Alias for <code>~&lt;pattern&gt;</code>.</li>
+<li><code>allkeys</code>: Alias for <code>~*</code>, it allows the user to access all the keys.</li>
+<li><code>resetkeys</code>: Removes all the key patterns from the list of key patterns the user can access.</li>
+<li><code>&amp;&lt;pattern&gt;</code>: Adds the specified glob style pattern to the list of Pub/Sub channel patterns accessible by the user. You can add multiple channel patterns to the same user. Example: <code>&amp;chatroom:*</code></li>
+<li><code>allchannels</code>: Alias for <code>&amp;*</code>, it allows the user to access all Pub/Sub channels.</li>
+<li><code>resetchannels</code>: Removes all channel patterns from the list of Pub/Sub channel patterns the user can access.</li>
+<li><code>+&lt;command&gt;</code>: Adds the command to the list of commands the user can call. Can be used with <code>|</code> for allowing subcommands (e.g "+config|get").</li>
+<li><code>+@&lt;category&gt;</code>: Adds all the commands in the specified category to the list of commands the user is able to execute. Example: <code>+@string</code> (adds all the string commands). For a list of categories, check the <a href="/commands/acl-cat"><code>ACL CAT</code></a> command.</li>
+<li><code>+&lt;command&gt;|first-arg</code>: Allows a specific first argument of an otherwise disabled command. It is only supported on commands with no sub-commands, and is not allowed as negative form like -SELECT|1, only additive starting with "+". This feature is deprecated and may be removed in the future.</li>
+<li><code>allcommands</code>: Alias of <code>+@all</code>. Adds all the commands there are in the server, including <em>future commands</em> loaded via module, to be executed by this user.</li>
+<li><code>-&lt;command&gt;</code>: Remove the command to the list of commands the user can call. It can be used with <code>|</code> for blocking subcommands (e.g., "-config|set").</li>
+<li><code>-@&lt;category&gt;</code>: Like <code>+@&lt;category&gt;</code> but removes all the commands in the category instead of adding them.</li>
+<li><code>nocommands</code>: Alias for <code>-@all</code>. Removes all the commands, and the user is no longer able to execute anything.</li>
+<li><code>db=&lt;id&gt;[,&lt;id&gt;...]</code>: Sets the specified database id(s) as the databases the selector is allowed to access.
+Multiple ids are separated by commas, e.g. <code>db=0,1,2</code>; at least one id is required.
+Clears the <code>alldbs</code> flag and any previously configured database ids on the selector.
+See <a href="/topics/acl#database-permissions">database permissions</a> for more information.</li>
+<li><code>alldbs</code>: Allows the selector to access all databases. This is the default for new selectors and is omitted from generated ACL strings.</li>
+<li><code>resetdbs</code>: Removes all databases from the list of allowed databases and clears the <code>alldbs</code> flag.</li>
+</ul>
+<h3 id="user-management-rules">User management rules</h3>
+<ul>
+<li><code>on</code>: Set the user as active, it will be possible to authenticate as this user using <a href="/commands/auth"><code>AUTH</code></a> <code>&lt;username&gt; &lt;password&gt;</code>.</li>
+<li><code>off</code>: Set user as not active, it will be impossible to log as this user. Please note that if a user gets disabled (set to off) after there are connections already authenticated with such a user, the connections will continue to work as expected. To also kill the old connections you can use <a href="/commands/client-kill"><code>CLIENT KILL</code></a> with the user option. An alternative is to delete the user with <a href="/commands/acl-deluser"><code>ACL DELUSER</code></a>, that will result in all the connections authenticated as the deleted user to be disconnected.</li>
+<li><code>nopass</code>: The user is set as a <em>no password</em> user. It means that it will be possible to authenticate as such user with any password. By default, the <code>default</code> special user is set as "nopass". The <code>nopass</code> rule will also reset all the configured passwords for the user.</li>
+<li><code>&gt;password</code>: Adds the specified clear text password as a hashed password in the list of the users passwords. Every user can have many active passwords, so that password rotation will be simpler. The specified password is not stored as clear text inside the server. Example: <code>&gt;mypassword</code>.</li>
+<li><code>#&lt;hashedpassword&gt;</code>: Adds the specified hashed password to the list of user passwords. A hashed password is hashed with SHA256 and translated into a hexadecimal string. Example: <code>#c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2</code>.</li>
+<li><code>&lt;password</code>: Like <code>&gt;password</code> but removes the password instead of adding it.</li>
+<li><code>!&lt;hashedpassword&gt;</code>: Like <code>#&lt;hashedpassword&gt;</code> but removes the password instead of adding it.</li>
+<li><code>(&lt;rule list&gt;)</code>: Creates a new selector to match rules against. Selectors are evaluated after the user permissions, and are evaluated according to the order they are defined. If a command matches either the user permissions or any selector, it is allowed. See <a href="/topics/acl#selectors">selectors</a> for more information.</li>
+<li><code>clearselectors</code>: Deletes all of the selectors attached to the user.</li>
+<li><code>reset</code>: Removes any capability from the user. They are set to off, without passwords, unable to execute any command, unable to access any key.</li>
+</ul>
+<h2 id="examples">Examples</h2>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; ACL SETUSER alan allkeys +@string +@set -SADD &gt;alanpassword</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; ACL SETUSER antirez heeyyyy</span></span>
+<span class="giallo-l"><span>(error) ERR Error in ACL SETUSER modifier &#39;heeyyyy&#39;: Syntax error</span></span></code></pre>
+<p>Restrict a user to a subset of databases:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; ACL SETUSER alice on +@all ~* db=0,1 nopass</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; ACL LIST</span></span>
+<span class="giallo-l"><span>1) &quot;user alice on nopass ~* resetchannels db=0,1 +@all&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;user default on nopass ~* &amp;* +@all&quot;</span></span></code></pre>
+<p>A later <code>db=</code> rule replaces the previous database list:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; ACL SETUSER alice db=2,3</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; ACL LIST</span></span>
+<span class="giallo-l"><span>1) &quot;user alice on nopass ~* resetchannels db=2,3 +@all&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;user default on nopass ~* &amp;* +@all&quot;</span></span></code></pre>
+<p>Different selectors can grant access on different databases:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; ACL SETUSER bob on nopass (db=0,1 +@write +select ~*) (db=2,3 +@read +select ~*)</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; ACL LIST</span></span>
+<span class="giallo-l"><span>1) &quot;user bob on nopass resetchannels -@all (~* resetchannels db=0,1 -@all +@write +select) (~* resetchannels db=2,3 -@all +@read +select)&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;user default on nopass ~* &amp;* +@all&quot;</span></span></code></pre>
+<p>The <code>ACL LIST</code> output shows three sets of permissions for <code>bob</code>: the root
+permissions (<code>-@all</code>, with implicit <code>alldbs</code>) and two selectors, one for each
+parenthesized rule set. A command is allowed when the root permissions or any selector matches it.
+See <a href="/topics/acl#selectors">selectors</a> for more information.</p>
+
+
+
+<h3>RESP2/RESP3 Reply</h3>
+            <p><a href="/topics/protocol#simple-strings">Simple string reply</a>: <code>OK</code>.</p>
+<p>If the rules contain errors, the error is returned.</p>
+
+        
+<h3>History</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Version</th>
+            <th>Change</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+        
+        <tr>
+            <td>6.2.0</td>
+            <td><p>Added Pub/Sub channel patterns.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>7.0.0</td>
+            <td><p>Added selectors and key based permissions.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>9.1.0</td>
+            <td><p>Added database permission rules.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>9.2.0</td>
+            <td><p>Added the <code>role=</code> rule for assigning roles to a user.</p>
+</td>
+        </tr>
+        
+
+    </tbody>
+</table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+
+
+
+
+<div class="sb-search-container">
+    <input type="search" id="sidebar-search-box" placeholder="Search all commands..." autocomplete="off" aria-label="Search all commands" />
+</div>
+
+<!-- No results message for sidebar search -->
+<div id="sidebar-no-results-message" class="no-results-message" hidden>
+    <span>&lt;/&gt;</span>
+    <h4>No commands found</h4>
+    <p>Check your spelling or try different keywords</p>
+</div>
+
+<h2 id="command-list-title">Similar commands</h2>
+<ul id="command-list" class="sb-command-list"></ul>
+<div class="sb-command-list-footer">
+    <button type="button" id="sidebar-show-more" class="command-show-more" hidden>Show more</button>
+    
+    <p id="sidebar-command-status" class="command-list-status" aria-live="polite"></p>
+    <p><a href="/commands/">Browse the full command reference</a></p>
+</div>
+
+<script src="/assets/js/command-reference.js"></script>
+<script>
+(() => {
+    const CR = window.ValkeyCommandReference;
+    const PAGE_SIZE = 10;
+    const CURRENT_SLUG = "acl-setuser";
+    const groups = {
+    "bitmap": { name: "Bitmap", description: "Operations on the Bitmap data type" },
+    "bloom": { name: "Bloom filter", description: "Operations on the Bloom filter data type" },
+    "search": { name: "Search", description: "Vector Similarity Search engine optimized for AI-driven workloads" },
+    "cluster": { name: "Cluster", description: "Valkey Cluster management" },
+    "connection": { name: "Connection", description: "Client connections management" },
+    "generic": { name: "Generic", description: "Generic commands" },
+    "geo": { name: "Geospatial indices", description: "Operations on the Geospatial Index data type" },
+    "hash": { name: "Hash", description: "Operations on the Hash data type" },
+    "hyperloglog": { name: "HyperLogLog", description: "Operations on the HyperLogLog data type" },
+    "json": { name: "JSON", description: "Operations on the JSON data type" },
+    "list": { name: "List", description: "Operations on the List data type" },
+    "pubsub": { name: "Pub/Sub", description: "Pub/Sub commands" },
+    "scripting": { name: "Scripting and Functions", description: "Valkey server-side scripting and functions" },
+    "sentinel": { name: "Sentinel", description: "Valkey Sentinel commands" },
+    "server": { name: "Server", description: "Server management commands" },
+    "set": { name: "Set", description: "Operations on the Set data type" },
+    "sorted-set": { name: "Sorted Set", description: "Operations on the Sorted Set data type" },
+    "stream": { name: "Stream", description: "Operations on the Stream data type" },
+    "string": { name: "String", description: "Operations on the String data type" },
+    "transactions": { name: "Transactions", description: "Valkey Transaction management" }
+};
+    const groupNames = Object.fromEntries(Object.entries(groups).map(([key, g]) => [key, g.name]));
+
+    const listEl = document.getElementById("command-list");
+    const searchBox = document.getElementById("sidebar-search-box");
+    const title = document.getElementById("command-list-title");
+    const showMore = document.getElementById("sidebar-show-more");
+    const status = document.getElementById("sidebar-command-status");
+    const noResults = document.getElementById("sidebar-no-results-message");
+
+    let entries = [];
+    let current = null;
+    let similar = [];
+    const state = { query: "", shown: PAGE_SIZE };
+    const setStatus = CR.liveStatus(status);
+
+    // `typing` debounces the live status so screen readers aren't interrupted on every keystroke.
+    function render(typing) {
+        const query = CR.normalizeQuery(state.query);
+        const matches = query ? CR.search(entries, query) : similar;
+        const visible = matches.slice(0, state.shown);
+        CR.showEntries(listEl, entries, visible);
+        if (current) current.el.classList.add("is-current");
+
+        title.textContent = query ? `${matches.length} ${matches.length === 1 ? "result" : "results"}` : "Similar commands";
+        title.hidden = query !== "" && matches.length === 0;
+        noResults.hidden = matches.length !== 0;
+
+        const remaining = matches.length - visible.length;
+        CR.updateShowMore(showMore, remaining, PAGE_SIZE);
+        let message;
+        if (!matches.length) {
+            message = query ? "No commands found." : "";
+        } else if (!query && remaining <= 0) {
+            message = `Can't find it? Search above to look through all ${entries.length} commands.`;
+        } else {
+            message = `Showing ${visible.length} of ${matches.length}.`;
+        }
+        setStatus(message, !typing);
+    }
+
+    function init(html) {
+        listEl.innerHTML = html;
+        entries = Array.from(listEl.querySelectorAll(".command-list-item"), (el) => CR.parseEntry(el, groupNames));
+        current = entries.find((e) => e.slug === CURRENT_SLUG) || null;
+        similar = current
+            ? CR.mostSimilar(entries, current)
+            // Unknown command: fall back to the most popular ones.
+            : entries.filter((e) => e.rank !== Infinity).sort((a, b) => a.rank - b.rank);
+        render();
+    }
+
+    searchBox.addEventListener("input", () => {
+        state.query = searchBox.value;
+        state.shown = PAGE_SIZE;
+        render(true);
+    });
+    CR.bindSearchKeys(searchBox, listEl);
+    // No "/" shortcut here: on long doc pages it would override the browser's quick find.
+    showMore.addEventListener("click", () => {
+        state.shown += PAGE_SIZE;
+        render();
+    });
+
+    fetch("/command-list/")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(init)
+        .catch(() => {
+            title.hidden = true;
+            showMore.hidden = true;
+            status.textContent = "";
+            listEl.innerHTML = "<li>Could not load the command list.</li>";
+        });
+})();
+</script>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

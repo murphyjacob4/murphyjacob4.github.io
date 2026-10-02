@@ -1,0 +1,408 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Pub&#x2F;Sub</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Pub&#x2F;Sub">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Pub&#x2F;Sub</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Pub&#x2F;Sub
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p><code>SUBSCRIBE</code>, <code>UNSUBSCRIBE</code> and <code>PUBLISH</code> implement the <a rel="external" href="https://en.wikipedia.org/wiki/Publish/subscribe">Publish/Subscribe messaging paradigm</a> where publishers send their messages to channels, without knowledge of what receivers (subscribers) there may be.
+Subscribers express interest in one or more channels and only receive messages that are of interest, without knowledge of what (if any) publishers there are.
+This decoupling of publishers and subscribers allows for greater scalability and a more dynamic network topology.</p>
+<p>Pubsub channels are not persisted. If there are no subscribes to a channel when a message is published, the message is lost.
+If you're looking for persisted messages queues, you may want to look into <a href="/topics/streams-intro">Streams</a> instead.</p>
+<p>To subscribe to channels "channel11" and "ch:00" the client issues a <code>SUBSCRIBE</code> providing the names of the channels:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">SUBSCRIBE</span><span style="color: #A5D6FF;"> channel11 ch:00</span></span></code></pre>
+<p>Messages sent by other clients to these channels will be pushed by Valkey to all the subscribed clients.
+Subscribers receive the messages in the order that the messages are published.</p>
+<p>A client subscribed to one or more channels shouldn't issue commands, although it can <code>SUBSCRIBE</code> and <code>UNSUBSCRIBE</code> to and from other channels.
+The replies to subscription and unsubscribing operations are sent in the form of messages so that the client can just read a coherent stream of messages where the first element indicates the type of message.
+The commands that are allowed in the context of a subscribed RESP2 client are:</p>
+<ul>
+<li><code>PING</code></li>
+<li><code>PSUBSCRIBE</code></li>
+<li><code>PUNSUBSCRIBE</code></li>
+<li><code>QUIT</code></li>
+<li><code>RESET</code></li>
+<li><code>SSUBSCRIBE</code></li>
+<li><code>SUBSCRIBE</code></li>
+<li><code>SUNSUBSCRIBE</code></li>
+<li><code>UNSUBSCRIBE</code></li>
+</ul>
+<p>However, if RESP3 is used (see <code>HELLO</code>), a client can issue any commands while in the subscribed state.</p>
+<p>Please note that when using <code>valkey-cli</code>, in subscribed mode commands such as <code>UNSUBSCRIBE</code> and <code>PUNSUBSCRIBE</code> cannot be used because <code>valkey-cli</code> will not accept any commands and can only quit the mode with <code>Ctrl-C</code>.</p>
+<h2 id="delivery-semantics">Delivery semantics</h2>
+<p>Valkey' Pub/Sub exhibits <em>at-most-once</em> message delivery semantics.
+As the name suggests, it means that a message will be delivered once if at all.
+Once the message is sent by the Valkey server, there's no chance of it being sent again.
+If the subscriber is unable to handle the message (for example, due to an error or a network disconnect) the message is forever lost.</p>
+<p>If your application requires stronger delivery guarantees, you may want to learn about <a href="/topics/streams-intro">Streams</a>.
+Messages in streams are persisted, and support both <em>at-most-once</em> as well as <em>at-least-once</em> delivery semantics.</p>
+<h2 id="format-of-pushed-messages">Format of pushed messages</h2>
+<p>A message is an <a href="/topics/protocol#arrays">array-reply</a> with three elements.</p>
+<p>The first element is the kind of message:</p>
+<ul>
+<li>
+<p><code>subscribe</code>: means that we successfully subscribed to the channel given as the second element in the reply.
+The third argument represents the number of channels we are currently subscribed to.</p>
+</li>
+<li>
+<p><code>unsubscribe</code>: means that we successfully unsubscribed from the channel given as second element in the reply.
+The third argument represents the number of channels we are currently subscribed to.
+When the last argument is zero, we are no longer subscribed to any channel, and the client can issue any kind of Valkey command as we are outside the Pub/Sub state.</p>
+</li>
+<li>
+<p><code>message</code>: it is a message received as a result of a <code>PUBLISH</code> command issued by another client.
+The second element is the name of the originating channel, and the third argument is the actual message payload.</p>
+</li>
+</ul>
+<h2 id="database-scoping">Database &amp; Scoping</h2>
+<p>Pub/Sub has no relation to the key space.
+It was made to not interfere with it on any level, including database numbers.</p>
+<p>Publishing on db 10, will be heard by a subscriber on db 1.</p>
+<p>If you need scoping of some kind, prefix the channels with the name of the environment (test, staging, production...).</p>
+<h2 id="wire-protocol-example">Wire protocol example</h2>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SUBSCRIBE first second</span></span>
+<span class="giallo-l"><span>*3</span></span>
+<span class="giallo-l"><span>$9</span></span>
+<span class="giallo-l"><span>subscribe</span></span>
+<span class="giallo-l"><span>$5</span></span>
+<span class="giallo-l"><span>first</span></span>
+<span class="giallo-l"><span>:1</span></span>
+<span class="giallo-l"><span>*3</span></span>
+<span class="giallo-l"><span>$9</span></span>
+<span class="giallo-l"><span>subscribe</span></span>
+<span class="giallo-l"><span>$6</span></span>
+<span class="giallo-l"><span>second</span></span>
+<span class="giallo-l"><span>:2</span></span></code></pre>
+<p>At this point, from another client we issue a <code>PUBLISH</code> operation against the channel named <code>second</code>:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; PUBLISH second Hello</span></span></code></pre>
+<p>This is what the first client receives:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>*3</span></span>
+<span class="giallo-l"><span>$7</span></span>
+<span class="giallo-l"><span>message</span></span>
+<span class="giallo-l"><span>$6</span></span>
+<span class="giallo-l"><span>second</span></span>
+<span class="giallo-l"><span>$5</span></span>
+<span class="giallo-l"><span>Hello</span></span></code></pre>
+<p>Now the client unsubscribes itself from all the channels using the <code>UNSUBSCRIBE</code> command without additional arguments:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>UNSUBSCRIBE</span></span>
+<span class="giallo-l"><span>*3</span></span>
+<span class="giallo-l"><span>$11</span></span>
+<span class="giallo-l"><span>unsubscribe</span></span>
+<span class="giallo-l"><span>$6</span></span>
+<span class="giallo-l"><span>second</span></span>
+<span class="giallo-l"><span>:1</span></span>
+<span class="giallo-l"><span>*3</span></span>
+<span class="giallo-l"><span>$11</span></span>
+<span class="giallo-l"><span>unsubscribe</span></span>
+<span class="giallo-l"><span>$5</span></span>
+<span class="giallo-l"><span>first</span></span>
+<span class="giallo-l"><span>:0</span></span></code></pre><h2 id="pattern-matching-subscriptions">Pattern-matching subscriptions</h2>
+<p>The Valkey Pub/Sub implementation supports pattern matching.
+Clients may subscribe to glob-style patterns to receive all the messages sent to channel names matching a given pattern.</p>
+<p>For instance:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>PSUBSCRIBE news.*</span></span></code></pre>
+<p>Will receive all the messages sent to the channel <code>news.art.figurative</code>, <code>news.music.jazz</code>, etc.
+All the glob-style patterns are valid, so multiple wildcards are supported.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>PUNSUBSCRIBE news.*</span></span></code></pre>
+<p>Will then unsubscribe the client from that pattern.
+No other subscriptions will be affected by this call.</p>
+<p>Messages received as a result of pattern matching are sent in a different format:</p>
+<ul>
+<li>The type of the message is <code>pmessage</code>: it is a message received as a result from a <code>PUBLISH</code> command issued by another client, matching a pattern-matching subscription.
+The second element is the original pattern matched, the third element is the name of the originating channel, and the last element is the actual message payload.</li>
+</ul>
+<p>Similarly to <code>SUBSCRIBE</code> and <code>UNSUBSCRIBE</code>, <code>PSUBSCRIBE</code> and <code>PUNSUBSCRIBE</code> commands are acknowledged by the system sending a message of type <code>psubscribe</code> and <code>punsubscribe</code> using the same format as the <code>subscribe</code> and <code>unsubscribe</code> message format.</p>
+<h2 id="messages-matching-both-a-pattern-and-a-channel-subscription">Messages matching both a pattern and a channel subscription</h2>
+<p>A client may receive a single message multiple times if it's subscribed to multiple patterns matching a published message, or if it is subscribed to both patterns and channels matching the message.
+This is shown by the following example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SUBSCRIBE foo</span></span>
+<span class="giallo-l"><span>PSUBSCRIBE f*</span></span></code></pre>
+<p>In the above example, if a message is sent to channel <code>foo</code>, the client will receive two messages: one of type <code>message</code> and one of type <code>pmessage</code>.</p>
+<h2 id="the-meaning-of-the-subscription-count-with-pattern-matching">The meaning of the subscription count with pattern matching</h2>
+<p>In <code>subscribe</code>, <code>unsubscribe</code>, <code>psubscribe</code> and <code>punsubscribe</code> message types, the last argument is the count of subscriptions still active.
+This number is the total number of channels and patterns the client is still subscribed to.
+So the client will exit the Pub/Sub state only when this count drops to zero as a result of unsubscribing from all the channels and patterns.</p>
+<h2 id="sharded-pub-sub">Sharded Pub/Sub</h2>
+<p>From Redis OSS 7.0, sharded Pub/Sub is introduced in which shard channels are assigned to slots by the same algorithm used to assign keys to slots.
+A shard message must be sent to a node that owns the slot the shard channel is hashed to.
+The cluster makes sure the published shard messages are forwarded to all nodes in the shard, so clients can subscribe to a shard channel by connecting to either the primary responsible for the slot, or to any of its replicas.
+<code>SSUBSCRIBE</code>, <code>SUNSUBSCRIBE</code> and <code>SPUBLISH</code> are used to implement sharded Pub/Sub.</p>
+<p>Sharded Pub/Sub helps to scale the usage of Pub/Sub in cluster mode.
+It restricts the propagation of messages to be within the shard of a cluster.
+Hence, the amount of data passing through the cluster bus is limited in comparison to global Pub/Sub where each message propagates to each node in the cluster.
+This allows users to horizontally scale the Pub/Sub usage by adding more shards.</p>
+<h2 id="client-library-implementation-hints">Client library implementation hints</h2>
+<p>Because all the messages received contain the original subscription causing the message delivery (the channel in the case of message type, and the original pattern in the case of pmessage type) client libraries may bind the original subscription to callbacks (that can be anonymous functions, blocks, function pointers), using a hash table.</p>
+<p>When a message is received an O(1) lookup can be done to deliver the message to the registered callback.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/pubsub.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

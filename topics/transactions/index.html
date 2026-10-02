@@ -1,0 +1,492 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Transactions</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Transactions">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Transactions</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Transactions
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey Transactions allow the execution of a group of commands
+in a single step, they are centered around the commands
+<code>MULTI</code>, <code>EXEC</code>, <code>DISCARD</code> and <code>WATCH</code>.
+Valkey Transactions make two important guarantees:</p>
+<ul>
+<li>
+<p>All the commands in a transaction are serialized and executed
+sequentially. A request sent by another client will never be
+served <strong>in the middle</strong> of the execution of a Valkey Transaction.
+This guarantees that the commands are executed as a single
+isolated operation.</p>
+</li>
+<li>
+<p>The <code>EXEC</code> command
+triggers the execution of all the commands in the transaction, so
+if a client loses the connection to the server in the context of a
+transaction before calling the <code>EXEC</code> command none of the operations
+are performed, instead if the <code>EXEC</code> command is called, all the
+operations are performed. When using the
+<a href="/topics/persistence#append-only-file">append-only file</a> Valkey makes sure
+to use a single write(2) syscall to write the transaction on disk.
+However if the Valkey server crashes or is killed by the system administrator
+in some hard way it is possible that only a partial number of operations
+are registered. Valkey will detect this condition at restart, and will exit with an error.
+Using the <code>valkey-check-aof</code> tool it is possible to fix the
+append only file that will remove the partial transaction so that the
+server can start again.</p>
+</li>
+</ul>
+<p>Valkey allows for an extra guarantee to the
+above two, in the form of optimistic locking in a way very similar to a
+check-and-set (CAS) operation.
+This is documented <a href="#cas">later</a> on this page.</p>
+<h2 id="usage">Usage</h2>
+<p>A Valkey Transaction is entered using the <code>MULTI</code> command. The command
+always replies with <code>OK</code>. At this point the user can issue multiple
+commands. Instead of executing these commands, Valkey will queue
+them. All the commands are executed once <code>EXEC</code> is called.</p>
+<p>Calling <code>DISCARD</code> instead will flush the transaction queue and will exit
+the transaction.</p>
+<p>The following example increments keys <code>foo</code> and <code>bar</code> atomically.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; MULTI</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; INCR foo</span></span>
+<span class="giallo-l"><span>QUEUED</span></span>
+<span class="giallo-l"><span>&gt; INCR bar</span></span>
+<span class="giallo-l"><span>QUEUED</span></span>
+<span class="giallo-l"><span>&gt; EXEC</span></span>
+<span class="giallo-l"><span>1) (integer) 1</span></span>
+<span class="giallo-l"><span>2) (integer) 1</span></span></code></pre>
+<p>As is clear from the session above, <code>EXEC</code> returns an
+array of replies, where every element is the reply of a single command
+in the transaction, in the same order the commands were issued.</p>
+<p>When a Valkey connection is in the context of a <code>MULTI</code> request,
+all commands will reply with the string <code>QUEUED</code> (sent as a Status Reply
+from the point of view of the Valkey protocol). A queued command is
+simply scheduled for execution when <code>EXEC</code> is called.</p>
+<h2 id="errors-inside-a-transaction">Errors inside a transaction</h2>
+<p>During a transaction it is possible to encounter two kinds of command errors:</p>
+<ul>
+<li>A command may fail to be queued, so there may be an error before <code>EXEC</code> is called.
+For instance the command may be syntactically wrong (wrong number of arguments,
+wrong command name, ...), or there may be some critical condition like an out of
+memory condition (if the server is configured to have a memory limit using the <code>maxmemory</code> directive).</li>
+<li>A command may fail <em>after</em> <code>EXEC</code> is called, for instance since we performed
+an operation against a key with the wrong value (like calling a list operation against a string value).</li>
+</ul>
+<p>The server will detect an error during the accumulation of commands.
+It will then refuse to execute the transaction returning an error during <code>EXEC</code>, discarding the transaction.</p>
+<p>Errors happening <em>after</em> <code>EXEC</code> instead are not handled in a special way:
+all the other commands will be executed even if some command fails during the transaction.</p>
+<p>This is more clear on the protocol level. In the following example one
+command will fail when executed even if the syntax is right:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>Trying 127.0.0.1...</span></span>
+<span class="giallo-l"><span>Connected to localhost.</span></span>
+<span class="giallo-l"><span>Escape character is &#39;^]&#39;.</span></span>
+<span class="giallo-l"><span>MULTI</span></span>
+<span class="giallo-l"><span>+OK</span></span>
+<span class="giallo-l"><span>SET a abc</span></span>
+<span class="giallo-l"><span>+QUEUED</span></span>
+<span class="giallo-l"><span>LPOP a</span></span>
+<span class="giallo-l"><span>+QUEUED</span></span>
+<span class="giallo-l"><span>EXEC</span></span>
+<span class="giallo-l"><span>*2</span></span>
+<span class="giallo-l"><span>+OK</span></span>
+<span class="giallo-l"><span>-WRONGTYPE Operation against a key holding the wrong kind of value</span></span></code></pre>
+<p><code>EXEC</code> returned two-element <a href="/topics/protocol#bulk-strings">bulk string reply</a> where one is an <code>OK</code> code and
+the other an error reply. It's up to the client library to find a
+sensible way to provide the error to the user.</p>
+<p>It's important to note that
+<strong>even when a command fails, all the other commands in the queue are processed</strong> – Valkey will <em>not</em> stop the
+processing of commands.</p>
+<p>Another example, again using the wire protocol with <code>telnet</code>, shows how
+syntax errors are reported ASAP instead:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MULTI</span></span>
+<span class="giallo-l"><span>+OK</span></span>
+<span class="giallo-l"><span>INCR a b c</span></span>
+<span class="giallo-l"><span>-ERR wrong number of arguments for &#39;incr&#39; command</span></span>
+<span class="giallo-l"><span>EXEC</span></span>
+<span class="giallo-l"><span>-EXECABORT Transaction discarded because of previous errors.</span></span></code></pre>
+<p>This time due to the syntax error the bad <code>INCR</code> command is not queued
+at all. And the <code>EXEC</code> command will receive an <code>EXECABORT</code> error.</p>
+<p>When the <code>EXEC</code> command is processed, the server will check if a failover or slot migration has occurred since queuing the commands.
+If either event has occurred, a <code>-MOVED</code> or <code>-REDIRECT</code> error will be returned if needed without processing the transaction.</p>
+<p>For cluster mode:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MULTI    ==&gt;  +OK</span></span>
+<span class="giallo-l"><span>SET x y  ==&gt;  +QUEUED</span></span>
+<span class="giallo-l"><span>slot {x} is migrated to other node</span></span>
+<span class="giallo-l"><span>EXEC     ==&gt;  -MOVED</span></span></code></pre>
+<p>For standalone mode:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MULTI    ==&gt;  +OK</span></span>
+<span class="giallo-l"><span>SET x y  ==&gt;  +QUEUED</span></span>
+<span class="giallo-l"><span>failover</span></span>
+<span class="giallo-l"><span>EXEC     ==&gt;  -REDIRECT</span></span></code></pre>
+<p>Before the <code>EXEC</code> command is processed, if a command accesses data that does not belong to the current node,
+a <code>-MOVED</code> or <code>-REDIRECT</code> error will be returned immediately, and the <code>EXEC</code> command will receive an <code>EXECABORT</code> error.</p>
+<p>For cluster mode:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MULTI    ==&gt;  +OK</span></span>
+<span class="giallo-l"><span>SET x y  ==&gt;  -MOVED</span></span>
+<span class="giallo-l"><span>EXEC     ==&gt;  -EXECABORT</span></span></code></pre>
+<p>For standalone mode:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MULTI    ==&gt;  +OK</span></span>
+<span class="giallo-l"><span>SET x y  ==&gt;  -REDIRECT</span></span>
+<span class="giallo-l"><span>EXEC     ==&gt;  -EXECABORT</span></span></code></pre><h2 id="what-about-rollbacks">What about rollbacks?</h2>
+<p>Valkey does not support rollbacks of transactions since supporting rollbacks
+would have a significant impact on the simplicity and performance of Valkey.</p>
+<h2 id="discarding-the-command-queue">Discarding the command queue</h2>
+<p><code>DISCARD</code> can be used in order to abort a transaction. In this case, no
+commands are executed and the state of the connection is restored to
+normal.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; SET foo 1</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; MULTI</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; INCR foo</span></span>
+<span class="giallo-l"><span>QUEUED</span></span>
+<span class="giallo-l"><span>&gt; DISCARD</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"><span>&gt; GET foo</span></span>
+<span class="giallo-l"><span>&quot;1&quot;</span></span></code></pre>
+<p><a name="cas"></a></p>
+<h2 id="optimistic-locking-using-check-and-set">Optimistic locking using check-and-set</h2>
+<p><code>WATCH</code> is used to provide a check-and-set (CAS) behavior to Valkey
+transactions.</p>
+<p><code>WATCH</code>ed keys are monitored in order to detect changes against them. If
+at least one watched key is modified before the <code>EXEC</code> command, the
+whole transaction aborts, and <code>EXEC</code> returns a <a href="/topics/protocol#nil-reply">Null reply</a> to notify that
+the transaction failed.</p>
+<p>For example, imagine we have the need to atomically increment the value
+of a key by 1 (let's suppose Valkey doesn't have <code>INCR</code>).</p>
+<p>The first try may be the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>val = GET mykey</span></span>
+<span class="giallo-l"><span>val = val + 1</span></span>
+<span class="giallo-l"><span>SET mykey $val</span></span></code></pre>
+<p>This will work reliably only if we have a single client performing the
+operation in a given time. If multiple clients try to increment the key
+at about the same time there will be a race condition. For instance,
+client A and B will read the old value, for instance, 10. The value will
+be incremented to 11 by both the clients, and finally <code>SET</code> as the value
+of the key. So the final value will be 11 instead of 12.</p>
+<p>Thanks to <code>WATCH</code> we are able to model the problem very well:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>WATCH mykey</span></span>
+<span class="giallo-l"><span>val = GET mykey</span></span>
+<span class="giallo-l"><span>val = val + 1</span></span>
+<span class="giallo-l"><span>MULTI</span></span>
+<span class="giallo-l"><span>SET mykey $val</span></span>
+<span class="giallo-l"><span>EXEC</span></span></code></pre>
+<p>Using the above code, if there are race conditions and another client
+modifies the result of <code>val</code> in the time between our call to <code>WATCH</code> and
+our call to <code>EXEC</code>, the transaction will fail.</p>
+<p>We just have to repeat the operation hoping this time we'll not get a
+new race. This form of locking is called <em>optimistic locking</em>.
+In many use cases, multiple clients will be accessing different keys,
+so collisions are unlikely – usually there's no need to repeat the operation.</p>
+<h2 id="watch-explained">WATCH explained</h2>
+<p>So what is <code>WATCH</code> really about? It is a command that will
+make the <code>EXEC</code> conditional: we are asking Valkey to perform
+the transaction only if none of the <code>WATCH</code>ed keys were modified. This includes
+modifications made by the client, like write commands, and by Valkey itself,
+like expiration or eviction. If keys were modified between when they were
+<code>WATCH</code>ed and when the <code>EXEC</code> was received, the entire transaction will be aborted
+instead.</p>
+<p><strong>NOTE:</strong>
+Commands within a transaction won't trigger the <code>WATCH</code> condition since they
+are only queued until the <code>EXEC</code> is sent.</p>
+<p><code>WATCH</code> can be called multiple times. Simply all the <code>WATCH</code> calls will
+have the effects to watch for changes starting from the call, up to
+the moment <code>EXEC</code> is called. You can also send any number of keys to a
+single <code>WATCH</code> call.</p>
+<p>When <code>EXEC</code> is called, all keys are <code>UNWATCH</code>ed, regardless of whether
+the transaction was aborted or not.  Also when a client connection is
+closed, everything gets <code>UNWATCH</code>ed.</p>
+<p>It is also possible to use the <code>UNWATCH</code> command (without arguments)
+in order to flush all the watched keys. Sometimes this is useful as we
+optimistically lock a few keys, since possibly we need to perform a
+transaction to alter those keys, but after reading the current content
+of the keys we don't want to proceed.  When this happens we just call
+<code>UNWATCH</code> so that the connection can already be used freely for new
+transactions.</p>
+<h3 id="using-watch-to-implement-zpopmin">Using WATCH to implement ZPOPMIN</h3>
+<p>An example to illustrate how <code>WATCH</code> can be used to create
+atomic operations is to implement <code>ZPOPMIN</code>,
+that is a command that pops the element with the lower
+score from a sorted set in an atomic way. This is a possible implementation:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>WATCH zset</span></span>
+<span class="giallo-l"><span>element = ZRANGE zset 0 0</span></span>
+<span class="giallo-l"><span>MULTI</span></span>
+<span class="giallo-l"><span>ZREM zset element</span></span>
+<span class="giallo-l"><span>EXEC</span></span></code></pre>
+<p>If <code>EXEC</code> fails (i.e. returns a <a href="/topics/protocol#nil-reply">Null reply</a>) we just repeat the operation.</p>
+<h2 id="valkey-scripting-and-transactions">Valkey scripting and transactions</h2>
+<p>Something else to consider for transaction-like operations are
+<a href="/commands/eval">scripts</a> which are transactional. Everything
+you can do with a Valkey Transaction, you can also do with a script.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/transactions.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

@@ -1,0 +1,768 @@
+
+
+
+
+
+
+
+
+    
+    
+    
+        
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Command &middot; CLIENT LIST</title>
+    <meta name="title" property="og:title" content="Valkey Command: CLIENT LIST">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+    
+        <div class="styled-title">
+            <h1 class="page-title">CLIENT LIST </h1>
+        </div>
+    
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/commands/" class="breadcrumb-link">Commands</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            CLIENT LIST
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <dl>
+        <dt>Usage:</dt>
+        <dd>
+            <code>
+            CLIENT LIST
+            
+            
+        [ TYPE  
+         normal    |
+        
+         master    |
+        
+         replica    |
+        
+         pubsub   
+         ]
+        
+        [ ID client-id  ]
+        
+            [ [ ID client-id  ] ... ]
+        
+        [ USER username  ]
+        
+        [ ADDR addr  ]
+        
+        [ LADDR laddr  ]
+        
+        [ SKIPME  
+         YES    |
+        
+         NO   
+         ]
+        
+        [ MAXAGE maxage  ]
+        
+        [ NAME name  ]
+        
+        [ IDLE idle  ]
+        
+        [ FLAGS flags  ]
+        
+        [ LIB-NAME lib-name  ]
+        
+        [ LIB-VER lib-ver  ]
+        
+        [ DB db  ]
+        
+        [ CAPA capa  ]
+        
+        [ IP ip  ]
+        
+        [ NOT-TYPE  
+         normal    |
+        
+         master    |
+        
+         replica    |
+        
+         pubsub   
+         ]
+        
+        [ NOT-ID not-client-id  ]
+        
+            [ [ NOT-ID not-client-id  ] ... ]
+        
+        [ NOT-USER not-username  ]
+        
+        [ NOT-ADDR not-addr  ]
+        
+        [ NOT-LADDR not-laddr  ]
+        
+        [ NOT-NAME not-name  ]
+        
+        [ NOT-FLAGS not-flags  ]
+        
+        [ NOT-LIB-NAME not-lib-name  ]
+        
+        [ NOT-LIB-VER not-lib-ver  ]
+        
+        [ NOT-DB not-db  ]
+        
+        [ NOT-CAPA not-capa  ]
+        
+        [ NOT-IP not-ip  ]
+        
+            
+            </code>
+        </dd>
+    </dl>
+    
+    <dl>
+        <dt>Complexity:</dt>
+        <dd>O(N) where N is the number of client connections</dd>
+    <dl>
+    
+    
+    
+    <dl>
+        <dt>Since:</dt>
+        <dd>2.4.0</dd>
+    <dl>
+    
+    
+    <dl>
+        <dt>ACL Categories:</dt>
+        <dd>
+            
+                @admin, 
+            
+                @connection, 
+            
+                @dangerous, 
+            
+                @slow
+            
+        </dd>
+    <dl>
+    
+    </dl>
+
+
+
+
+
+
+<p>The <code>CLIENT LIST</code> command returns information and statistics about the client
+connections server in a mostly human readable format.</p>
+<p>You can use one or more optional arguments to filter the list:</p>
+<ul>
+<li>
+<p><strong><code>TYPE type</code></strong>: Filters the list by clients' type, where <em>type</em> is one of <code>normal</code>, <code>master</code>, <code>replica</code>, and <code>pubsub</code>.</p>
+<blockquote>
+<p>Note: Clients blocked by the <code>MONITOR</code> command belong to the <code>normal</code> class.</p>
+</blockquote>
+</li>
+<li>
+<p><strong><code>ID client-id [client-id ...]</code></strong>: Returns entries for clients with IDs matching one or more <code>client-id</code> arguments.</p>
+</li>
+<li>
+<p><strong><code>USER user</code></strong>: Filters the list to include only clients authenticated as the specified user.</p>
+</li>
+<li>
+<p><strong><code>ADDR ip:port</code></strong>: Filters the list to include only clients connected from the specified address and port.</p>
+</li>
+<li>
+<p><strong><code>LADDR ip:port</code></strong>: Filters the list to include only clients connected to the specified local address and port.</p>
+</li>
+<li>
+<p><strong><code>SKIPME yes|no</code></strong>: Filters whether the list should skip the client making the request.</p>
+<ul>
+<li><code>yes</code>: Skips the client making the request.</li>
+<li><code>no</code>: Includes the client making the request.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>MAXAGE milliseconds</code></strong>: Filters the list to include only clients whose connection age (time since the client was created) is greater than or equal to the specified number of milliseconds.</p>
+<blockquote>
+<p>Note: This is actually a minimum age, not a maximum age. This filter was first added to CLIENT KILL, where the intention was to keep clients of a maximum age and kill the ones newer than the max age.</p>
+</blockquote>
+</li>
+<li>
+<p><strong><code>FLAGS flags</code></strong>: Filters the list by the client's flag string.</p>
+</li>
+<li>
+<p><strong><code>NAME name</code></strong>: Filters the list to include only clients with the specified name.</p>
+</li>
+<li>
+<p><strong><code>IDLE idle</code></strong>: Includes only clients that have been idle for at least the specified time.</p>
+</li>
+<li>
+<p><strong><code>LIB-NAME lib-name</code></strong>: Filters the list to include only clients using the specified library name.</p>
+</li>
+<li>
+<p><strong><code>LIB-VER lib-ver</code></strong>: Filters the list to include only clients with the specified library version.</p>
+</li>
+<li>
+<p><strong><code>DB db</code></strong>: Filters the list to include only clients with the specified database ID.</p>
+</li>
+<li>
+<p><strong><code>IP ip</code></strong>: Filters the list to include only clients with the specified IP address.</p>
+</li>
+<li>
+<p><strong><code>CAPA capa</code></strong>: Filters the list to include only clients with the specified capabilities.</p>
+</li>
+<li>
+<p><strong><code>NOT-ID client-id [client-id ...]</code></strong>: Excludes clients in the IDs set.</p>
+</li>
+<li>
+<p><strong><code>NOT-TYPE type</code></strong>: Excludes clients of the specified type.</p>
+</li>
+<li>
+<p><strong><code>NOT-ADDR ip:port</code></strong>: Excludes clients of the specified address and port.</p>
+</li>
+<li>
+<p><strong><code>NOT-LADDR ip:port</code></strong>: Excludes clients connected to the specified local address and port.</p>
+</li>
+<li>
+<p><strong><code>NOT-USER user</code></strong>: Excludes clients of the specified user.</p>
+</li>
+<li>
+<p><strong><code>NOT-FLAGS flags</code></strong>: Excludes clients with the specified flag string.</p>
+</li>
+<li>
+<p><strong><code>NOT-NAME name</code></strong>: Excludes clients with the specified name.</p>
+</li>
+<li>
+<p><strong><code>NOT-LIB-NAME lib-name</code></strong>: Excludes clients using the specified library name.</p>
+</li>
+<li>
+<p><strong><code>NOT-LIB-VER lib-ver</code></strong>: Excludes clients with the specified library version.</p>
+</li>
+<li>
+<p><strong><code>NOT-DB db</code></strong>: Excludes clients with the specified database ID.</p>
+</li>
+<li>
+<p><strong><code>NOT-CAPA capa</code></strong>: Excludes clients with the specified capabilities.</p>
+</li>
+<li>
+<p><strong><code>NOT-IP ip</code></strong>: Excludes clients with the specified IP address.</p>
+</li>
+</ul>
+<p>Filters can be combined to perform more precise searches. The command will handle multiple filters via logical AND.</p>
+<p>Here is the meaning of the fields:</p>
+<ul>
+<li><code>id</code>: a unique 64-bit client ID</li>
+<li><code>addr</code>: address/port of the client</li>
+<li><code>laddr</code>: address/port of local address client connected to (bind address)</li>
+<li><code>fd</code>: file descriptor corresponding to the socket</li>
+<li><code>name</code>: the name set by the client with <a href="/commands/client-setname"><code>CLIENT SETNAME</code></a></li>
+<li><code>age</code>: total duration of the connection in seconds</li>
+<li><code>idle</code>: idle time of the connection in seconds</li>
+<li><code>flags</code>: client flags (see below)</li>
+<li><code>capa</code>: client capabilities (see below). Added in Valkey 8.1</li>
+<li><code>db</code>: current database ID</li>
+<li><code>sub</code>: number of channel subscriptions</li>
+<li><code>psub</code>: number of pattern matching subscriptions</li>
+<li><code>ssub</code>: number of shard channel subscriptions.</li>
+<li><code>multi</code>: number of commands in a MULTI/EXEC context</li>
+<li><code>watch</code>: number of keys this client is currently watching. Added in Valkey 8.0</li>
+<li><code>qbuf</code>: query buffer length (0 means no query pending)</li>
+<li><code>qbuf-free</code>: free space of the query buffer (0 means the buffer is full)</li>
+<li><code>argv-mem</code>: incomplete arguments for the next command (already extracted from query buffer)</li>
+<li><code>multi-mem</code>: memory is used up by buffered multi commands.</li>
+<li><code>obl</code>: output buffer length</li>
+<li><code>oll</code>: output list length (replies are queued in this list when the buffer is full)</li>
+<li><code>omem</code>: output buffer memory usage</li>
+<li><code>tot-mem</code>: total memory consumed by this client in its various buffers</li>
+<li><code>events</code>: file descriptor events (see below)</li>
+<li><code>cmd</code>: last command played</li>
+<li><code>user</code>: the authenticated username of the client</li>
+<li><code>redir</code>: client id of current client tracking redirection</li>
+<li><code>resp</code>: client RESP protocol version.</li>
+<li><code>lib-name</code>: The client library name as set by <a href="/commands/client-setinfo"><code>CLIENT SETINFO</code></a></li>
+<li><code>lib-version</code>: The client library version as set by <code>CLIENT SETINFO</code></li>
+<li><code>tot-net-in</code>: Total network input bytes read from this client. Added in Valkey 8.0</li>
+<li><code>tot-net-out</code>: Total network output bytes sent to this client. Added in Valkey 8.0</li>
+<li><code>tot-cmds</code>: Total count of commands this client executed. Added in Valkey 8.0</li>
+</ul>
+<p>The client flags can be a combination of:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>A: connection to be closed ASAP</span></span>
+<span class="giallo-l"><span>b: the client is waiting in a blocking operation</span></span>
+<span class="giallo-l"><span>c: connection to be closed after writing entire reply</span></span>
+<span class="giallo-l"><span>d: a watched keys has been modified - EXEC will fail</span></span>
+<span class="giallo-l"><span>e: the client is excluded from the client eviction mechanism</span></span>
+<span class="giallo-l"><span>i: the client is waiting for a VM I/O (deprecated)</span></span>
+<span class="giallo-l"><span>M: the client is a primary</span></span>
+<span class="giallo-l"><span>N: no specific flag set</span></span>
+<span class="giallo-l"><span>O: the client is a client in MONITOR mode</span></span>
+<span class="giallo-l"><span>P: the client is a Pub/Sub subscriber</span></span>
+<span class="giallo-l"><span>r: the client is in readonly mode against a cluster node</span></span>
+<span class="giallo-l"><span>S: the client is a replica node connection to this instance</span></span>
+<span class="giallo-l"><span>u: the client is unblocked</span></span>
+<span class="giallo-l"><span>U: the client is connected via a Unix domain socket</span></span>
+<span class="giallo-l"><span>x: the client is in a MULTI/EXEC context</span></span>
+<span class="giallo-l"><span>t: the client enabled keys tracking in order to perform client side caching</span></span>
+<span class="giallo-l"><span>T: the client will not touch the LRU/LFU of the keys it accesses</span></span>
+<span class="giallo-l"><span>R: the client tracking target client is invalid</span></span>
+<span class="giallo-l"><span>B: the client enabled broadcast tracking mode</span></span>
+<span class="giallo-l"><span>I: the client is an import source</span></span></code></pre>
+<p>Client's capabilities can be:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>r: the client can handle redirect messages</span></span></code></pre>
+<p>The file descriptor events can be:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>r: the client socket is readable (event loop)</span></span>
+<span class="giallo-l"><span>w: the client socket is writable (event loop)</span></span></code></pre><h2 id="examples">Examples</h2>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">CLIENT</span><span style="color: #A5D6FF;"> LIST TYPE normal USER admin MAXAGE</span><span style="color: #79C0FF;"> 5000</span><span style="color: #A5D6FF;"> ID</span><span style="color: #79C0FF;"> 1234 5678</span></span>
+<span class="giallo-l"><span>id</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">1234</span><span> addr</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">127.0.0.1:64000</span><span> laddr</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">127.0.0.1:6379</span><span> fd</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">5</span><span> name</span><span style="color: #FF7B72;">=</span><span> age</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">600</span><span> idle</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">300</span><span> flags</span><span style="color: #FF7B72;">=</span><span> db</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> sub</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> psub</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> ssub</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> multi</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">-1</span><span> watch</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> qbuf</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> qbuf-free</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">32768</span><span> obl</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> oll</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> omem</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> tot-mem</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">1024</span><span> events</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">r</span><span> cmd</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">client</span><span style="color: #FF7B72;">|</span><span style="color: #FFA657;">list</span><span style="color: #A5D6FF;"> user=default redir=</span><span style="color: #79C0FF;">-1</span><span style="color: #A5D6FF;"> resp=</span><span style="color: #79C0FF;">2</span><span style="color: #A5D6FF;"> lib-name= lib-ver=</span></span>
+<span class="giallo-l"><span>id</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">5678</span><span> addr</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">127.0.0.1:64001</span><span> laddr</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">127.0.0.1:6379</span><span> fd</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">6</span><span> name</span><span style="color: #FF7B72;">=</span><span> age</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">900</span><span> idle</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">450</span><span> flags</span><span style="color: #FF7B72;">=</span><span> db</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> sub</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> psub</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> ssub</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> multi</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">-1</span><span> watch</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> qbuf</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> qbuf-free</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">32768</span><span> obl</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> oll</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> omem</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">0</span><span> tot-mem</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">2048</span><span> events</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">r</span><span> cmd</span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;">client</span><span style="color: #FF7B72;">|</span><span style="color: #FFA657;">list</span><span style="color: #A5D6FF;"> user=default redir=</span><span style="color: #79C0FF;">-1</span><span style="color: #A5D6FF;"> resp=</span><span style="color: #79C0FF;">2</span><span style="color: #A5D6FF;"> lib-name= lib-ver=</span></span></code></pre><h2 id="notes">Notes</h2>
+<p>New fields are regularly added for debugging purpose. Some could be removed
+in the future. A version safe Valkey client using this command should parse
+the output accordingly (i.e. handling gracefully missing fields, skipping
+unknown fields).</p>
+
+
+
+
+            <h3>RESP2 Reply</h3>
+                <p><a href="/topics/protocol#bulk-strings">Bulk string reply</a>: information and statistics about client connections.</p>
+
+            <h3>RESP3 Reply</h3>
+                <p><a href="/topics/protocol#verbatim-strings">Verbatim string reply</a>: information and statistics about client connections.</p>
+
+            
+<h3>History</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Version</th>
+            <th>Change</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+        
+        <tr>
+            <td>2.8.12</td>
+            <td><p>Added unique client <code>id</code> field.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>5.0.0</td>
+            <td><p>Added optional <code>TYPE</code> filter.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>6.0.0</td>
+            <td><p>Added <code>user</code> field.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>6.2.0</td>
+            <td><p>Added <code>argv-mem</code>, <code>tot-mem</code>, <code>laddr</code> and <code>redir</code> fields and the optional <code>ID</code> filter.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>7.0.0</td>
+            <td><p>Added <code>resp</code>, <code>multi-mem</code>, <code>rbs</code> and <code>rbp</code> fields.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>7.0.3</td>
+            <td><p>Added <code>ssub</code> field.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>8.0.0</td>
+            <td><p>Replaced <code>master</code> <code>TYPE</code> with <code>primary</code>. <code>master</code> still supported for backward compatibility.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>8.1.0</td>
+            <td><p>Added filters USER, ADDR, LADDR, SKIPME, and MAXAGE.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>9.0.0</td>
+            <td><p>Added filters NAME, IDLE, FLAGS, LIB-NAME, LIB-VER, DB, CAPA, and IP. And negative filters NOT-ID, NOT-TYPE, NOT-ADDR, NOT-LADDR, NOT-USER, NOT-FLAGS, NOT-NAME, NOT-LIB-NAME, NOT-LIB-VER, NOT-DB, NOT-CAPA, NOT-IP.</p>
+</td>
+        </tr>
+        
+        <tr>
+            <td>9.2.0</td>
+            <td><p>Added <code>H</code> flag to indicate high priority clients.</p>
+</td>
+        </tr>
+        
+
+    </tbody>
+</table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+
+
+
+
+<div class="sb-search-container">
+    <input type="search" id="sidebar-search-box" placeholder="Search all commands..." autocomplete="off" aria-label="Search all commands" />
+</div>
+
+<!-- No results message for sidebar search -->
+<div id="sidebar-no-results-message" class="no-results-message" hidden>
+    <span>&lt;/&gt;</span>
+    <h4>No commands found</h4>
+    <p>Check your spelling or try different keywords</p>
+</div>
+
+<h2 id="command-list-title">Similar commands</h2>
+<ul id="command-list" class="sb-command-list"></ul>
+<div class="sb-command-list-footer">
+    <button type="button" id="sidebar-show-more" class="command-show-more" hidden>Show more</button>
+    
+    <p id="sidebar-command-status" class="command-list-status" aria-live="polite"></p>
+    <p><a href="/commands/">Browse the full command reference</a></p>
+</div>
+
+<script src="/assets/js/command-reference.js"></script>
+<script>
+(() => {
+    const CR = window.ValkeyCommandReference;
+    const PAGE_SIZE = 10;
+    const CURRENT_SLUG = "client-list";
+    const groups = {
+    "bitmap": { name: "Bitmap", description: "Operations on the Bitmap data type" },
+    "bloom": { name: "Bloom filter", description: "Operations on the Bloom filter data type" },
+    "search": { name: "Search", description: "Vector Similarity Search engine optimized for AI-driven workloads" },
+    "cluster": { name: "Cluster", description: "Valkey Cluster management" },
+    "connection": { name: "Connection", description: "Client connections management" },
+    "generic": { name: "Generic", description: "Generic commands" },
+    "geo": { name: "Geospatial indices", description: "Operations on the Geospatial Index data type" },
+    "hash": { name: "Hash", description: "Operations on the Hash data type" },
+    "hyperloglog": { name: "HyperLogLog", description: "Operations on the HyperLogLog data type" },
+    "json": { name: "JSON", description: "Operations on the JSON data type" },
+    "list": { name: "List", description: "Operations on the List data type" },
+    "pubsub": { name: "Pub/Sub", description: "Pub/Sub commands" },
+    "scripting": { name: "Scripting and Functions", description: "Valkey server-side scripting and functions" },
+    "sentinel": { name: "Sentinel", description: "Valkey Sentinel commands" },
+    "server": { name: "Server", description: "Server management commands" },
+    "set": { name: "Set", description: "Operations on the Set data type" },
+    "sorted-set": { name: "Sorted Set", description: "Operations on the Sorted Set data type" },
+    "stream": { name: "Stream", description: "Operations on the Stream data type" },
+    "string": { name: "String", description: "Operations on the String data type" },
+    "transactions": { name: "Transactions", description: "Valkey Transaction management" }
+};
+    const groupNames = Object.fromEntries(Object.entries(groups).map(([key, g]) => [key, g.name]));
+
+    const listEl = document.getElementById("command-list");
+    const searchBox = document.getElementById("sidebar-search-box");
+    const title = document.getElementById("command-list-title");
+    const showMore = document.getElementById("sidebar-show-more");
+    const status = document.getElementById("sidebar-command-status");
+    const noResults = document.getElementById("sidebar-no-results-message");
+
+    let entries = [];
+    let current = null;
+    let similar = [];
+    const state = { query: "", shown: PAGE_SIZE };
+    const setStatus = CR.liveStatus(status);
+
+    // `typing` debounces the live status so screen readers aren't interrupted on every keystroke.
+    function render(typing) {
+        const query = CR.normalizeQuery(state.query);
+        const matches = query ? CR.search(entries, query) : similar;
+        const visible = matches.slice(0, state.shown);
+        CR.showEntries(listEl, entries, visible);
+        if (current) current.el.classList.add("is-current");
+
+        title.textContent = query ? `${matches.length} ${matches.length === 1 ? "result" : "results"}` : "Similar commands";
+        title.hidden = query !== "" && matches.length === 0;
+        noResults.hidden = matches.length !== 0;
+
+        const remaining = matches.length - visible.length;
+        CR.updateShowMore(showMore, remaining, PAGE_SIZE);
+        let message;
+        if (!matches.length) {
+            message = query ? "No commands found." : "";
+        } else if (!query && remaining <= 0) {
+            message = `Can't find it? Search above to look through all ${entries.length} commands.`;
+        } else {
+            message = `Showing ${visible.length} of ${matches.length}.`;
+        }
+        setStatus(message, !typing);
+    }
+
+    function init(html) {
+        listEl.innerHTML = html;
+        entries = Array.from(listEl.querySelectorAll(".command-list-item"), (el) => CR.parseEntry(el, groupNames));
+        current = entries.find((e) => e.slug === CURRENT_SLUG) || null;
+        similar = current
+            ? CR.mostSimilar(entries, current)
+            // Unknown command: fall back to the most popular ones.
+            : entries.filter((e) => e.rank !== Infinity).sort((a, b) => a.rank - b.rank);
+        render();
+    }
+
+    searchBox.addEventListener("input", () => {
+        state.query = searchBox.value;
+        state.shown = PAGE_SIZE;
+        render(true);
+    });
+    CR.bindSearchKeys(searchBox, listEl);
+    // No "/" shortcut here: on long doc pages it would override the browser's quick find.
+    showMore.addEventListener("click", () => {
+        state.shown += PAGE_SIZE;
+        render();
+    });
+
+    fetch("/command-list/")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(init)
+        .catch(() => {
+            title.hidden = true;
+            showMore.hidden = true;
+            status.textContent = "";
+            listEl.innerHTML = "<li>Could not load the command list.</li>";
+        });
+})();
+</script>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

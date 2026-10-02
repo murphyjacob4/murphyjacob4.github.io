@@ -1,0 +1,382 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Bulk loading</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Bulk loading">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Bulk loading</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Bulk loading
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Bulk loading is the process of loading Valkey with a large amount of pre-existing data. Ideally, you want to perform this operation quickly and efficiently. This document describes some strategies for bulk loading data in Valkey.</p>
+<h2 id="bulk-loading-using-the-resp-protocol">Bulk loading using the RESP protocol</h2>
+<p>Using a normal Valkey client to perform bulk loading is not a good idea
+for a few reasons: the naive approach of sending one command after the other
+is slow because you have to pay for the round trip time for every command.
+It is possible to use pipelining, but for bulk loading of many records
+you need to write new commands while you read replies at the same time to
+make sure you are inserting as fast as possible.</p>
+<p>Only a small percentage of clients support non-blocking I/O, and not all the
+clients are able to parse the replies in an efficient way in order to maximize
+throughput. For all of these reasons the preferred way to mass import data into
+Valkey is to generate a text file containing the Valkey protocol, in raw format,
+in order to call the commands needed to insert the required data.</p>
+<p>For instance if I need to generate a large data set where there are billions
+of keys in the form: `keyN -&gt; ValueN' I will create a file containing the
+following commands in the Valkey protocol format:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>SET Key0 Value0</span></span>
+<span class="giallo-l"><span>SET Key1 Value1</span></span>
+<span class="giallo-l"><span>...</span></span>
+<span class="giallo-l"><span>SET KeyN ValueN</span></span></code></pre>
+<p>Once this file is created, the remaining action is to feed it to Valkey
+as fast as possible. In the past the way to do this was to use the
+<code>netcat</code> with the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(cat data.txt; sleep 10) | nc localhost 6379 &gt; /dev/null</span></span></code></pre>
+<p>However this is not a very reliable way to perform mass import because netcat
+does not really know when all the data was transferred and can't check for
+errors. The <code>valkey-cli</code> utility
+supports a <strong>pipe mode</strong> that was designed to perform
+bulk loading.</p>
+<p>Using the pipe mode the command to run looks like the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>cat data.txt | valkey-cli --pipe</span></span></code></pre>
+<p>That will produce an output similar to this:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>All data transferred. Waiting for the last reply...</span></span>
+<span class="giallo-l"><span>Last reply received from server.</span></span>
+<span class="giallo-l"><span>errors: 0, replies: 1000000</span></span></code></pre>
+<p>The valkey-cli utility will also make sure to only redirect errors received
+from the Valkey instance to the standard output.</p>
+<h3 id="generating-resp-protocol">Generating RESP protocol</h3>
+<p>The RESP protocol is extremely simple to generate and parse, and is
+<a href="/topics/protocol">Documented here</a>. However in order to generate protocol for
+the goal of bulk loading you don't need to understand every detail of the
+protocol, but just that every command is represented in the following way:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>*&lt;args&gt;&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>$&lt;len&gt;&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>&lt;arg0&gt;&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>&lt;arg1&gt;&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>...</span></span>
+<span class="giallo-l"><span>&lt;argN&gt;&lt;cr&gt;&lt;lf&gt;</span></span></code></pre>
+<p>Where <code>&lt;cr&gt;</code> means "\r" (or ASCII character 13) and <code>&lt;lf&gt;</code> means "\n" (or ASCII character 10).</p>
+<p>For instance the command <strong>SET key value</strong> is represented by the following protocol:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>*3&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>$3&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>SET&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>$3&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>key&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>$5&lt;cr&gt;&lt;lf&gt;</span></span>
+<span class="giallo-l"><span>value&lt;cr&gt;&lt;lf&gt;</span></span></code></pre>
+<p>Or represented as a quoted string:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&quot;*3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n&quot;</span></span></code></pre>
+<p>The file you need to generate for bulk loading is just composed of commands
+represented in the above way, one after the other.</p>
+<p>The following Ruby function generates valid protocol:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="ruby"><span class="giallo-l"><span style="color: #FF7B72;">def</span><span style="color: #D2A8FF;"> gen_redis_proto</span><span>(</span><span style="color: #FF7B72;">*</span><span>cmd)</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">    proto</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &quot;&quot;</span></span>
+<span class="giallo-l"><span>    proto </span><span style="color: #FF7B72;">&lt;&lt;</span><span style="color: #A5D6FF;"> &quot;*&quot;</span><span style="color: #FF7B72;">+</span><span>cmd.</span><span style="color: #D2A8FF;">length</span><span>.</span><span style="color: #D2A8FF;">to_s</span><span style="color: #FF7B72;">+</span><span style="color: #A5D6FF;">&quot;</span><span style="color: #FF7B72;">\r\n</span><span style="color: #A5D6FF;">&quot;</span></span>
+<span class="giallo-l"><span>    cmd.</span><span style="color: #D2A8FF;">each</span><span>{|arg|</span></span>
+<span class="giallo-l"><span>        proto </span><span style="color: #FF7B72;">&lt;&lt;</span><span style="color: #A5D6FF;"> &quot;$&quot;</span><span style="color: #FF7B72;">+</span><span>arg.</span><span style="color: #D2A8FF;">to_s</span><span>.</span><span style="color: #D2A8FF;">bytesize</span><span>.</span><span style="color: #D2A8FF;">to_s</span><span style="color: #FF7B72;">+</span><span style="color: #A5D6FF;">&quot;</span><span style="color: #FF7B72;">\r\n</span><span style="color: #A5D6FF;">&quot;</span></span>
+<span class="giallo-l"><span>        proto </span><span style="color: #FF7B72;">&lt;&lt;</span><span> arg.</span><span style="color: #D2A8FF;">to_s</span><span style="color: #FF7B72;">+</span><span style="color: #A5D6FF;">&quot;</span><span style="color: #FF7B72;">\r\n</span><span style="color: #A5D6FF;">&quot;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>    proto</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79C0FF;">puts</span><span style="color: #D2A8FF;"> gen_redis_proto</span><span>(</span><span style="color: #A5D6FF;">&quot;SET&quot;</span><span>,</span><span style="color: #A5D6FF;">&quot;mykey&quot;</span><span>,</span><span style="color: #A5D6FF;">&quot;Hello World!&quot;</span><span>).</span><span style="color: #D2A8FF;">inspect</span></span></code></pre>
+<p>Using the above function it is possible to easily generate the key value pairs
+in the above example, with this program:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="ruby"><span class="giallo-l"><span>(</span><span style="color: #79C0FF;">0</span><span>...</span><span style="color: #79C0FF;">1000</span><span>).</span><span style="color: #D2A8FF;">each</span><span>{|n|</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">    STDOUT</span><span>.</span><span style="color: #D2A8FF;">write</span><span>(</span><span style="color: #D2A8FF;">gen_redis_proto</span><span>(</span><span style="color: #A5D6FF;">&quot;SET&quot;</span><span>,</span><span style="color: #A5D6FF;">&quot;Key</span><span style="color: #FF7B72;">#{</span><span style="color: #A5D6FF;">n</span><span style="color: #FF7B72;">}</span><span style="color: #A5D6FF;">&quot;</span><span>,</span><span style="color: #A5D6FF;">&quot;Value</span><span style="color: #FF7B72;">#{</span><span style="color: #A5D6FF;">n</span><span style="color: #FF7B72;">}</span><span style="color: #A5D6FF;">&quot;</span><span>))</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>We can run the program directly in pipe to valkey-cli in order to perform our
+first mass import session.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ ruby proto.rb | valkey-cli --pipe</span></span>
+<span class="giallo-l"><span>All data transferred. Waiting for the last reply...</span></span>
+<span class="giallo-l"><span>Last reply received from server.</span></span>
+<span class="giallo-l"><span>errors: 0, replies: 1000</span></span></code></pre><h3 id="how-the-pipe-mode-works-under-the-hood">How the pipe mode works under the hood</h3>
+<p>The magic needed inside the pipe mode of valkey-cli is to be as fast as netcat
+and still be able to understand when the last reply was sent by the server
+at the same time.</p>
+<p>This is obtained in the following way:</p>
+<ul>
+<li>valkey-cli --pipe tries to send data as fast as possible to the server.</li>
+<li>At the same time it reads data when available, trying to parse it.</li>
+<li>Once there is no more data to read from stdin, it sends a special <strong>ECHO</strong>
+command with a random 20 byte string: we are sure this is the latest command
+sent, and we are sure we can match the reply checking if we receive the same
+20 bytes as a bulk reply.</li>
+<li>Once this special final command is sent, the code receiving replies starts
+to match replies with these 20 bytes. When the matching reply is reached it
+can exit with success.</li>
+</ul>
+<p>Using this trick we don't need to parse the protocol we send to the server
+in order to understand how many commands we are sending, but just the replies.</p>
+<p>However while parsing the replies we take a counter of all the replies parsed
+so that at the end we are able to tell the user the amount of commands
+transferred to the server by the mass insert session.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/mass-insertion.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

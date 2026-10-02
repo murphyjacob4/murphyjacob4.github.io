@@ -1,0 +1,755 @@
+
+
+
+
+
+
+
+
+    
+    
+    
+        
+    
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Command &middot; FT.SEARCH</title>
+    <meta name="title" property="og:title" content="Valkey Command: FT.SEARCH">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+    
+        <div class="styled-title">
+            <h1 class="page-title">FT.SEARCH </h1>
+        </div>
+    
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/commands/" class="breadcrumb-link">Commands</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            FT.SEARCH
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <dl>
+        <dt>Usage:</dt>
+        <dd>
+            <code>
+             FT.SEARCH
+            
+            
+          index  
+        
+          query  
+        
+        [   
+         ALLSHARDS    |
+        
+         SOMESHARDS   
+         ]
+        
+        [   
+         CONSISTENT    |
+        
+         INCONSISTENT   
+         ]
+        
+        [ DIALECT DIALECT  ]
+        
+        [   
+         INKEYS   
+        
+          count  
+        
+          keys  
+        
+            [   keys   ... ]
+         ]
+        
+        [ INORDER   ]
+        
+        [ LIMIT  
+          offset  
+        
+          count  
+         ]
+        
+        [ NOCONTENT   ]
+        
+        [ PARAMS  
+          count  
+        
+           
+          name  
+        
+          value  
+         
+        
+            [    
+          name  
+        
+          value  
+          ... ]
+         ]
+        
+        [ RETURN  
+          count  
+        
+           
+          field  
+        
+        [   
+         AS   
+        
+          name  
+         ]
+         
+        
+            [    
+          field  
+        
+        [   
+         AS   
+        
+          name  
+         ]
+          ... ]
+         ]
+        
+        [ SLOP SLOP  ]
+        
+        [ SORTBY  
+          field  
+        
+        [   
+         ASC    |
+        
+         DESC   
+         ]
+         ]
+        
+        [ TIMEOUT TIMEOUT  ]
+        
+        [ VERBATIM   ]
+        
+        [ WITHSORTKEYS   ]
+        
+        [ WITHCURSOR  
+        [ COUNT count  ]
+        
+        [ MAXIDLE maxidle  ]
+         ]
+        
+            
+            </code>
+        </dd>
+    </dl>
+    
+    <dl>
+        <dt>Complexity:</dt>
+        <dd>O(log N)</dd>
+    <dl>
+    
+    
+    <dl>
+        
+            <dt>Module:</dt>
+            <dd><a href=https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-search>valkey-search</a></dd>
+        
+    <dl>
+    <dl>
+        <dt>Since module version:</dt>
+        <dd>1.0.0</dd>
+    <dl>
+    
+    
+    
+    <dl>
+        <dt>ACL Categories:</dt>
+        <dd>
+            
+                @read, 
+            
+                @slow, 
+            
+                @search
+            
+        </dd>
+    <dl>
+    
+    </dl>
+
+
+
+
+
+
+<p>Performs a search of the specified index. The keys which match the query expression are returned.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH &lt;index&gt; &lt;query&gt;</span></span>
+<span class="giallo-l"><span>  [ALLSHARDS | SOMESHARDS]</span></span>
+<span class="giallo-l"><span>  [CONSISTENT | INCONSISTENT]</span></span>
+<span class="giallo-l"><span>  [DIALECT &lt;dialect&gt;]</span></span>
+<span class="giallo-l"><span>  [INORDER]</span></span>
+<span class="giallo-l"><span>  [LIMIT &lt;offset&gt; &lt;num&gt;]</span></span>
+<span class="giallo-l"><span>  [NOCONTENT]</span></span>
+<span class="giallo-l"><span>  [PARAMS &lt;count&gt; &lt;name&gt; &lt;value&gt; [ &lt;name&gt; &lt;value&gt; ...]]</span></span>
+<span class="giallo-l"><span>  [RETURN &lt;count&gt; &lt;field&gt; [AS &lt;name&gt;] &lt;field&gt; [AS &lt;name&gt;]...]</span></span>
+<span class="giallo-l"><span>  [SLOP &lt;slop&gt;]</span></span>
+<span class="giallo-l"><span>  [SORTBY &lt;field&gt; [ ASC | DESC]]</span></span>
+<span class="giallo-l"><span>  [TIMEOUT &lt;timeout&gt;]</span></span>
+<span class="giallo-l"><span>  [VERBATIM]</span></span>
+<span class="giallo-l"><span>  [WITHSORTKEYS]</span></span></code></pre>
+<ul>
+<li><code>&lt;index&gt;</code> (required): This index name you want to query.</li>
+<li><code>&lt;query&gt;</code> (required): The query string, see <a href="/topics/search-query">Search - query language</a> for details.</li>
+<li><code>ALLSHARDS</code> (Optional): If specified, the command is terminated with a timeout error if a valid response from all shards is not received within the timeout interval. This is the default.</li>
+<li><code>CONSISTENT</code> (Optional): If specified, the command is terminated with an error if the cluster is in an inconsistent state. This is the default.</li>
+<li><code>DIALECT &lt;dialect&gt;</code> (optional): Specifies your dialect. The only supported dialect is 2.</li>
+<li><code>INCONSISTENT</code> (Optional): If specified, the command will generate a best-effort reply if the cluster remains inconsistent within the timeout interval.</li>
+<li><code>LIMIT &lt;offset&gt; &lt;count&gt;</code> (optional): Lets you choose a portion of the result. The first <code>&lt;offset&gt;</code> keys are skipped and only a maximum of <code>&lt;count&gt;</code> keys are included. The default is LIMIT 0 10, which returns at most 10 keys.</li>
+<li><code>NOCONTENT</code> (optional): When present, only the resulting key names are returned, no key values are included.</li>
+<li><code>PARAMS &lt;count&gt; &lt;name&gt; &lt;value&gt; [&lt;name&gt; &lt;value&gt; ...]</code> (optional): <code>count</code> is of the number of arguments, i.e., twice the number of value/name pairs. <a href="/topics/search-query">Search - query language</a> for details.</li>
+<li><code>RETURN &lt;count&gt; &lt;field&gt; [AS &lt;name&gt;] &lt;field&gt; [AS &lt;name&gt;] ...</code> (options): <code>count</code> is the number of fields to return. Specifies the fields you want to retrieve from your documents, along with any renaming for the returned values. By default, all fields are returned unless the <code>NOCONTENT</code> option is set, in which case no fields are returned. If num is set to 0, it behaves the same as <code>NOCONTENT</code>.</li>
+<li><code>INORDER</code> (optional): Indicates that proximity matching of text terms in the query must be in order.</li>
+<li><code>SLOP &lt;slop&gt;</code> (Optional): Specifies a slop value for proximity matching of text terms in the query.</li>
+<li><code>VERBATIM</code> (Optional): If specified, stemming is not applied to text terms in the query.</li>
+<li><code>SOMESHARDS</code> (Optional): If specified, the command will generate a best-effort reply if all shards have not responded within the timeout interval.</li>
+<li><code>SORTBY &lt;field&gt; [ASC | DESC]</code> (Optional): If present, results are sorted according the value of the specified field and the optional sort-direction instruction. By default, vector results are sorted in distance order and non-vector results are not sorted in any particular order. Sorting is applied before the <code>LIMIT</code> clause is applied.</li>
+<li><code>TIMEOUT &lt;timeout&gt;</code> (optional): Lets you set a timeout value for the search command. This must be an integer in milliseconds.</li>
+<li><code>WITHSORTKEYS</code> (Optional): If <code>SORTBY</code> is specified then enabling this option augments the output with the value of the field used for sorting.</li>
+</ul>
+<p>Response</p>
+<p>The shape and contents of the response depend on the options specified in the command.
+In all cases, the response is an array with the first element being a count of the number of keys which match the query.
+The value of this count is unaffected by the presence of the <code>LIMIT</code> clause.</p>
+<p>The <code>LIMIT</code> clause trims the list of matched keys to generate a list of returned keys. The remainder of the response array is for the returned keys.</p>
+<h3 id="nocontent-or-return-0-was-specified"><code>NOCONTENT</code> or <code>RETURN 0</code> was specified.</h3>
+<p>The remainder of the response array is one entry per returned key, consisting of the key name.</p>
+<h3 id="return-with-arguments-was-specified"><code>RETURN</code> with arguments was specified.</h3>
+<p>The remainder of the response array is two entries per returned key. The first entry is the key name and
+the second entry is an array of name/value pairs. The array of name/value pairs is driven by the <code>RETURN</code> clause.
+Each of the named fields in the <code>RETURN</code> clause is returned along with the value of that field for this particular key. If the named field isn't present in this key then it won't be included.
+In addition, if this is a vector search, then one additional name/value pair will be included which is the computed vector distance for this returned key -- see <a href="/topics/search-query">Search - query language</a> for details on how to control the name of that field.</p>
+<h3 id="neither-nocontent-nor-return-was-specified">Neither <code>NOCONTENT</code> nor <code>RETURN</code> was specified.</h3>
+<p>If the index is on <code>HASH</code> keys, then the result is the same as if a <code>RETURN</code> clause had been present that listed all of the fields of a key.</p>
+<p>If the index is on <code>JSON</code> keys, then one name/value pair is inserted with name <code>$</code> and the value being the entire JSON key as a string.
+In addition, if this is a vector search, then one additional name/value pair will be included which is the computed vector distance for this returned key -- see <a href="/topics/search-query">Search - query language</a> for details on how to control the name of that field.</p>
+<h1 id="examples">Examples</h1>
+<h2 id="non-vector-queries-on-hash-index">Non-vector Queries On Hash Index</h2>
+<p>For these queries the following index and data definitions were used:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE index on hash SCHEMA color TAG city TAG</span></span>
+<span class="giallo-l"><span>hset key1 color blue city London</span></span>
+<span class="giallo-l"><span>hset key2 color black city Paris</span></span>
+<span class="giallo-l"><span>hset key3 color green city Berlin</span></span>
+<span class="giallo-l"><span>hset key4 color white city Tokyo</span></span>
+<span class="giallo-l"><span>hset key5 color blend</span></span></code></pre>
+<p>A simple query returning all data of matched keys</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH index @color:{bl*}</span></span>
+<span class="giallo-l"><span>1) (integer) 3</span></span>
+<span class="giallo-l"><span>2) &quot;key1&quot;</span></span>
+<span class="giallo-l"><span>3) 1) &quot;city&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;London&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   4) &quot;blue&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;key5&quot;</span></span>
+<span class="giallo-l"><span>5) 1) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;blend&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;cityextra&quot;</span></span>
+<span class="giallo-l"><span>   4) &quot;Unknown&quot;</span></span>
+<span class="giallo-l"><span>6) &quot;key2&quot;</span></span>
+<span class="giallo-l"><span>7) 1) &quot;city&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;Paris&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   4) &quot;black&quot;</span></span></code></pre>
+<p>The same query with the <code>NOCONTENT</code> clause.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH index @color:{bl*} NOCONTENT</span></span>
+<span class="giallo-l"><span>1) (integer) 3</span></span>
+<span class="giallo-l"><span>2) &quot;key1&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;key5&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;key2&quot;</span></span></code></pre>
+<p>The same query with a <code>RETURN</code> clause.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH index @color:{bl*} RETURN 2 color city</span></span>
+<span class="giallo-l"><span>1) (integer) 3</span></span>
+<span class="giallo-l"><span>2) &quot;key1&quot;</span></span>
+<span class="giallo-l"><span>3) 1) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;blue&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;city&quot;</span></span>
+<span class="giallo-l"><span>   4) &quot;London&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;key5&quot;</span></span>
+<span class="giallo-l"><span>5) 1) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;blend&quot;</span></span>
+<span class="giallo-l"><span>6) &quot;key2&quot;</span></span>
+<span class="giallo-l"><span>7) 1) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;black&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;city&quot;</span></span>
+<span class="giallo-l"><span>   4) &quot;Paris&quot;</span></span></code></pre><h2 id="non-vector-queries-on-json-index">Non-vector Queries On JSON Index</h2>
+<p>Repeating the queries above, except the data is JSON</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE index on json SCHEMA $.color as color TAG $.city as city TAG</span></span>
+<span class="giallo-l"><span>json.set key1 . {&quot;color&quot;:&quot;blue&quot;,&quot;city&quot;:&quot;London&quot;}</span></span>
+<span class="giallo-l"><span>json.set key2 . {&quot;color&quot;:&quot;black&quot;,&quot;city&quot;:&quot;Paris&quot;}</span></span>
+<span class="giallo-l"><span>json.set key3 . {&quot;color&quot;:&quot;green&quot;,&quot;city&quot;:&quot;Berlin&quot;}</span></span>
+<span class="giallo-l"><span>json.set key4 . {&quot;color&quot;:&quot;white&quot;,&quot;city&quot;:&quot;Tokyo&quot;}</span></span>
+<span class="giallo-l"><span>json.set key5 . {&quot;color&quot;:&quot;blend&quot;,&quot;cityextra&quot;:&quot;Unknown&quot;}</span></span></code></pre>
+<p>A simple query returning all data of matched keys</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH index @color:{bl*}</span></span>
+<span class="giallo-l"><span>1) (integer) 3</span></span>
+<span class="giallo-l"><span>2) &quot;key2&quot;</span></span>
+<span class="giallo-l"><span>3) 1) &quot;$&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;{\&quot;color\&quot;:\&quot;black\&quot;,\&quot;city\&quot;:\&quot;Paris\&quot;}&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;key5&quot;</span></span>
+<span class="giallo-l"><span>5) 1) &quot;$&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;{\&quot;color\&quot;:\&quot;blend\&quot;,\&quot;cityextra\&quot;:\&quot;Unknown\&quot;}&quot;</span></span>
+<span class="giallo-l"><span>6) &quot;key1&quot;</span></span>
+<span class="giallo-l"><span>7) 1) &quot;$&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;{\&quot;color\&quot;:\&quot;blue\&quot;,\&quot;city\&quot;:\&quot;London\&quot;}&quot;</span></span></code></pre>
+<p>The same query with <code>NOCONTENT</code></p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH index @color:{bl*} NOCONTENT</span></span>
+<span class="giallo-l"><span>1) (integer) 3</span></span>
+<span class="giallo-l"><span>2) &quot;key2&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;key5&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;key1&quot;</span></span></code></pre>
+<p>The same query with a <code>RETURN</code> clause.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH index @color:{bl*} RETURN 2 color city</span></span>
+<span class="giallo-l"><span>1) (integer) 3</span></span>
+<span class="giallo-l"><span>2) &quot;key2&quot;</span></span>
+<span class="giallo-l"><span>3) 1) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;black&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;city&quot;</span></span>
+<span class="giallo-l"><span>   4) &quot;Paris&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;key5&quot;</span></span>
+<span class="giallo-l"><span>5) 1) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;blend&quot;</span></span>
+<span class="giallo-l"><span>6) &quot;key1&quot;</span></span>
+<span class="giallo-l"><span>7) 1) &quot;color&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;blue&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;city&quot;</span></span>
+<span class="giallo-l"><span>   4) &quot;London&quot;</span></span></code></pre><h2 id="pure-vector-search-query">Pure vector search query</h2>
+<p>For this example, assume we're building a property searching index where customers can search properties based on some features.
+Assume we have a list of properties with the following attributes:</p>
+<ul>
+<li>Description - vector embedding for given property.</li>
+<li>Other fields - each property can have other metadata as well. However, for simplicity, other fields are ignored in this example.</li>
+</ul>
+<p>At first, we create an <code>HNSW</code> index with the description as a vector field using the <code>FT.CREATE</code> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.CREATE idx SCHEMA description VECTOR HNSW 6 TYPE FLOAT32 DIM 3 DISTANCE_METRIC L2</span></span></code></pre>
+<p>Now we can insert a few properties (this can be done prior to index creation as well) using the <code>HSET</code> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>HSET p1 description &quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?&quot;</span></span>
+<span class="giallo-l"><span>HSET p2 description &quot;\x00\x00\x00\x00\x00\x00\x80?\x00\x00\x00\x00&quot;</span></span>
+<span class="giallo-l"><span>HSET p3 description &quot;\x00\x00\x80?\x00\x00\x00\x00\x00\x00\x00\x00&quot;</span></span>
+<span class="giallo-l"><span>HSET p4 description &quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?&quot;</span></span>
+<span class="giallo-l"><span>HSET p5 description &quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?&quot;</span></span></code></pre>
+<p>Now we can perform queries using the <code>FT.SEARCH</code> command. The following query returns up to five of the most similar
+properties to the provided query vector:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>FT.SEARCH idx &quot;*=&gt;[KNN 5 @description $query_vector]&quot; PARAMS 2 query_vector &quot;\xcd\xccL?\x00\x00\x00\x00\x00\x00\x00\x00&quot; DIALECT 2</span></span></code></pre>
+<p>Returned result:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span> 1) (integer) 5</span></span>
+<span class="giallo-l"><span> 2) p5</span></span>
+<span class="giallo-l"><span> 3) 1) __description_score</span></span>
+<span class="giallo-l"><span>    2) 1.6400001049</span></span>
+<span class="giallo-l"><span>    3) description</span></span>
+<span class="giallo-l"><span>    4) \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?</span></span>
+<span class="giallo-l"><span> 4) p4</span></span>
+<span class="giallo-l"><span> 5) 1) __description_score</span></span>
+<span class="giallo-l"><span>    2) 1.6400001049</span></span>
+<span class="giallo-l"><span>    3) description</span></span>
+<span class="giallo-l"><span>    4) \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?</span></span>
+<span class="giallo-l"><span> 6) p2</span></span>
+<span class="giallo-l"><span> 7) 1) __description_score</span></span>
+<span class="giallo-l"><span>    2) 1.6400001049</span></span>
+<span class="giallo-l"><span>    3) description</span></span>
+<span class="giallo-l"><span>    4) \x00\x00\x00\x00\x00\x00\x80?\x00\x00\x00\x00</span></span>
+<span class="giallo-l"><span> 8) p1</span></span>
+<span class="giallo-l"><span> 9) 1) __description_score</span></span>
+<span class="giallo-l"><span>    2) 1.6400001049</span></span>
+<span class="giallo-l"><span>    3) description</span></span>
+<span class="giallo-l"><span>    4) \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?</span></span>
+<span class="giallo-l"><span>10) p3</span></span>
+<span class="giallo-l"><span>11) 1) __description_score</span></span>
+<span class="giallo-l"><span>    2) 0.0399999953806</span></span>
+<span class="giallo-l"><span>    3) description</span></span>
+<span class="giallo-l"><span>    4) \x00\x00\x80?\x00\x00\x00\x00\x00\x00\x00\x00</span></span></code></pre>
+
+
+<h3>RESP2/RESP3 Reply</h3>
+            <p><a href="/topics/protocol#arrays">Array reply</a>: the first entry in the array represents the count of matching keys, followed by one array entry for each matching key. When <code>NOCONTENT</code> is specified, each entry in the response contains only the matching key name, otherwise, each entry includes the matching key name, followed by an array of the returned fields</p>
+
+        
+<h3>History</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Version</th>
+            <th>Change</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+        
+        <tr>
+            <td>1.2.0</td>
+            <td><p>Added Text Indexing and Search support</p>
+</td>
+        </tr>
+        
+
+    </tbody>
+</table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+
+
+
+
+<div class="sb-search-container">
+    <input type="search" id="sidebar-search-box" placeholder="Search all commands..." autocomplete="off" aria-label="Search all commands" />
+</div>
+
+<!-- No results message for sidebar search -->
+<div id="sidebar-no-results-message" class="no-results-message" hidden>
+    <span>&lt;/&gt;</span>
+    <h4>No commands found</h4>
+    <p>Check your spelling or try different keywords</p>
+</div>
+
+<h2 id="command-list-title">Similar commands</h2>
+<ul id="command-list" class="sb-command-list"></ul>
+<div class="sb-command-list-footer">
+    <button type="button" id="sidebar-show-more" class="command-show-more" hidden>Show more</button>
+    
+    <p id="sidebar-command-status" class="command-list-status" aria-live="polite"></p>
+    <p><a href="/commands/">Browse the full command reference</a></p>
+</div>
+
+<script src="/assets/js/command-reference.js"></script>
+<script>
+(() => {
+    const CR = window.ValkeyCommandReference;
+    const PAGE_SIZE = 10;
+    const CURRENT_SLUG = "ft.search";
+    const groups = {
+    "bitmap": { name: "Bitmap", description: "Operations on the Bitmap data type" },
+    "bloom": { name: "Bloom filter", description: "Operations on the Bloom filter data type" },
+    "search": { name: "Search", description: "Vector Similarity Search engine optimized for AI-driven workloads" },
+    "cluster": { name: "Cluster", description: "Valkey Cluster management" },
+    "connection": { name: "Connection", description: "Client connections management" },
+    "generic": { name: "Generic", description: "Generic commands" },
+    "geo": { name: "Geospatial indices", description: "Operations on the Geospatial Index data type" },
+    "hash": { name: "Hash", description: "Operations on the Hash data type" },
+    "hyperloglog": { name: "HyperLogLog", description: "Operations on the HyperLogLog data type" },
+    "json": { name: "JSON", description: "Operations on the JSON data type" },
+    "list": { name: "List", description: "Operations on the List data type" },
+    "pubsub": { name: "Pub/Sub", description: "Pub/Sub commands" },
+    "scripting": { name: "Scripting and Functions", description: "Valkey server-side scripting and functions" },
+    "sentinel": { name: "Sentinel", description: "Valkey Sentinel commands" },
+    "server": { name: "Server", description: "Server management commands" },
+    "set": { name: "Set", description: "Operations on the Set data type" },
+    "sorted-set": { name: "Sorted Set", description: "Operations on the Sorted Set data type" },
+    "stream": { name: "Stream", description: "Operations on the Stream data type" },
+    "string": { name: "String", description: "Operations on the String data type" },
+    "transactions": { name: "Transactions", description: "Valkey Transaction management" }
+};
+    const groupNames = Object.fromEntries(Object.entries(groups).map(([key, g]) => [key, g.name]));
+
+    const listEl = document.getElementById("command-list");
+    const searchBox = document.getElementById("sidebar-search-box");
+    const title = document.getElementById("command-list-title");
+    const showMore = document.getElementById("sidebar-show-more");
+    const status = document.getElementById("sidebar-command-status");
+    const noResults = document.getElementById("sidebar-no-results-message");
+
+    let entries = [];
+    let current = null;
+    let similar = [];
+    const state = { query: "", shown: PAGE_SIZE };
+    const setStatus = CR.liveStatus(status);
+
+    // `typing` debounces the live status so screen readers aren't interrupted on every keystroke.
+    function render(typing) {
+        const query = CR.normalizeQuery(state.query);
+        const matches = query ? CR.search(entries, query) : similar;
+        const visible = matches.slice(0, state.shown);
+        CR.showEntries(listEl, entries, visible);
+        if (current) current.el.classList.add("is-current");
+
+        title.textContent = query ? `${matches.length} ${matches.length === 1 ? "result" : "results"}` : "Similar commands";
+        title.hidden = query !== "" && matches.length === 0;
+        noResults.hidden = matches.length !== 0;
+
+        const remaining = matches.length - visible.length;
+        CR.updateShowMore(showMore, remaining, PAGE_SIZE);
+        let message;
+        if (!matches.length) {
+            message = query ? "No commands found." : "";
+        } else if (!query && remaining <= 0) {
+            message = `Can't find it? Search above to look through all ${entries.length} commands.`;
+        } else {
+            message = `Showing ${visible.length} of ${matches.length}.`;
+        }
+        setStatus(message, !typing);
+    }
+
+    function init(html) {
+        listEl.innerHTML = html;
+        entries = Array.from(listEl.querySelectorAll(".command-list-item"), (el) => CR.parseEntry(el, groupNames));
+        current = entries.find((e) => e.slug === CURRENT_SLUG) || null;
+        similar = current
+            ? CR.mostSimilar(entries, current)
+            // Unknown command: fall back to the most popular ones.
+            : entries.filter((e) => e.rank !== Infinity).sort((a, b) => a.rank - b.rank);
+        render();
+    }
+
+    searchBox.addEventListener("input", () => {
+        state.query = searchBox.value;
+        state.shown = PAGE_SIZE;
+        render(true);
+    });
+    CR.bindSearchKeys(searchBox, listEl);
+    // No "/" shortcut here: on long doc pages it would override the browser's quick find.
+    showMore.addEventListener("click", () => {
+        state.shown += PAGE_SIZE;
+        render();
+    });
+
+    fetch("/command-list/")
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.text();
+        })
+        .then(init)
+        .catch(() => {
+            title.hidden = true;
+            showMore.hidden = true;
+            status.textContent = "";
+            listEl.innerHTML = "<li>Could not load the command list.</li>";
+        });
+})();
+</script>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

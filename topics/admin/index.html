@@ -1,0 +1,366 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Administration</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Administration">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Administration</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Administration
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+<p><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review. 
+    In the future it may change substantially or be removed entirely.</p>
+<hr />
+
+    <h2 id="valkey-setup-tips">Valkey setup tips</h2>
+<h3 id="linux">Linux</h3>
+<ul>
+<li>
+<p>Deploy Valkey using the Linux operating system.
+Valkey is also regularly tested on macOS and FreeBSD, and from time to time on other OpenBSD, NetBSD, DragonFlyBSD and Solaris-derived systems.
+However, Linux is where most of the stress testing is performed, and where most production deployments are run.</p>
+</li>
+<li>
+<p>Set the Linux kernel overcommit memory setting to 1. Add <code>vm.overcommit_memory = 1</code> to <code>/etc/sysctl.conf</code>. Then, reboot or run the command <code>sysctl vm.overcommit_memory=1</code> to activate the setting. See <a href="/topics/faq#background-saving-fails-with-a-fork-error-on-linux">FAQ: Background saving fails with a fork() error on Linux?</a> for details.</p>
+</li>
+<li>
+<p>To ensure the Linux kernel feature Transparent Huge Pages does not impact Valkey memory usage and latency, run the command: <code>echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</code> to disable it. See <a href="/topics/latency#latency-induced-by-transparent-huge-pages">Latency Diagnosis - Latency induced by transparent huge pages</a> for additional context.</p>
+</li>
+</ul>
+<h3 id="memory">Memory</h3>
+<ul>
+<li>
+<p>Ensured that swap is enabled and that your swap file size is equal to amount of memory on your system. If Linux does not have swap set up, and your Valkey instance accidentally consumes too much memory, Valkey can crash when it is out of memory, or the Linux kernel OOM killer can kill the Valkey process. When swapping is enabled, you can detect latency spikes and act on them.</p>
+</li>
+<li>
+<p>Set an explicit <code>maxmemory</code> option limit in your instance to make sure that it will report errors instead of failing when the system memory limit is near to be reached. Note that <code>maxmemory</code> should be set by calculating the overhead for Valkey, other than data, and the fragmentation overhead. So if you think you have 10 GB of free memory, set it to 8 or 9.</p>
+</li>
+<li>
+<p>If you are using Valkey in a write-heavy application, while saving an RDB file on disk or rewriting the AOF log, Valkey can use up to 2 times the memory normally used. The additional memory used is proportional to the number of memory pages modified by writes during the saving process, so it is often proportional to the number of keys (or aggregate types items) touched during this time. Make sure to size your memory accordingly.</p>
+</li>
+<li>
+<p>See the <code>LATENCY DOCTOR</code> and <code>MEMORY DOCTOR</code> commands to assist in troubleshooting.</p>
+</li>
+</ul>
+<h3 id="imaging">Imaging</h3>
+<ul>
+<li>When running under daemontools, use <code>daemonize no</code>.</li>
+</ul>
+<h3 id="replication">Replication</h3>
+<ul>
+<li>
+<p>Set up a non-trivial replication backlog in proportion to the amount of memory Valkey is using. The backlog allows replicas to sync with the primary instance much more easily.</p>
+</li>
+<li>
+<p>If you use replication, Valkey performs RDB saves even if persistence is disabled. (This does not apply to diskless replication.) If you don't have disk usage on the primary, enable diskless replication.</p>
+</li>
+<li>
+<p>If you are using replication, ensure that either your primary has persistence enabled, or that it does not automatically restart on crashes. Replicas will try to maintain an exact copy of the primary, so if a primary restarts with an empty data set, replicas will be wiped as well.</p>
+</li>
+</ul>
+<h3 id="security">Security</h3>
+<ul>
+<li>By default, Valkey does not require any authentication and listens to all the network interfaces. This is a big security issue if you leave Valkey exposed on the internet or other places where attackers can reach it. Please check our <a href="/topics/security">security page</a> and the <a href="/topics/quickstart">quick start</a> for information about how to secure Valkey.</li>
+</ul>
+<h2 id="running-valkey-on-ec2">Running Valkey on EC2</h2>
+<ul>
+<li>Use HVM based instances, not PV based instances.</li>
+<li>The use of Valkey persistence with EC2 EBS volumes needs to be handled with care because sometimes EBS volumes have high latency characteristics.</li>
+<li>You may want to try diskless replication if you have issues when replicas are synchronizing with the primary.</li>
+</ul>
+<h2 id="upgrading-or-restarting-a-valkey-instance-without-downtime">Upgrading or restarting a Valkey instance without downtime</h2>
+<p>Valkey is designed to be a long-running process in your server. You can modify many configuration options without a restart using the <code>CONFIG SET</code> command. You can also switch from AOF to RDB snapshots persistence, or the other way around, without restarting Valkey. Check the output of the <code>CONFIG GET *</code> command for more information.</p>
+<p>From time to time, a restart is required, for example, to upgrade the Valkey process to a newer version, or when you need to modify a configuration parameter that is currently not supported by the <code>CONFIG</code> command.</p>
+<p>Follow these steps to avoid downtime.</p>
+<ul>
+<li>
+<p>Set up your new Valkey instance as a replica for your current Valkey instance. In order to do so, you need a different server, or a server that has enough RAM to keep two instances of Valkey running at the same time.</p>
+</li>
+<li>
+<p>If you use a single server, ensure that the replica is started on a different port than the primary instance, otherwise the replica cannot start.</p>
+</li>
+<li>
+<p>Wait for the replication initial synchronization to complete. Check the replica's log file.</p>
+</li>
+<li>
+<p>Using <code>INFO</code>, ensure the primary and replica have the same number of keys. Use <code>valkey-cli</code> to check that the replica is working as expected and is replying to your commands.</p>
+</li>
+<li>
+<p>Allow writes to the replica using <code>CONFIG SET replica-read-only no</code>.</p>
+</li>
+<li>
+<p>Configure all your clients to use the new instance (the replica). Note that you may want to use the <code>CLIENT PAUSE</code> command to ensure that no client can write to the old primary during the switch.</p>
+</li>
+<li>
+<p>Once you confirm that the primary is no longer receiving any queries (you can check this using the <code>MONITOR</code> command), elect the replica to primary using the <code>REPLICAOF NO ONE</code> command, and then shut down your primary.</p>
+</li>
+</ul>
+<p>If you are using <a href="/topics/sentinel">Valkey Sentinel</a> or <a href="/topics/cluster-tutorial">Valkey Cluster</a>, the simplest way to upgrade to newer versions is to upgrade one replica after the other. Then you can perform a manual failover to promote one of the upgraded replicas to primary, and finally promote the last replica.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/admin.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

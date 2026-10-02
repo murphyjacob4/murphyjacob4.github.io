@@ -1,0 +1,625 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Migration from Redis to Valkey</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Migration from Redis to Valkey">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Migration from Redis to Valkey</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Migration from Redis to Valkey
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>This is a migration guide from Redis open source versions to Valkey.
+You will learn how to migrate a standalone Redis server instance and a Redis Cluster.</p>
+<p>This guide provides migration steps for Redis server and Valkey deployed in Docker; however, they should also apply for other deployments.
+Refer to <a href="/topics/installation">install Valkey</a> for installation options.</p>
+<h2 id="why-to-migrate-to-valkey">Why to migrate to Valkey?</h2>
+<p>Valkey is a vendor-neutral, open-source continuation of Redis OSS.
+It keeps compatibility with Redis OSS 7.2 and earlier versions while adding Valkey-specific features and improvements in later releases.</p>
+<h2 id="redis-compatibility-and-migration-options">Redis compatibility and migration options</h2>
+<p>You can migrate a Redis server to Valkey.
+Valkey is compatible with Redis OSS 7.2 and all earlier open-source Redis versions, as Valkey 7.2.4 is a fork of Redis OSS 7.2.4.
+Migrating from one of these Redis versions to Valkey is effectively an upgrade.</p>
+<blockquote>
+<p>NOTE: In this guide, whenever a reference to a <code>redis-cli</code> or <code>valkey-cli</code> command is provided, the reference will only point to the Valkey version of the documentation.</p>
+</blockquote>
+<p>Redis Community Edition (CE) version 7.4 and later produce data files that are not compatible with Valkey.
+It may be possible to migrate the data to Valkey from proprietary Redis versions and other Redis-like software, but it requires another method and is not covered by this document.</p>
+<p>The following table provides migration options depending on the Redis version you run:</p>
+<table><thead><tr><th>Redis source</th><th>Valkey target</th><th>Notes</th></tr></thead><tbody>
+<tr><td>OSS 2.x - 7.2.x</td><td>Valkey 7.2 or later</td><td>Uses compatible protocol, configuration, and RDB/AOF formats.</td></tr>
+<tr><td>CE 7.4 and later</td><td>n/a</td><td>Data files are not compatible with Valkey.</td></tr>
+</tbody></table>
+<p>Compatibility details:</p>
+<ul>
+<li>Protocol: Valkey uses the RESP wire protocol and supports both RESP2 and RESP3. Existing Redis client libraries can connect to Valkey without code changes.</li>
+<li>Persistence: Valkey reads and writes RDB and AOF files compatible with Redis OSS 7.2. RDB files produced by Redis CE 7.4 and later are not compatible.</li>
+<li>Configuration: Valkey accepts Redis-style configuration files. Existing Redis OSS 7.2 configuration directives are supported, with additional Valkey-specific options for new features.</li>
+<li>CLI: <code>redis-cli</code> works with Valkey servers, and <code>valkey-cli</code> works with Redis OSS servers.</li>
+<li>INFO: Valkey reports <code>redis_version:7.2.4</code> in the <a href="/commands/info">INFO</a> output for backward compatibility. Use <code>server_name</code> and <code>valkey_version</code> to detect the actual Valkey server and version.</li>
+<li>Lua scripting: Existing scripts that use the <code>redis</code> namespace continue to work. Valkey also supports the <code>server</code> namespace and <code>SERVER_NAME</code>, <code>SERVER_VERSION</code>, and <code>SERVER_VERSION_NUM</code> globals.</li>
+<li>Modules: Modules written for Redis OSS using the <code>RedisModule_</code> API work in Valkey. Valkey also provides the <code>ValkeyModule_</code> API and <code>valkeymodule.h</code> header for new modules.</li>
+</ul>
+<h2 id="migrate-a-standalone-instance">Migrate a standalone instance</h2>
+<p>To migrate a standalone Redis server to Valkey, you have the following options:</p>
+<ul>
+<li><a href="#physical-migration">Physical migration</a> by copying the most recent on-disk snapshot from the Redis server to Valkey and starting Valkey server with it</li>
+<li><a href="#replication">Setting up replication</a> between Redis and Valkey</li>
+<li><a href="#migrate-specific-keys">Migrating specific keys</a></li>
+</ul>
+<p>The example migration steps are provided for Redis 7.2.5 and Valkey version 7.2.6.</p>
+<p>Note that Redis and Valkey Docker containers are considered stand-alone servers, if they are not part of a cluster.</p>
+<h3 id="physical-migration">Physical migration</h3>
+<p>This is the easiest and fastest migration method. You make a fresh snapshot of your Redis instance and copy it over to Valkey. Valkey reads the data from the snapshot on startup and restores its contents into memory. The tradeoffs for this method are:</p>
+<ul>
+<li>The downtime to shutdown Redis and wait for Valkey to load the data.</li>
+<li>Potential risk of data loss on instances with heavy writes. To prevent it, you must disconnect all active connections before starting the migration.</li>
+</ul>
+<p>To perform a physical migration:</p>
+<ol>
+<li>
+<p>Disconnect all active connections to the Redis instance.</p>
+</li>
+<li>
+<p>Connect to your Redis container using <code>redis-cli</code>, and check the number of keys, using the <code>INFO KEYSPACE</code> command. This will be used later to verify that the entire database has been successfully migrated. In this example, <code>keys=6286</code> indicates that there are 6,286 keys in the database.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ redis-cli -h 127.0.0.1 -p 6379</span></span>
+<span class="giallo-l"><span>redis 127.0.0.1:6379&gt; INFO KEYSPACE</span></span>
+<span class="giallo-l"><span># Keyspace</span></span>
+<span class="giallo-l"><span>db0:keys=6286,expires=0,avg_ttl=0</span></span></code></pre></li>
+<li>
+<p>Check the configuration for the directory (<code>dir</code>) where Redis stores its database files and the name of the database file (<code>dbfilename</code>). In this example, Redis saves the backup into the <code>/data/dump.rdb</code> file</p>
+<blockquote>
+<p>NOTE: If your Redis Docker container <code>/data</code> directory is mounted to a directory on your host, the RDB file is also written to that host directory.</p>
+</blockquote>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>redis 127.0.0.1:6379&gt; CONFIG GET dir dbfilename</span></span>
+<span class="giallo-l"><span>1) &quot;dir&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;/data&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;dbfilename&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;dump.rdb&quot;</span></span></code></pre></li>
+<li>
+<p>Create the backup file. Since all active connections have been disconnected for this example, the <code>redis-cli</code> <a href="/commands/save">SAVE</a> command can be used to create the backup file.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>redis 127.0.0.1:6379&gt; SAVE</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre></li>
+<li>
+<p>Exit  <code>redis-cli</code> by pressing <code>CTRL-D</code> or typing <code>exit</code>.</p>
+</li>
+<li>
+<p>Create a directory on your host to which you will mount the <code>/data</code> directory of the Valkey container.</p>
+</li>
+<li>
+<p>Copy the RDB file from Redis to Valkey, using one of the following:</p>
+<ul>
+<li>
+<p>If the Redis and Valkey containers are both mounted to a host directory:</p>
+<p>Copy the RDB file from the host directory mounted to the Redis container to the host directory being mounted to the Valkey container.</p>
+</li>
+<li>
+<p>If the Redis container is not mounted to a host directory but the Valkey container is:</p>
+<p>Use <code>docker cp</code> to copy the RDB file from within the Redis container to the host directory that will be mounted to your Valkey container.</p>
+<blockquote>
+<p>NOTE: You may also want to copy the RDB file to a second location as a backup.</p>
+</blockquote>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>docker cp redis-container-name:/dir-name/dbfilename &lt;path/on/host&gt;/dbfilename</span></span></code></pre></li>
+</ul>
+</li>
+<li>
+<p>Stop the Redis server.</p>
+</li>
+<li>
+<p>Start Valkey:</p>
+<blockquote>
+<p>NOTE: If you enabled AOF in your Valkey configuration, disable it on the first start. Otherwise, the copied RDB file will not be imported into Valkey.</p>
+</blockquote>
+<p>Run the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>docker run -d --name valkey-container-name -v &lt;path/on/host&gt;:&lt;path/in/Valkey/container&gt; image-name</span></span>
+<span class="giallo-l"></span></code></pre></li>
+<li>
+<p>To verify that the data has been successfully migrated, determine the number of keys in the Valkey database. If the migration is successful, then the number of keys in the Valkey database match the number of keys in the Redis database that you obtained in step 2:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker exec -it somevalkey valkey-cli</span></span>
+<span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; INFO KEYSPACE</span></span>
+<span class="giallo-l"><span># Keyspace</span></span>
+<span class="giallo-l"><span>db0:keys=6286,expires=0,avg_ttl=0</span></span></code></pre></li>
+<li>
+<p>To exit <code>valkey-cli</code>, press <code>Ctrl-D</code> or type <code>exit</code>.</p>
+</li>
+</ol>
+<h3 id="replication">Replication</h3>
+<p>To minimize the downtime during migration, you can use replication. Both Redis and Valkey allow replaying data on another server to handle the workload.</p>
+<p>In this scenario we will configure Valkey to be the replica of Redis. For illustrative purposes, both Redis and Valkey are running in separate Docker containers connected to the same network.</p>
+<ol>
+<li>
+<p>Retrieve the IP address of the Redis container. Replace the <code>myredis</code> placeholder with the name of your container. In this example, <code>172.17.0.2</code> is returned as the IP address of the <code>myredis</code> container.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker inspect -f &#39;{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}&#39; myredis</span></span>
+<span class="giallo-l"><span>172.17.0.2</span></span></code></pre></li>
+<li>
+<p>Determine the port on which your Redis container is exposed. Note that for clarity, not all of the fields are shown in the response. In this example, the <code>myredis</code> container is exposed on port <code>6379</code>.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>docker container ls</span></span>
+<span class="giallo-l"><span>CONTAINER ID   ...     PORTS      NAMES</span></span>
+<span class="giallo-l"><span>bffc575f261a   ...     6379/tcp   myvalkey</span></span>
+<span class="giallo-l"><span>ab18318ce820   ...     6379/tcp   myredis</span></span></code></pre></li>
+<li>
+<p>Connect to your Valkey container and start the <code>valkey-cli</code> to configure replication using the <a href="/commands/replicaof">REPLICAOF</a> command. In this example, the Redis IP address is <code>172.17.0.2</code> and the port is <code>6379</code>. Replace with the IP address and port of your Redis container obtained in steps 1 and 2.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>docker exec -it myvalkey valkey-cli</span></span>
+<span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; REPLICAOF 172.17.0.2 6379</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre></li>
+<li>
+<p>Check the replication status in Valkey using the <code>INFO REPLICATION</code> command. If <code>master_link_status:up</code> is present, then the Redis and Valkey servers are synchronized. <a href="/commands/info">INFO Command</a> describes the different output fields.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; INFO REPLICATION</span></span>
+<span class="giallo-l"><span># Replication</span></span>
+<span class="giallo-l"><span>role:slave</span></span>
+<span class="giallo-l"><span>master_host:172.17.0.2</span></span>
+<span class="giallo-l"><span>master_port:6379</span></span>
+<span class="giallo-l"><span>master_link_status:up</span></span>
+<span class="giallo-l"><span>master_last_io_seconds_ago:4</span></span>
+<span class="giallo-l"><span>master_sync_in_progress:0</span></span>
+<span class="giallo-l"><span>....</span></span></code></pre></li>
+<li>
+<p>Once Redis and Valkey are synchronized, verify that your applications connect to Valkey and shut down your Redis instance.</p>
+<blockquote>
+<p>NOTE: Since the Redis 7.0 release, the <code>SHUTDOWN</code> command waits for a time period, set by the <code>shutdown-timeout</code> configuration variable, for any lagging replicas to sync. There may be potential data loss in the case where there are writes active on the Redis primary while it is syncing with the replica.</p>
+</blockquote>
+<p>You can shut down Redis in one of the following ways:</p>
+<ul>
+<li>
+<p>Using <code>redis-cli</code>:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ redis-cli SHUTDOWN</span></span></code></pre></li>
+<li>
+<p>If Redis was started directly in the foreground (using redis-server), you can simply stop it by pressing <code>Ctrl-C</code> in the terminal where it is running.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>In your Valkey container, stop the Valkey replication using the <code>REPLICAOF</code> command with <code>NO ONE</code> as the options:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; REPLICAOF NO ONE</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre></li>
+<li>
+<p>You can verify that replication has stopped by running the <code>valkey-cli</code> command, <code>INFO REPLICATION</code>. If you see <code>role:master</code> and <code>connected_slaves:0</code>, then the Valkey container is now the master and is no longer connected to the Redis server. <a href="/commands/info">INFO Command</a> describes the different output fields.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; INFO REPLICATION</span></span>
+<span class="giallo-l"><span># Replication</span></span>
+<span class="giallo-l"><span>role:master</span></span>
+<span class="giallo-l"><span>connected_slaves:0</span></span>
+<span class="giallo-l"><span>master_failover_state:no-failover</span></span>
+<span class="giallo-l"><span>master_replid:8d48c4667129cdb5933f9a12a1d5e6a24899602b</span></span>
+<span class="giallo-l"><span>master_replid2:602b7046ada6d2d6f0e89657e646d5932cc42791</span></span>
+<span class="giallo-l"><span>master_repl_offset:1336</span></span>
+<span class="giallo-l"><span>second_repl_offset:1337</span></span>
+<span class="giallo-l"><span>repl_backlog_active:1</span></span>
+<span class="giallo-l"><span>repl_backlog_size:1048576</span></span>
+<span class="giallo-l"><span>repl_backlog_first_byte_offset:1</span></span>
+<span class="giallo-l"><span>repl_backlog_histlen:1336</span></span></code></pre></li>
+</ol>
+<blockquote>
+<p>NOTE: If not for backward compatibility, the Valkey project no longer uses the words "master" and "slave". Unfortunately, in this command these words are part of the protocol, so we’ll be able to remove such occurrences only when this API is naturally deprecated.</p>
+</blockquote>
+<h3 id="migrate-specific-keys">Migrate specific keys</h3>
+<p>Both physical migration and replication migrate the entire keyspace over to Valkey.</p>
+<p>There may be cases when you need to migrate only a specific set of critical keys.
+The <code>redis-cli</code> command, <a href="/commands/migrate">MIGRATE</a> is used to migrate one or more keys.</p>
+<p>Requirements for this example:</p>
+<ul>
+<li>
+<p>The Redis and Valkey Docker containers are on the same network and can communicate with each other.</p>
+</li>
+<li>
+<p>The Redis and Valkey containers are running without authentication.</p>
+</li>
+</ul>
+<p>Perform the following steps:</p>
+<ol>
+<li>
+<p>Determine the keys you wish to migrate. In this example, the <code>message</code> and  <code>mydata</code> keys are being migrated from the <code>myredis</code> container, and the <code>redis-cli</code> is used to view their current values.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker exec -it myredis redis-cli</span></span>
+<span class="giallo-l"><span>redis 127.0.0.1:6379&gt; GET message</span></span>
+<span class="giallo-l"><span>&quot;Hello Valkey&quot;</span></span>
+<span class="giallo-l"><span>redis 127.0.0.1:6379&gt; HGETALL  mydata</span></span>
+<span class="giallo-l"><span>1) &quot;name&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;Alice&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;age&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;33&quot;</span></span>
+<span class="giallo-l"><span>5) &quot;country&quot;</span></span>
+<span class="giallo-l"><span>6) &quot;Brazil&quot;</span></span>
+<span class="giallo-l"><span>7) &quot;favorite food&quot;</span></span>
+<span class="giallo-l"><span>8) &quot;beans&quot;</span></span></code></pre></li>
+<li>
+<p>Retrieve the IP address of your Valkey container. Replace <code>myvalkey</code> with the name of your Valkey container.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker inspect -f &#39;{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}&#39; myvalkey</span></span>
+<span class="giallo-l"><span>172.21.0.3</span></span></code></pre></li>
+<li>
+<p>Start the <code>valkey-cli</code> in your Valkey container and get the database number using the <code>INFO KEYSPACE</code> command. In this example, the database number is <code>0</code> (db0).</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; INFO KEYSPACE</span></span>
+<span class="giallo-l"><span># Keyspace</span></span>
+<span class="giallo-l"><span>db0:keys=3,expires=0,avg_ttl=0</span></span></code></pre>
+<blockquote>
+<p>NOTE: If you haven't migrated or added any data to your Valkey database, then the <code>INFO KEYSPACE</code> command will not return any database number. You can use <code>0</code> for the <code>MIGRATE</code> command in step 4.</p>
+</blockquote>
+</li>
+<li>
+<p>From the Redis server, run the <code>MIGRATE</code> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>MIGRATE valkey-ip valkey-port &lt;key | &quot;&quot;&gt; valkey-db-number timeout-value [COPY] [REPLACE] [AUTH password | AUTH2 username password] [KEYS key [key ...]]</span></span></code></pre>
+<p>For example, to migrate the <code>message</code> and <code>mydata</code> keys to the Valkey instance with the IP address 172.21.0.3 and port 6379, the command would look similar to:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>redis 127.0.0.1:6379&gt; MIGRATE 172.21.0.3 6379 &quot;&quot; 0 10 COPY REPLACE KEYS message mydata</span></span></code></pre>
+<p>where:</p>
+<ul>
+<li><code>""</code> = Indicates that we are migrating multiple keys. You can use <code>key</code> name here if you are only migrating a single key.</li>
+<li><code>0</code> = The database number.</li>
+<li><code>10</code>= The maximum idle time, in milliseconds, allowed when communicating with the destination server.</li>
+<li><code>COPY</code> = Do not remove the key from the Redis database.</li>
+<li><code>REPLACE</code> = Replace existing key on the Valkey database.</li>
+<li><code>KEYS</code> = We are migrating multiple keys, and it is followed by the key names.</li>
+</ul>
+</li>
+<li>
+<p>Exit <code>redis-cli</code> by pressing <code>Ctrl-D</code> or typing <code>exit</code>.</p>
+</li>
+<li>
+<p>Connect to Valkey and check the migrated keys. replace <code>myvalkey</code> with the name of your Valkey container.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker exec -it myvalkey valkey-cli</span></span>
+<span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; GET message</span></span>
+<span class="giallo-l"><span>&quot;Hello Valkey&quot;</span></span>
+<span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; HGETALL mydata</span></span>
+<span class="giallo-l"><span>1) &quot;name&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;Alice&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;age&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;33&quot;</span></span>
+<span class="giallo-l"><span>5) &quot;country&quot;</span></span>
+<span class="giallo-l"><span>6) &quot;Brazil&quot;</span></span>
+<span class="giallo-l"><span>7) &quot;favorite food&quot;</span></span>
+<span class="giallo-l"><span>8) &quot;beans&quot;</span></span>
+<span class="giallo-l"><span>....</span></span></code></pre></li>
+</ol>
+<h2 id="migrate-a-cluster">Migrate a Cluster</h2>
+<p>This section demonstrates how to migrate a cluster. The first step is to add the required number of Valkey nodes to the existing cluster as replicas. Once the new Valkey nodes replicate the data, one Valkey replica is promoted to be a new primary for each Redis primary. After the migration, the Redis nodes are removed from the cluster.</p>
+<blockquote>
+<p>NOTE: You can also use data migration tools such as <a rel="external" href="https://redis.github.io/riot/#_introduction">RIOT</a>, <a rel="external" href="https://github.com/tair-opensource/RedisShake">RedisShake</a>, and <a rel="external" href="https://github.com/vipshop/redis-migrate-tool">Redis-Migrate-Tool</a> but that is beyond the scope of this document.</p>
+</blockquote>
+<p>Requirements for this example:</p>
+<ul>
+<li>The Redis and Valkey cluster nodes are on the same network and can communicate with each other.</li>
+</ul>
+<p>For this scenario, there is a Redis Cluster consisting of 3 primary and 3 replica nodes up and running.</p>
+<p>To perform the migration:</p>
+<ol>
+<li>
+<p>Use the <code>redis-cli</code> on one of the cluster nodes to check the current state of the cluster and to ensure all nodes are connected and active. In this cluster, there are three primary (master) and three replica (slave) nodes.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ redis-cli -h 127.0.0.1 -p 6379 -c CLUSTER NODES</span></span>
+<span class="giallo-l"><span>70beedebe43e422b275ee1a7bac0d3819dedca98 172.22.0.3:6379@16379 master - 0 1725450849000 1 connected 0-5460</span></span>
+<span class="giallo-l"><span>8bbe836c59644f7395bbab09c6f8b36bc277e902 172.22.0.5:6379@16379 slave 58061fb2836bdb2f5a0973e1ccfd74a66166f329 0 1725450849510 3 connected</span></span>
+<span class="giallo-l"><span>65061b94da5b481dc35c2df7dae13c233d4b3ad2 172.22.0.4:6379@16379 master - 0 1725450848000 2 connected 5461-10922</span></span>
+<span class="giallo-l"><span>a242941d0e3edad27a954bc14ac3a3413f3040aa 172.22.0.7:6379@16379 slave 65061b94da5b481dc35c2df7dae13c233d4b3ad2 0 1725450849000 2 connected</span></span>
+<span class="giallo-l"><span>3499854656f085ebb77b5b921389a91b7ae9d703 172.22.0.6:6379@16379 slave 70beedebe43e422b275ee1a7bac0d3819dedca98 0 1725450849829 1 connected</span></span>
+<span class="giallo-l"><span>58061fb2836bdb2f5a0973e1ccfd74a66166f329 172.22.0.2:6379@16379 myself,master - 0 1725450846000 3 connected 10923-16383</span></span></code></pre></li>
+<li>
+<p>Create a valkey.conf configuration file and specify the following parameters. Note that this configuration file enables clustering. <a rel="external" href="https://raw.githubusercontent.com/valkey-io/valkey/7.2/valkey.conf">Valkey configuration file example</a> provides a description of the various configuration arguments:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span># valkey.conf file</span></span>
+<span class="giallo-l"><span>port 6379</span></span>
+<span class="giallo-l"><span>cluster-enabled yes</span></span>
+<span class="giallo-l"><span>cluster-config-file nodes.conf</span></span>
+<span class="giallo-l"><span>cluster-node-timeout 5000</span></span>
+<span class="giallo-l"><span>appendonly yes</span></span></code></pre></li>
+<li>
+<p>Start a Valkey instance with your custom configuration file. The following command starts Valkey in Docker:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker run  -d -v myvalkey/conf:/usr/local/etc/valkey --name valkey-1 --net mynetwork valkey/valkey valkey-server /usr/local/etc/valkey/valkey.conf</span></span></code></pre>
+<p>where:</p>
+<ul>
+<li><code>myvalkey/conf</code> is a local directory containing your <code>valkey.conf</code> configuration file that is being mapped to the <code>/usr/local/etc/valkey</code> directory within the Docker Valkey container.</li>
+<li><code>valkey-1</code> is the name of your container</li>
+<li><code>mynetwork</code> is the name of the network where Redis cluster is running.</li>
+<li><code>valkey/valkey</code> is the name of the Valkey image</li>
+</ul>
+</li>
+<li>
+<p>Retrieve the IP address of the Valkey instance; replacing <code>valkey-1</code> with the name of your container.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker inspect -f &#39;{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}&#39; valkey-1</span></span></code></pre></li>
+<li>
+<p>Add your new Valkey node to the Redis Cluster as a replica. Replace the <code>redis-1</code>, <code>valkey-node-ip</code>, and <code>existing-node-ip</code> placeholders with your values:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker exec -it redis-1 bash</span></span>
+<span class="giallo-l"><span>$ redis-cli --cluster add-node valkey-node-ip:6379 existing-node-ip:6379 --cluster-replica</span></span></code></pre></li>
+<li>
+<p>Check the cluster status. The output of the <code>CLUSTER NODES</code> command is described in <a href="/commands/cluster-nodes">CLUSTER NODES</a>.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ redis-cli -c CLUSTER NODES</span></span></code></pre>
+<p>In the output, you will see the newly added node as a replica (slave). For example, we have added a Valkey node with the IP address <code>172.22.0.8:6379</code>. The cluster nodes list now includes a new entry as follows:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>a98d5bac59672597b8509f24970e413002f896b6 172.22.0.8:6379@16379 slave 58061fb2836bdb2f5a0973e1ccfd74a66166f329 0 1725451086000 3 connected</span></span></code></pre></li>
+<li>
+<p>Verify that your newly added Valkey node is recognized as a replica by running the <code>INFO REPLICATION</code> command. The output displays information about the node's primary.</p>
+</li>
+<li>
+<p>Start the <code>valkey-cli</code> in your new Valkey container and enter the following command to promote it to be primary. <a href="/commands/cluster-failover">CLUSTER FAILOVER</a> provides additional information.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>docker exec -it valkey-container-name valkey-cli</span></span>
+<span class="giallo-l"><span>valkey 127.0.0.1:6379&gt; CLUSTER FAILOVER</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre></li>
+<li>
+<p>Use the <code>CLUSTER NODES</code> command to display the cluster state and verify that your new Valkey node is now a new primary.</p>
+</li>
+<li>
+<p>Repeat steps 3-9 to add 2 more Valkey nodes and replace the Redis primary nodes.</p>
+</li>
+<li>
+<p>Repeat steps 3-7 to add 3 Valkey replica nodes.</p>
+<p>To add a replica to a specific primary, do the following:</p>
+<p>a. Filter primary nodes. Connect to any node in the Cluster and run the following command, replacing <code>valkey-1</code> with then name of your Valkey container:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ docker exec -it valkey-1 bash</span></span>
+<span class="giallo-l"><span>$ valkey-cli -c cluster nodes | grep master</span></span>
+<span class="giallo-l"><span>70beedebe43e422b275ee1a7bac0d3819dedca98 172.22.0.3:6379@16379 master - 0 1725451135799 1 connected 0-5460</span></span>
+<span class="giallo-l"><span>65061b94da5b481dc35c2df7dae13c233d4b3ad2 172.22.0.4:6379@16379 master - 0 1725451136000 2 connected 5461-10922</span></span>
+<span class="giallo-l"><span>58061fb2836bdb2f5a0973e1ccfd74a66166f329 172.22.0.2:6379@16379 myself,master - 0 1725451136000 3 connected 10923-16383</span></span></code></pre>
+<blockquote>
+<p>NOTE: The node ID is the 40-character globally unique string that is generated when the node is created. In this example, <code>70beedebe43e422b275ee1a7bac0d3819dedca98</code> is the ID of the primary (master) node with the IP address <code>172.22.0.3:6379</code>. The ID of a node is required when adding a new Valkey replica to a specific primary in step b.</p>
+</blockquote>
+<p>b. Add a new node to a specific primary, replacing node-id with your node ID:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-cli --cluster add-node 172.22.0.10:6379 172.22.0.2:6379 --cluster-replica --cluster-master-id node-id</span></span></code></pre></li>
+<li>
+<p>Remove Redis nodes:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>redis-cli --cluster del-node 127.0.0.1:6379 node-id</span></span></code></pre>
+<p>The first argument is just a random node in the cluster, the second argument is the ID of the node you want to remove.</p>
+</li>
+</ol>
+<blockquote>
+<p>NOTE: If not for backward compatibility, the Valkey project no longer uses the words "master" and "slave". Unfortunately, in the given commands these words are part of the protocol, so we'll be able to remove such occurrences only when this API is naturally deprecated.</p>
+</blockquote>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/migration.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

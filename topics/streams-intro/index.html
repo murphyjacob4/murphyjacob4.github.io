@@ -1,0 +1,911 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Streams</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Streams">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Streams</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Streams
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>A Stream is a data structure that acts like an append-only log but also implements several operations to overcome some of the limits of a typical append-only log. These include random access in O(1) time and complex consumption strategies, such as consumer groups.
+You can use streams to record and simultaneously syndicate events in real time.
+Examples of Stream use cases include:</p>
+<ul>
+<li>Event sourcing (e.g., tracking user actions, clicks, etc.)</li>
+<li>Sensor monitoring (e.g., readings from devices in the field)</li>
+<li>Notifications (e.g., storing a record of each user's notifications in a separate stream)</li>
+</ul>
+<p>Valkey generates a unique ID for each stream entry.
+You can use these IDs to retrieve their associated entries later or to read and process all subsequent entries in the stream. Note that because these IDs are related to time, the ones shown here may vary and will be different from the IDs you see in your own Valkey instance.</p>
+<p>Streams support several trimming strategies (to prevent streams from growing unbounded) and more than one consumption strategy (see <code>XREAD</code>, <code>XREADGROUP</code>, and <code>XRANGE</code>).</p>
+<h2 id="basic-commands">Basic commands</h2>
+<ul>
+<li><code>XADD</code> adds a new entry to a stream.</li>
+<li><code>XREAD</code> reads one or more entries, starting at a given position and moving forward in time.</li>
+<li><code>XRANGE</code> returns a range of entries between two supplied entry IDs.</li>
+<li><code>XLEN</code> returns the length of a stream.</li>
+</ul>
+<p>See the <a href="/commands/#stream">complete list of stream commands</a>.</p>
+<h2 id="examples">Examples</h2>
+<ul>
+<li>When our racers pass a checkpoint, we add a stream entry for each racer that includes the racer's name, speed, position, and location ID:</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:france * rider Castilla speed 30.2 position 1 location_id 1</span></span>
+<span class="giallo-l"><span>&quot;1692632086370-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:france * rider Norem speed 28.8 position 3 location_id 1</span></span>
+<span class="giallo-l"><span>&quot;1692632094485-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:france * rider Prickett speed 29.7 position 2 location_id 1</span></span>
+<span class="giallo-l"><span>&quot;1692632102976-0&quot;</span></span></code></pre>
+<ul>
+<li>Read two stream entries starting at ID <code>1692632086370-0</code>:</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:france 1692632086370-0 + COUNT 2</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632086370-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;30.2&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>2) 1) &quot;1692632094485-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Norem&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;28.8&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;3&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span></code></pre>
+<ul>
+<li>Read up to 100 new stream entries, starting at the end of the stream, and block for up to 300 ms if no entries are being written:</li>
+</ul>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XREAD COUNT 100 BLOCK 300 STREAMS race:france $</span></span>
+<span class="giallo-l"><span>(nil)</span></span></code></pre><h2 id="performance">Performance</h2>
+<p>Adding an entry to a stream is O(1).
+Accessing any single entry is O(n), where <em>n</em> is the length of the ID.
+Since stream IDs are typically short and of a fixed length, this effectively reduces to a constant time lookup.
+For details on why, note that streams are implemented as <a rel="external" href="https://en.wikipedia.org/wiki/Radix_tree">radix trees</a>.</p>
+<p>Simply put, Streams provide highly efficient inserts and reads.
+See each command's time complexity for the details.</p>
+<h2 id="streams-basics">Streams basics</h2>
+<p>Streams are an append-only data structure. The fundamental write command, called <code>XADD</code>, appends a new entry to the specified stream.</p>
+<p>Each stream entry consists of one or more field-value pairs, somewhat like a dictionary or a Hash:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:france * rider Castilla speed 29.9 position 1 location_id 2</span></span>
+<span class="giallo-l"><span>&quot;1692632147973-0&quot;</span></span></code></pre>
+<p>The above call to the <code>XADD</code> command adds an entry <code>rider: Castilla, speed: 29.9, position: 1, location_id: 2</code> to the stream at key <code>race:france</code>, using an auto-generated entry ID, which is the one returned by the command, specifically <code>1692632147973-0</code>. It gets as its first argument the key name <code>race:france</code>, the second argument is the entry ID that identifies every entry inside a stream. However, in this case, we passed <code>*</code> because we want the server to generate a new ID for us. Every new ID will be monotonically increasing, so in more simple terms, every new entry added will have a higher ID compared to all the past entries. Auto-generation of IDs by the server is almost always what you want, and the reasons for specifying an ID explicitly are very rare. We'll talk more about this later. The fact that each Stream entry has an ID is another similarity with log files, where line numbers, or the byte offset inside the file, can be used in order to identify a given entry. Returning back at our <code>XADD</code> example, after the key name and ID, the next arguments are the field-value pairs composing our stream entry.</p>
+<p>It is possible to get the number of items inside a Stream just using the <code>XLEN</code> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XLEN race:france</span></span>
+<span class="giallo-l"><span>(integer) 4</span></span></code></pre><h3 id="entry-ids">Entry IDs</h3>
+<p>The entry ID returned by the <code>XADD</code> command, and identifying univocally each entry inside a given stream, is composed of two parts:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&lt;millisecondsTime&gt;-&lt;sequenceNumber&gt;</span></span></code></pre>
+<p>The milliseconds time part is actually the local time in the local Valkey node generating the stream ID, however if the current milliseconds time happens to be smaller than the previous entry time, then the previous entry time is used instead, so if a clock jumps backward the monotonically incrementing ID property still holds. The sequence number is used for entries created in the same millisecond. Since the sequence number is 64 bit wide, in practical terms there is no limit to the number of entries that can be generated within the same millisecond.</p>
+<p>The format of such IDs may look strange at first, and the gentle reader may wonder why the time is part of the ID. The reason is that Streams support range queries by ID. Because the ID is related to the time the entry is generated, this gives the ability to query for time ranges basically for free. We will see this soon while covering the <code>XRANGE</code> command.</p>
+<p>If for some reason the user needs incremental IDs that are not related to time but are actually associated to another external system ID, as previously mentioned, the <code>XADD</code> command can take an explicit ID instead of the <code>*</code> wildcard ID that triggers auto-generation, like in the following examples:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:usa 0-1 racer Castilla</span></span>
+<span class="giallo-l"><span>0-1</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:usa 0-2 racer Norem</span></span>
+<span class="giallo-l"><span>0-2</span></span></code></pre>
+<p>Note that in this case, the minimum ID is 0-1 and that the command will not accept an ID equal or smaller than a previous one:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:usa 0-1 racer Prickett</span></span>
+<span class="giallo-l"><span>(error) ERR The ID specified in XADD is equal or smaller than the target stream top item</span></span></code></pre>
+<p>If you're running Redis OSS 7 or later, you can also provide an explicit ID consisting of the milliseconds part only. In this case, the sequence portion of the ID will be automatically generated. To do this, use the syntax below:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:usa 0-* racer Prickett</span></span>
+<span class="giallo-l"><span>0-3</span></span></code></pre><h2 id="getting-data-from-streams">Getting data from Streams</h2>
+<p>Now we are finally able to append entries in our stream via <code>XADD</code>. However, while appending data to a stream is quite obvious, the way streams can be queried in order to extract data is not so obvious. If we continue with the analogy of the log file, one obvious way is to mimic what we normally do with the Unix command <code>tail -f</code>, that is, we may start to listen in order to get the new messages that are appended to the stream. Note that unlike the blocking list operations of Valkey, where a given element will reach a single client which is blocking in a <em>pop style</em> operation like <code>BLPOP</code>, with streams we want multiple consumers to see the new messages appended to the stream (the same way many <code>tail -f</code> processes can see what is added to a log). Using the traditional terminology we want the streams to be able to <em>fan out</em> messages to multiple clients.</p>
+<p>However, this is just one potential access mode. We could also see a stream in quite a different way: not as a messaging system, but as a <em>time series store</em>. In this case, maybe it's also useful to get the new messages appended, but another natural query mode is to get messages by ranges of time, or alternatively to iterate the messages using a cursor to incrementally check all the history. This is definitely another useful access mode.</p>
+<p>Finally, if we see a stream from the point of view of consumers, we may want to access the stream in yet another way, that is, as a stream of messages that can be partitioned to multiple consumers that are processing such messages, so that groups of consumers can only see a subset of the messages arriving in a single stream. In this way, it is possible to scale the message processing across different consumers, without single consumers having to process all the messages: each consumer will just get different messages to process. This is basically what Kafka (TM) does with consumer groups. Reading messages via consumer groups is yet another interesting mode of reading from a Stream.</p>
+<p>Streams support all three of the query modes described above via different commands. The next sections will show them all, starting from the simplest and most direct to use: range queries.</p>
+<h3 id="querying-by-range-xrange-and-xrevrange">Querying by range: XRANGE and XREVRANGE</h3>
+<p>To query the stream by range we are only required to specify two IDs, <em>start</em> and <em>end</em>. The range returned will include the elements having start or end as ID, so the range is inclusive. The two special IDs <code>-</code> and <code>+</code> respectively mean the smallest and the greatest ID possible.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:france - +</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632086370-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;30.2&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>2) 1) &quot;1692632094485-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Norem&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;28.8&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;3&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>3) 1) &quot;1692632102976-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Prickett&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;29.7&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;2&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>4) 1) &quot;1692632147973-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;29.9&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;2&quot;</span></span></code></pre>
+<p>Each entry returned is an array of two items: the ID and the list of field-value pairs. We already said that the entry IDs have a relation with the time, because the part at the left of the <code>-</code> character is the Unix time in milliseconds of the local node that created the stream entry, at the moment the entry was created (however note that streams are replicated with fully specified <code>XADD</code> commands, so the replicas will have identical IDs to the primary). This means that I could query a range of time using <code>XRANGE</code>. In order to do so, however, I may want to omit the sequence part of the ID: if omitted, in the start of the range it will be assumed to be 0, while in the end part it will be assumed to be the maximum sequence number available. This way, querying using just two milliseconds Unix times, we get all the entries that were generated in that range of time, in an inclusive way. For instance, if I want to query a two milliseconds period I could use:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:france 1692632086369 1692632086371</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632086370-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;30.2&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span></code></pre>
+<p>I have only a single entry in this range. However in real data sets, I could query for ranges of hours, or there could be many items in just two milliseconds, and the result returned could be huge. For this reason, <code>XRANGE</code> supports an optional <strong>COUNT</strong> option at the end. By specifying a count, I can just get the first <em>N</em> items. If I want more, I can get the last ID returned, increment the sequence part by one, and query again. Let's see this in the following example. Let's assume that the stream <code>race:france</code> was populated with 4 items. To start my iteration, getting 2 items per command, I start with the full range, but with a count of 2.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:france - + COUNT 2</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632086370-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;30.2&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>2) 1) &quot;1692632094485-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Norem&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;28.8&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;3&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span></code></pre>
+<p>To continue the iteration with the next two items, I have to pick the last ID returned, that is <code>1692632094485-0</code>, and add the prefix <code>(</code> to it. The resulting exclusive range interval, that is <code>(1692632094485-0</code> in this case, can now be used as the new <em>start</em> argument for the next <code>XRANGE</code> call:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:france (1692632094485-0 + COUNT 2</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632102976-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Prickett&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;29.7&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;2&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>2) 1) &quot;1692632147973-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;29.9&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;2&quot;</span></span></code></pre>
+<p>Now that we've retrieved 4 items out of a stream that only had 4 entries in it, if we try to retrieve more items, we'll get an empty array:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:france (1692632147973-0 + COUNT 2</span></span>
+<span class="giallo-l"><span>(empty array)</span></span></code></pre>
+<p>Since <code>XRANGE</code> complexity is <em>O(log(N))</em> to seek, and then <em>O(M)</em> to return M elements, with a small count the command has a logarithmic time complexity, which means that each step of the iteration is fast. So <code>XRANGE</code> is also the de facto <em>streams iterator</em> and does not require an <strong>XSCAN</strong> command.</p>
+<p>The command <code>XREVRANGE</code> is the equivalent of <code>XRANGE</code> but returning the elements in inverted order, so a practical use for <code>XREVRANGE</code> is to check what is the last item in a Stream:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XREVRANGE race:france + - COUNT 1</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632147973-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>      3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>      4) &quot;29.9&quot;</span></span>
+<span class="giallo-l"><span>      5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>      6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>      8) &quot;2&quot;</span></span></code></pre>
+<p>Note that the <code>XREVRANGE</code> command takes the <em>start</em> and <em>stop</em> arguments in reverse order.</p>
+<h2 id="listening-for-new-items-with-xread">Listening for new items with XREAD</h2>
+<p>When we do not want to access items by a range in a stream, usually what we want instead is to <em>subscribe</em> to new items arriving to the stream. This concept may appear related to Valkey Pub/Sub, where you subscribe to a channel, or to Valkey blocking lists, where you wait for a key to get new elements to fetch, but there are fundamental differences in the way you consume a stream:</p>
+<ol>
+<li>A stream can have multiple clients (consumers) waiting for data. Every new item, by default, will be delivered to <em>every consumer</em> that is waiting for data in a given stream. This behavior is different than blocking lists, where each consumer will get a different element. However, the ability to <em>fan out</em> to multiple consumers is similar to Pub/Sub.</li>
+<li>While in Pub/Sub messages are <em>fire and forget</em> and are never stored anyway, and while when using blocking lists, when a message is received by the client it is <em>popped</em> (effectively removed) from the list, streams work in a fundamentally different way. All the messages are appended in the stream indefinitely (unless the user explicitly asks to delete entries): different consumers will know what is a new message from its point of view by remembering the ID of the last message received.</li>
+<li>Streams Consumer Groups provide a level of control that Pub/Sub or blocking lists cannot achieve, with different groups for the same stream, explicit acknowledgment of processed items, ability to inspect the pending items, claiming of unprocessed messages, and coherent history visibility for each single client, that is only able to see its private past history of messages.</li>
+</ol>
+<p>The command that provides the ability to listen for new messages arriving into a stream is called <code>XREAD</code>. It's a bit more complex than <code>XRANGE</code>, so we'll start showing simple forms, and later the whole command layout will be provided.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XREAD COUNT 2 STREAMS race:france 0</span></span>
+<span class="giallo-l"><span>1) 1) &quot;race:france&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) 1) &quot;1692632086370-0&quot;</span></span>
+<span class="giallo-l"><span>         2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>            2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>            3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>            4) &quot;30.2&quot;</span></span>
+<span class="giallo-l"><span>            5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>            6) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>            7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>            8) &quot;1&quot;</span></span>
+<span class="giallo-l"><span>      2) 1) &quot;1692632094485-0&quot;</span></span>
+<span class="giallo-l"><span>         2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>            2) &quot;Norem&quot;</span></span>
+<span class="giallo-l"><span>            3) &quot;speed&quot;</span></span>
+<span class="giallo-l"><span>            4) &quot;28.8&quot;</span></span>
+<span class="giallo-l"><span>            5) &quot;position&quot;</span></span>
+<span class="giallo-l"><span>            6) &quot;3&quot;</span></span>
+<span class="giallo-l"><span>            7) &quot;location_id&quot;</span></span>
+<span class="giallo-l"><span>            8) &quot;1&quot;</span></span></code></pre>
+<p>The above is the non-blocking form of <code>XREAD</code>. Note that the <strong>COUNT</strong> option is not mandatory, in fact the only mandatory option of the command is the <strong>STREAMS</strong> option, that specifies a list of keys together with the corresponding maximum ID already seen for each stream by the calling consumer, so that the command will provide the client only with messages with an ID greater than the one we specified.</p>
+<p>In the above command we wrote <code>STREAMS race:france 0</code> so we want all the messages in the Stream <code>race:france</code> having an ID greater than <code>0-0</code>. As you can see in the example above, the command returns the key name, because actually it is possible to call this command with more than one key to read from different streams at the same time. I could write, for instance: <code>STREAMS race:france race:italy 0 0</code>. Note how after the <strong>STREAMS</strong> option we need to provide the key names, and later the IDs. For this reason, the <strong>STREAMS</strong> option must always be the last option.
+Any other options must come before the <strong>STREAMS</strong> option.</p>
+<p>Apart from the fact that <code>XREAD</code> can access multiple streams at once, and that we are able to specify the last ID we own to just get newer messages, in this simple form the command is not doing something so different compared to <code>XRANGE</code>. However, the interesting part is that we can turn <code>XREAD</code> into a <em>blocking command</em> easily, by specifying the <strong>BLOCK</strong> argument:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; XREAD BLOCK 0 STREAMS race:france $</span></span></code></pre>
+<p>Note that in the example above, other than removing <strong>COUNT</strong>, I specified the new <strong>BLOCK</strong> option with a timeout of 0 milliseconds (that means to never timeout). Moreover, instead of passing a normal ID for the stream <code>race:france</code> I passed the special ID <code>$</code>. This special ID means that <code>XREAD</code> should use as last ID the maximum ID already stored in the stream <code>race:france</code>, so that we will receive only <em>new</em> messages, starting from the time we started listening. This is similar to the <code>tail -f</code> Unix command in some way.</p>
+<p>Note that when the <strong>BLOCK</strong> option is used, we do not have to use the special ID <code>$</code>. We can use any valid ID. If the command is able to serve our request immediately without blocking, it will do so, otherwise it will block. Normally if we want to consume the stream starting from new entries, we start with the ID <code>$</code>, and after that we continue using the ID of the last message received to make the next call, and so forth.</p>
+<p>The blocking form of <code>XREAD</code> is also able to listen to multiple Streams, just by specifying multiple key names. If the request can be served synchronously because there is at least one stream with elements greater than the corresponding ID we specified, it returns with the results. Otherwise, the command will block and will return the items of the first stream which gets new data (according to the specified ID).</p>
+<p>Similarly to blocking list operations, blocking stream reads are <em>fair</em> from the point of view of clients waiting for data, since the semantics is FIFO style. The first client that blocked for a given stream will be the first to be unblocked when new items are available.</p>
+<p><code>XREAD</code> has no other options than <strong>COUNT</strong> and <strong>BLOCK</strong>, so it's a pretty basic command with a specific purpose to attach consumers to one or multiple streams. More powerful features to consume streams are available using the consumer groups API, however reading via consumer groups is implemented by a different command called <code>XREADGROUP</code>, covered in the next section of this guide.</p>
+<h2 id="consumer-groups">Consumer groups</h2>
+<p>When the task at hand is to consume the same stream from different clients, then <code>XREAD</code> already offers a way to <em>fan-out</em> to N clients, potentially also using replicas in order to provide more read scalability. However in certain problems what we want to do is not to provide the same stream of messages to many clients, but to provide a <em>different subset</em> of messages from the same stream to many clients. An obvious case where this is useful is that of messages which are slow to process: the ability to have N different workers that will receive different parts of the stream allows us to scale message processing, by routing different messages to different workers that are ready to do more work.</p>
+<p>In practical terms, if we imagine having three consumers C1, C2, C3, and a stream that contains the messages 1, 2, 3, 4, 5, 6, 7 then what we want is to serve the messages according to the following diagram:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>1 -&gt; C1</span></span>
+<span class="giallo-l"><span>2 -&gt; C2</span></span>
+<span class="giallo-l"><span>3 -&gt; C3</span></span>
+<span class="giallo-l"><span>4 -&gt; C1</span></span>
+<span class="giallo-l"><span>5 -&gt; C2</span></span>
+<span class="giallo-l"><span>6 -&gt; C3</span></span>
+<span class="giallo-l"><span>7 -&gt; C1</span></span></code></pre>
+<p>In order to achieve this, Valkey uses a concept called <em>consumer groups</em>. It is very important to understand that Valkey consumer groups have nothing to do, from an implementation standpoint, with Kafka (TM) consumer groups. Yet they are similar in functionality, so I decided to keep Kafka's (TM) terminology, as it originally popularized this idea.</p>
+<p>A consumer group is like a <em>pseudo consumer</em> that gets data from a stream, and actually serves multiple consumers, providing certain guarantees:</p>
+<ol>
+<li>Each message is served to a different consumer so that it is not possible that the same message will be delivered to multiple consumers.</li>
+<li>Consumers are identified, within a consumer group, by a name, which is a case-sensitive string that the clients implementing consumers must choose. This means that even after a disconnect, the stream consumer group retains all the state, since the client will claim again to be the same consumer. However, this also means that it is up to the client to provide a unique identifier.</li>
+<li>Each consumer group has the concept of the <em>first ID never consumed</em> so that, when a consumer asks for new messages, it can provide just messages that were not previously delivered.</li>
+<li>Consuming a message, however, requires an explicit acknowledgment using a specific command. Valkey interprets the acknowledgment as: this message was correctly processed so it can be evicted from the consumer group.</li>
+<li>A consumer group tracks all the messages that are currently pending, that is, messages that were delivered to some consumer of the consumer group, but are yet to be acknowledged as processed. Thanks to this feature, when accessing the message history of a stream, each consumer <em>will only see messages that were delivered to it</em>.</li>
+</ol>
+<p>In a way, a consumer group can be imagined as some <em>amount of state</em> about a stream:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>+----------------------------------------+</span></span>
+<span class="giallo-l"><span>| consumer_group_name: mygroup           |</span></span>
+<span class="giallo-l"><span>| consumer_group_stream: somekey         |</span></span>
+<span class="giallo-l"><span>| last_delivered_id: 1292309234234-92    |</span></span>
+<span class="giallo-l"><span>|                                        |</span></span>
+<span class="giallo-l"><span>| consumers:                             |</span></span>
+<span class="giallo-l"><span>|    &quot;consumer-1&quot; with pending messages  |</span></span>
+<span class="giallo-l"><span>|       1292309234234-4                  |</span></span>
+<span class="giallo-l"><span>|       1292309234232-8                  |</span></span>
+<span class="giallo-l"><span>|    &quot;consumer-42&quot; with pending messages |</span></span>
+<span class="giallo-l"><span>|       ... (and so forth)               |</span></span>
+<span class="giallo-l"><span>+----------------------------------------+</span></span></code></pre>
+<p>If you see this from this point of view, it is very simple to understand what a consumer group can do, how it is able to just provide consumers with their history of pending messages, and how consumers asking for new messages will just be served with message IDs greater than <code>last_delivered_id</code>. At the same time, if you look at the consumer group as an auxiliary data structure for Streams, it is obvious that a single stream can have multiple consumer groups, that have a different set of consumers. Actually, it is even possible for the same stream to have clients reading without consumer groups via <code>XREAD</code>, and clients reading via <code>XREADGROUP</code> in different consumer groups.</p>
+<p>Now it's time to zoom in to see the fundamental consumer group commands. They are the following:</p>
+<ul>
+<li><code>XGROUP</code> is used in order to create, destroy and manage consumer groups.</li>
+<li><code>XREADGROUP</code> is used to read from a stream via a consumer group.</li>
+<li><code>XACK</code> is the command that allows a consumer to mark a pending message as correctly processed.</li>
+</ul>
+<h2 id="creating-a-consumer-group">Creating a consumer group</h2>
+<p>Assuming I have a key <code>race:france</code> of type stream already existing, in order to create a consumer group I just need to do the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XGROUP CREATE race:france france_riders $</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre>
+<p>As you can see in the command above when creating the consumer group we have to specify an ID, which in the example is just <code>$</code>. This is needed because the consumer group, among the other states, must have an idea about what message to serve next at the first consumer connecting, that is, what was the <em>last message ID</em> when the group was just created. If we provide <code>$</code> as we did, then only new messages arriving in the stream from now on will be provided to the consumers in the group. If we specify <code>0</code> instead the consumer group will consume <em>all</em> the messages in the stream history to start with. Of course, you can specify any other valid ID. What you know is that the consumer group will start delivering messages that are greater than the ID you specify. Because <code>$</code> means the current greatest ID in the stream, specifying <code>$</code> will have the effect of consuming only new messages.</p>
+<p><code>XGROUP CREATE</code> also supports creating the stream automatically, if it doesn't exist, using the optional <code>MKSTREAM</code> subcommand as the last argument:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XGROUP CREATE race:italy italy_riders $ MKSTREAM</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre>
+<p>Now that the consumer group is created we can immediately try to read messages via the consumer group using the <code>XREADGROUP</code> command. We'll read from consumers, that we will call Alice and Bob, to see how the system will return different messages to Alice or Bob.</p>
+<p><code>XREADGROUP</code> is very similar to <code>XREAD</code> and provides the same <strong>BLOCK</strong> option, otherwise it is a synchronous command. However there is a <em>mandatory</em> option that must be always specified, which is <strong>GROUP</strong> and has two arguments: the name of the consumer group, and the name of the consumer that is attempting to read. The option <strong>COUNT</strong> is also supported and is identical to the one in <code>XREAD</code>.</p>
+<p>We'll add riders to the race:italy stream and try reading something using the consumer group:
+Note: <em>here rider is the field name, and the name is the associated value. Remember that stream items are small dictionaries.</em></p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy * rider Castilla</span></span>
+<span class="giallo-l"><span>&quot;1692632639151-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy * rider Royce</span></span>
+<span class="giallo-l"><span>&quot;1692632647899-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy * rider Sam-Bodden</span></span>
+<span class="giallo-l"><span>&quot;1692632662819-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy * rider Prickett</span></span>
+<span class="giallo-l"><span>&quot;1692632670501-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy * rider Norem</span></span>
+<span class="giallo-l"><span>&quot;1692632678249-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XREADGROUP GROUP italy_riders Alice COUNT 1 STREAMS race:italy &gt;</span></span>
+<span class="giallo-l"><span>1) 1) &quot;race:italy&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) 1) &quot;1692632639151-0&quot;</span></span>
+<span class="giallo-l"><span>         2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>            2) &quot;Castilla&quot;</span></span></code></pre>
+<p><code>XREADGROUP</code> replies are just like <code>XREAD</code> replies. Note however the <code>GROUP &lt;group-name&gt; &lt;consumer-name&gt;</code> provided above. It states that I want to read from the stream using the consumer group <code>mygroup</code> and I'm the consumer <code>Alice</code>. Every time a consumer performs an operation with a consumer group, it must specify its name, uniquely identifying this consumer inside the group.</p>
+<p>There is another very important detail in the command line above, after the mandatory <strong>STREAMS</strong> option the ID requested for the key <code>race:italy</code> is the special ID <code>&gt;</code>. This special ID is only valid in the context of consumer groups, and it means: <strong>messages never delivered to other consumers so far</strong>.</p>
+<p>This is almost always what you want, however it is also possible to specify a real ID, such as <code>0</code> or any other valid ID, in this case, however, what happens is that we request from <code>XREADGROUP</code> to just provide us with the <strong>history of pending messages</strong>, and in such case, will never see new messages in the group. So basically <code>XREADGROUP</code> has the following behavior based on the ID we specify:</p>
+<ul>
+<li>If the ID is the special ID <code>&gt;</code> then the command will return only new messages never delivered to other consumers so far, and as a side effect, will update the consumer group's <em>last ID</em>.</li>
+<li>If the ID is any other valid numerical ID, then the command will let us access our <em>history of pending messages</em>. That is, the set of messages that were delivered to this specified consumer (identified by the provided name), and never acknowledged so far with <code>XACK</code>.</li>
+</ul>
+<p>We can test this behavior immediately specifying an ID of 0, without any <strong>COUNT</strong> option: we'll just see the only pending message, that is, the one about Castilla:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XREADGROUP GROUP italy_riders Alice STREAMS race:italy 0</span></span>
+<span class="giallo-l"><span>1) 1) &quot;race:italy&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) 1) &quot;1692632639151-0&quot;</span></span>
+<span class="giallo-l"><span>         2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>            2) &quot;Castilla&quot;</span></span></code></pre>
+<p>However, if we acknowledge the message as processed, it will no longer be part of the pending messages history, so the system will no longer report anything:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XACK race:italy italy_riders 1692632639151-0</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XREADGROUP GROUP italy_riders Alice STREAMS race:italy 0</span></span>
+<span class="giallo-l"><span>1) 1) &quot;race:italy&quot;</span></span>
+<span class="giallo-l"><span>   2) (empty array)</span></span></code></pre>
+<p>Don't worry if you yet don't know how <code>XACK</code> works, the idea is just that processed messages are no longer part of the history that we can access.</p>
+<p>Now it's Bob's turn to read something:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XREADGROUP GROUP italy_riders Bob COUNT 2 STREAMS race:italy &gt;</span></span>
+<span class="giallo-l"><span>1) 1) &quot;race:italy&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) 1) &quot;1692632647899-0&quot;</span></span>
+<span class="giallo-l"><span>         2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>            2) &quot;Royce&quot;</span></span>
+<span class="giallo-l"><span>      2) 1) &quot;1692632662819-0&quot;</span></span>
+<span class="giallo-l"><span>         2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>            2) &quot;Sam-Bodden&quot;</span></span></code></pre>
+<p>Bob asked for a maximum of two messages and is reading via the same group <code>mygroup</code>. So what happens is that Valkey reports just <em>new</em> messages. As you can see the "Castilla" message is not delivered, since it was already delivered to Alice, so Bob gets Royce and Sam-Bodden and so forth.</p>
+<p>This way Alice, Bob, and any other consumer in the group, are able to read different messages from the same stream, to read their history of yet to process messages, or to mark messages as processed. This allows creating different topologies and semantics for consuming messages from a stream.</p>
+<p>There are a few things to keep in mind:</p>
+<ul>
+<li>Consumers are auto-created the first time they are mentioned, no need for explicit creation.</li>
+<li>Even with <code>XREADGROUP</code> you can read from multiple keys at the same time, however for this to work, you need to create a consumer group with the same name in every stream. This is not a common need, but it is worth mentioning that the feature is technically available.</li>
+<li><code>XREADGROUP</code> is a <em>write command</em> because even if it reads from the stream, the consumer group is modified as a side effect of reading, so it can only be called on primary instances.</li>
+</ul>
+<p>An example of a consumer implementation, using consumer groups, written in the Ruby language could be the following. The Ruby code is aimed to be readable by virtually any experienced programmer, even if they do not know Ruby:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="ruby"><span class="giallo-l"><span style="color: #FF7B72;">require</span><span style="color: #A5D6FF;"> &#39;redis&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">if</span><span style="color: #79C0FF;"> ARGV</span><span>.</span><span style="color: #D2A8FF;">length</span><span style="color: #FF7B72;"> ==</span><span style="color: #79C0FF;"> 0</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">    puts</span><span style="color: #A5D6FF;"> &quot;Please specify a consumer name&quot;</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">    exit 1</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79C0FF;">ConsumerName</span><span style="color: #FF7B72;"> =</span><span style="color: #79C0FF;"> ARGV</span><span>[</span><span style="color: #79C0FF;">0</span><span>]</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">GroupName</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &quot;mygroup&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">r</span><span style="color: #FF7B72;"> =</span><span style="color: #79C0FF;"> Redis</span><span>.</span><span style="color: #FF7B72;">new</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">def</span><span style="color: #D2A8FF;"> process_message</span><span>(id,msg)</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">    puts</span><span style="color: #A5D6FF;"> &quot;[</span><span style="color: #FF7B72;">#{</span><span style="color: #79C0FF;">ConsumerName</span><span style="color: #FF7B72;">}</span><span style="color: #A5D6FF;">] </span><span style="color: #FF7B72;">#{</span><span style="color: #A5D6FF;">id</span><span style="color: #FF7B72;">}</span><span style="color: #A5D6FF;"> = </span><span style="color: #FF7B72;">#{</span><span style="color: #A5D6FF;">msg.</span><span style="color: #D2A8FF;">inspect</span><span style="color: #A5D6FF;">]: &quot;</span></span>
+<span class="giallo-l"><span style="color: #A5D6FF;">end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #A5D6FF;">$lastid = &#39;0-0&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #A5D6FF;">puts &quot;</span><span style="color: #79C0FF;">Consumer</span><span style="color: #8B949E;"> #{ConsumerName} starting...&quot;</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">check_backlog</span><span style="color: #FF7B72;"> =</span><span style="color: #79C0FF;"> true</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">while</span><span style="color: #79C0FF;"> true</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    # Pick the ID based on the iteration: the first time we want to</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    # read our pending messages, in case we crashed and are recovering.</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    # Once we consumed our history, we can start getting new messages.</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    if</span><span style="color: #A5D6FF;"> check_backlog</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">        myid</span><span style="color: #FF7B72;"> =</span><span> $lastid</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    else</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">        myid</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> &#39;&gt;&#39;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79C0FF;">    items</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> r.</span><span style="color: #D2A8FF;">xreadgroup</span><span style="color: #A5D6FF;">(&#39;GROUP&#39;,</span><span style="color: #79C0FF;">GroupName</span><span style="color: #A5D6FF;">,</span><span style="color: #79C0FF;">ConsumerName</span><span style="color: #A5D6FF;">,&#39;BLOCK&#39;,&#39;2000&#39;,&#39;COUNT&#39;,&#39;10&#39;,&#39;STREAMS&#39;,</span><span style="color: #79C0FF;">:my_stream_key</span><span style="color: #A5D6FF;">,myid)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    if</span><span style="color: #A5D6FF;"> items </span><span style="color: #FF7B72;">==</span><span style="color: #79C0FF;"> nil</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">        puts</span><span style="color: #A5D6FF;"> &quot;Timeout!&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">        next</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">    end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">    # If we receive an empty reply, it means we were consuming our history</span></span>
+<span class="giallo-l"><span style="color: #8B949E;">    # and that the history is now empty. Let&#39;s start to consume new messages.</span></span>
+<span class="giallo-l"><span style="color: #79C0FF;">    check_backlog</span><span style="color: #FF7B72;"> =</span><span style="color: #79C0FF;"> false</span><span style="color: #FF7B72;"> if</span><span style="color: #A5D6FF;"> items[</span><span style="color: #79C0FF;">0</span><span style="color: #A5D6FF;">][</span><span style="color: #79C0FF;">1</span><span style="color: #A5D6FF;">].</span><span style="color: #D2A8FF;">length</span><span style="color: #FF7B72;"> ==</span><span style="color: #79C0FF;"> 0</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #A5D6FF;">    items[</span><span style="color: #79C0FF;">0</span><span style="color: #A5D6FF;">][</span><span style="color: #79C0FF;">1</span><span style="color: #A5D6FF;">].</span><span style="color: #D2A8FF;">each</span><span style="color: #A5D6FF;">{</span><span>|i|</span></span>
+<span class="giallo-l"><span style="color: #A5D6FF;">        id,fields </span><span style="color: #FF7B72;">=</span><span style="color: #A5D6FF;"> i</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">        # Process the message</span></span>
+<span class="giallo-l"><span style="color: #D2A8FF;">        process_message</span><span style="color: #A5D6FF;">(id,fields)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">        # Acknowledge the message as processed</span></span>
+<span class="giallo-l"><span style="color: #A5D6FF;">        r.</span><span style="color: #D2A8FF;">xack</span><span style="color: #A5D6FF;">(</span><span style="color: #79C0FF;">:my_stream_key</span><span style="color: #A5D6FF;">,</span><span style="color: #79C0FF;">GroupName</span><span style="color: #A5D6FF;">,id)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        $lastid</span><span style="color: #FF7B72;"> =</span><span style="color: #A5D6FF;"> id</span></span>
+<span class="giallo-l"><span style="color: #A5D6FF;">    }</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">end</span></span></code></pre>
+<p>As you can see the idea here is to start by consuming the history, that is, our list of pending messages. This is useful because the consumer may have crashed before, so in the event of a restart we want to re-read messages that were delivered to us without getting acknowledged. Note that we might process a message multiple times or one time (at least in the case of consumer failures, but there are also the limits of Valkey persistence and replication involved, see the specific section about this topic).</p>
+<p>Once the history was consumed, and we get an empty list of messages, we can switch to using the <code>&gt;</code> special ID in order to consume new messages.</p>
+<h2 id="recovering-from-permanent-failures">Recovering from permanent failures</h2>
+<p>The example above allows us to write consumers that participate in the same consumer group, each taking a subset of messages to process, and when recovering from failures re-reading the pending messages that were delivered just to them. However in the real world consumers may permanently fail and never recover. What happens to the pending messages of the consumer that never recovers after stopping for any reason?</p>
+<p>Valkey consumer groups offer a feature that is used in these situations in order to <em>claim</em> the pending messages of a given consumer so that such messages will change ownership and will be re-assigned to a different consumer. The feature is very explicit. A consumer has to inspect the list of pending messages, and will have to claim specific messages using a special command, otherwise the server will leave the messages pending forever and assigned to the old consumer. In this way different applications can choose if to use such a feature or not, and exactly how to use it.</p>
+<p>The first step of this process is just a command that provides observability of pending entries in the consumer group and is called <code>XPENDING</code>.
+This is a read-only command which is always safe to call and will not change ownership of any message.
+In its simplest form, the command is called with two arguments, which are the name of the stream and the name of the consumer group.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XPENDING race:italy italy_riders</span></span>
+<span class="giallo-l"><span>1) (integer) 2</span></span>
+<span class="giallo-l"><span>2) &quot;1692632647899-0&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;1692632662819-0&quot;</span></span>
+<span class="giallo-l"><span>4) 1) 1) &quot;Bob&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;2&quot;</span></span></code></pre>
+<p>When called in this way, the command outputs the total number of pending messages in the consumer group (two in this case), the lower and higher message ID among the pending messages, and finally a list of consumers and the number of pending messages they have.
+We have only Bob with two pending messages because the single message that Alice requested was acknowledged using <code>XACK</code>.</p>
+<p>We can ask for more information by giving more arguments to <code>XPENDING</code>, because the full command signature is the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>XPENDING &lt;key&gt; &lt;groupname&gt; [[IDLE &lt;min-idle-time&gt;] &lt;start-id&gt; &lt;end-id&gt; &lt;count&gt; [&lt;consumer-name&gt;]]</span></span></code></pre>
+<p>By providing a start and end ID (that can be just <code>-</code> and <code>+</code> as in <code>XRANGE</code>) and a count to control the amount of information returned by the command, we are able to know more about the pending messages. The optional final argument, the consumer name, is used if we want to limit the output to just messages pending for a given consumer, but won't use this feature in the following example.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XPENDING race:italy italy_riders - + 10</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632647899-0&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;Bob&quot;</span></span>
+<span class="giallo-l"><span>   3) (integer) 74642</span></span>
+<span class="giallo-l"><span>   4) (integer) 1</span></span>
+<span class="giallo-l"><span>2) 1) &quot;1692632662819-0&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;Bob&quot;</span></span>
+<span class="giallo-l"><span>   3) (integer) 74642</span></span>
+<span class="giallo-l"><span>   4) (integer) 1</span></span></code></pre>
+<p>Now we have the details for each message: the ID, the consumer name, the <em>idle time</em> in milliseconds, which is how many milliseconds have passed since the last time the message was delivered to some consumer, and finally the number of times that a given message was delivered.
+We have two messages from Bob, and they are idle for 60000+ milliseconds, about a minute.</p>
+<p>Note that nobody prevents us from checking what the first message content was by just using <code>XRANGE</code>.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:italy 1692632647899-0 1692632647899-0</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632647899-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Royce&quot;</span></span></code></pre>
+<p>We have just to repeat the same ID twice in the arguments. Now that we have some ideas, Alice may decide that after 1 minute of not processing messages, Bob will probably not recover quickly, and it's time to <em>claim</em> such messages and resume the processing in place of Bob. To do so, we use the <code>XCLAIM</code> command.</p>
+<p>This command is very complex and full of options in its full form, since it is used for replication of consumer groups changes, but we'll use just the arguments that we need normally. In this case it is as simple as:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>XCLAIM &lt;key&gt; &lt;group&gt; &lt;consumer&gt; &lt;min-idle-time&gt; &lt;ID-1&gt; &lt;ID-2&gt; ... &lt;ID-N&gt;</span></span></code></pre>
+<p>Basically we say, for this specific key and group, I want that the message IDs specified will change ownership, and will be assigned to the specified consumer name <code>&lt;consumer&gt;</code>. However, we also provide a minimum idle time, so that the operation will only work if the idle time of the mentioned messages is greater than the specified idle time. This is useful because maybe two clients are retrying to claim a message at the same time:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>Client 1: XCLAIM race:italy italy_riders Alice 60000 1692632647899-0</span></span>
+<span class="giallo-l"><span>Client 2: XCLAIM race:italy italy_riders Lora 60000 1692632647899-0</span></span></code></pre>
+<p>However, as a side effect, claiming a message will reset its idle time and will increment its number of deliveries counter, so the second client will fail claiming it. In this way we avoid trivial re-processing of messages (even if in the general case you cannot obtain exactly once processing).</p>
+<p>This is the result of the command execution:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XCLAIM race:italy italy_riders Alice 60000 1692632647899-0</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692632647899-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Royce&quot;</span></span></code></pre>
+<p>The message was successfully claimed by Alice, who can now process the message and acknowledge it, and move things forward even if the original consumer is not recovering.</p>
+<p>It is clear from the example above that as a side effect of successfully claiming a given message, the <code>XCLAIM</code> command also returns it. However this is not mandatory. The <strong>JUSTID</strong> option can be used in order to return just the IDs of the message successfully claimed. This is useful if you want to reduce the bandwidth used between the client and the server (and also the performance of the command) and you are not interested in the message because your consumer is implemented in a way that it will rescan the history of pending messages from time to time.</p>
+<p>Claiming may also be implemented by a separate process: one that just checks the list of pending messages, and assigns idle messages to consumers that appear to be active. Active consumers can be obtained using one of the observability features of Streams. This is the topic of the next section.</p>
+<h2 id="automatic-claiming">Automatic claiming</h2>
+<p>The <code>XAUTOCLAIM</code> command, added in Redis OSS 6.2, implements the claiming process that we've described above.
+<code>XPENDING</code> and <code>XCLAIM</code> provide the basic building blocks for different types of recovery mechanisms.
+This command optimizes the generic process by having Valkey manage it and offers a simple solution for most recovery needs.</p>
+<p><code>XAUTOCLAIM</code> identifies idle pending messages and transfers ownership of them to a consumer.
+The command's signature looks like this:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>XAUTOCLAIM &lt;key&gt; &lt;group&gt; &lt;consumer&gt; &lt;min-idle-time&gt; &lt;start&gt; [COUNT count] [JUSTID]</span></span></code></pre>
+<p>So, in the example above, I could have used automatic claiming to claim a single message like this:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XAUTOCLAIM race:italy italy_riders Alice 60000 0-0 COUNT 1</span></span>
+<span class="giallo-l"><span>1) &quot;0-0&quot;</span></span>
+<span class="giallo-l"><span>2) 1) 1) &quot;1692632662819-0&quot;</span></span>
+<span class="giallo-l"><span>      2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>         2) &quot;Sam-Bodden&quot;</span></span></code></pre>
+<p>Like <code>XCLAIM</code>, the command replies with an array of the claimed messages, but it also returns a stream ID that allows iterating the pending entries.
+The stream ID is a cursor, and I can use it in my next call to continue in claiming idle pending messages:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XAUTOCLAIM race:italy italy_riders Lora 60000 (1692632662819-0 COUNT 1</span></span>
+<span class="giallo-l"><span>1) &quot;1692632662819-0&quot;</span></span>
+<span class="giallo-l"><span>2) 1) 1) &quot;1692632647899-0&quot;</span></span>
+<span class="giallo-l"><span>      2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>         2) &quot;Royce&quot;</span></span></code></pre>
+<p>When <code>XAUTOCLAIM</code> returns the "0-0" stream ID as a cursor, that means that it reached the end of the consumer group pending entries list.
+That doesn't mean that there are no new idle pending messages, so the process continues by calling <code>XAUTOCLAIM</code> from the beginning of the stream.</p>
+<h2 id="claiming-and-the-delivery-counter">Claiming and the delivery counter</h2>
+<p>The counter that you observe in the <code>XPENDING</code> output is the number of deliveries of each message. The counter is incremented in two ways: when a message is successfully claimed via <code>XCLAIM</code> or when an <code>XREADGROUP</code> call is used in order to access the history of pending messages.</p>
+<p>When there are failures, it is normal that messages will be delivered multiple times, but eventually they usually get processed and acknowledged. However there might be a problem processing some specific message, because it is corrupted or crafted in a way that triggers a bug in the processing code. In such a case what happens is that consumers will continuously fail to process this particular message. Because we have the counter of the delivery attempts, we can use that counter to detect messages that for some reason are not processable. So once the deliveries counter reaches a given large number that you chose, it is probably wiser to put such messages in another stream and send a notification to the system administrator. This is basically the way that Streams implements the <em>dead letter</em> concept.</p>
+<h2 id="streams-observability">Streams observability</h2>
+<p>Messaging systems that lack observability are very hard to work with. Not knowing who is consuming messages, what messages are pending, the set of consumer groups active in a given stream, makes everything opaque. For this reason, Streams and consumer groups have different ways to observe what is happening. We already covered <code>XPENDING</code>, which allows us to inspect the list of messages that are under processing at a given moment, together with their idle time and number of deliveries.</p>
+<p>However we may want to do more than that, and the <code>XINFO</code> command is an observability interface that can be used with sub-commands in order to get information about streams or consumer groups.</p>
+<p>This command uses subcommands in order to show different information about the status of the stream and its consumer groups. For instance <strong>XINFO STREAM <key></strong> reports information about the stream itself.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XINFO STREAM race:italy</span></span>
+<span class="giallo-l"><span> 1) &quot;length&quot;</span></span>
+<span class="giallo-l"><span> 2) (integer) 5</span></span>
+<span class="giallo-l"><span> 3) &quot;radix-tree-keys&quot;</span></span>
+<span class="giallo-l"><span> 4) (integer) 1</span></span>
+<span class="giallo-l"><span> 5) &quot;radix-tree-nodes&quot;</span></span>
+<span class="giallo-l"><span> 6) (integer) 2</span></span>
+<span class="giallo-l"><span> 7) &quot;last-generated-id&quot;</span></span>
+<span class="giallo-l"><span> 8) &quot;1692632678249-0&quot;</span></span>
+<span class="giallo-l"><span> 9) &quot;groups&quot;</span></span>
+<span class="giallo-l"><span>10) (integer) 1</span></span>
+<span class="giallo-l"><span>11) &quot;first-entry&quot;</span></span>
+<span class="giallo-l"><span>12) 1) &quot;1692632639151-0&quot;</span></span>
+<span class="giallo-l"><span>    2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>       2) &quot;Castilla&quot;</span></span>
+<span class="giallo-l"><span>13) &quot;last-entry&quot;</span></span>
+<span class="giallo-l"><span>14) 1) &quot;1692632678249-0&quot;</span></span>
+<span class="giallo-l"><span>    2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>       2) &quot;Norem&quot;</span></span></code></pre>
+<p>The output shows information about how the stream is encoded internally, and also shows the first and last message in the stream. Another piece of information available is the number of consumer groups associated with this stream. We can dig further asking for more information about the consumer groups.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XINFO GROUPS race:italy</span></span>
+<span class="giallo-l"><span>1) 1) &quot;name&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;italy_riders&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;consumers&quot;</span></span>
+<span class="giallo-l"><span>   4) (integer) 3</span></span>
+<span class="giallo-l"><span>   5) &quot;pending&quot;</span></span>
+<span class="giallo-l"><span>   6) (integer) 2</span></span>
+<span class="giallo-l"><span>   7) &quot;last-delivered-id&quot;</span></span>
+<span class="giallo-l"><span>   8) &quot;1692632662819-0&quot;</span></span></code></pre>
+<p>As you can see in this and in the previous output, the <code>XINFO</code> command outputs a sequence of field-value items. Because it is an observability command this allows the human user to immediately understand what information is reported, and allows the command to report more information in the future by adding more fields without breaking compatibility with older clients. Other commands that must be more bandwidth efficient, like <code>XPENDING</code>, just report the information without the field names.</p>
+<p>The output of the example above, where the <strong>GROUPS</strong> subcommand is used, should be clear observing the field names. We can check in more detail the state of a specific consumer group by checking the consumers that are registered in the group.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XINFO CONSUMERS race:italy italy_riders</span></span>
+<span class="giallo-l"><span>1) 1) &quot;name&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;Alice&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;pending&quot;</span></span>
+<span class="giallo-l"><span>   4) (integer) 1</span></span>
+<span class="giallo-l"><span>   5) &quot;idle&quot;</span></span>
+<span class="giallo-l"><span>   6) (integer) 177546</span></span>
+<span class="giallo-l"><span>2) 1) &quot;name&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;Bob&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;pending&quot;</span></span>
+<span class="giallo-l"><span>   4) (integer) 0</span></span>
+<span class="giallo-l"><span>   5) &quot;idle&quot;</span></span>
+<span class="giallo-l"><span>   6) (integer) 424686</span></span>
+<span class="giallo-l"><span>3) 1) &quot;name&quot;</span></span>
+<span class="giallo-l"><span>   2) &quot;Lora&quot;</span></span>
+<span class="giallo-l"><span>   3) &quot;pending&quot;</span></span>
+<span class="giallo-l"><span>   4) (integer) 1</span></span>
+<span class="giallo-l"><span>   5) &quot;idle&quot;</span></span>
+<span class="giallo-l"><span>   6) (integer) 72241</span></span></code></pre>
+<p>In case you do not remember the syntax of the command, just ask the command itself for help:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; XINFO HELP</span></span>
+<span class="giallo-l"><span>1) XINFO &lt;subcommand&gt; [&lt;arg&gt; [value] [opt] ...]. Subcommands are:</span></span>
+<span class="giallo-l"><span>2) CONSUMERS &lt;key&gt; &lt;groupname&gt;</span></span>
+<span class="giallo-l"><span>3)     Show consumers of &lt;groupname&gt;.</span></span>
+<span class="giallo-l"><span>4) GROUPS &lt;key&gt;</span></span>
+<span class="giallo-l"><span>5)     Show the stream consumer groups.</span></span>
+<span class="giallo-l"><span>6) STREAM &lt;key&gt; [FULL [COUNT &lt;count&gt;]</span></span>
+<span class="giallo-l"><span>7)     Show information about the stream.</span></span>
+<span class="giallo-l"><span>8) HELP</span></span>
+<span class="giallo-l"><span>9)     Prints this help.</span></span></code></pre><h2 id="differences-with-kafka-tm-partitions">Differences with Kafka (TM) partitions</h2>
+<p>Consumer groups in Streams may resemble in some way Kafka (TM) partitioning-based consumer groups, however note that Streams are, in practical terms, very different. The partitions are only <em>logical</em> and the messages are just put into a single Valkey key, so the way the different clients are served is based on who is ready to process new messages, and not from which partition clients are reading. For instance, if the consumer C3 at some point fails permanently, Valkey will continue to serve C1 and C2 all the new messages arriving, as if now there are only two <em>logical</em> partitions.</p>
+<p>Similarly, if a given consumer is much faster at processing messages than the other consumers, this consumer will receive proportionally more messages in the same unit of time. This is possible since Valkey tracks all the unacknowledged messages explicitly, and remembers who received which message and the ID of the first message never delivered to any consumer.</p>
+<p>However, this also means that in Valkey if you really want to partition messages in the same stream into multiple Valkey instances, you have to use multiple keys and some sharding system such as Valkey Cluster or some other application-specific sharding system. A single Stream is not automatically partitioned to multiple instances.</p>
+<p>We could say that schematically the following is true:</p>
+<ul>
+<li>If you use 1 stream -&gt; 1 consumer, you are processing messages in order.</li>
+<li>If you use N streams with N consumers, so that only a given consumer hits a subset of the N streams, you can scale the above model of 1 stream -&gt; 1 consumer.</li>
+<li>If you use 1 stream -&gt; N consumers, you are load balancing to N consumers, however in that case, messages about the same logical item may be consumed out of order, because a given consumer may process message 3 faster than another consumer is processing message 4.</li>
+</ul>
+<p>So basically Kafka partitions are more similar to using N different Valkey keys, while Valkey consumer groups are a server-side load balancing system of messages from a given stream to N different consumers.</p>
+<h2 id="capped-streams">Capped Streams</h2>
+<p>Many applications do not want to collect data into a stream forever. Sometimes it is useful to have at maximum a given number of items inside a stream, other times once a given size is reached, it is useful to move data from Valkey to a storage which is not in memory and not as fast but suited to store the history for, potentially, decades to come. Streams have some support for this. One is the <strong>MAXLEN</strong> option of the <code>XADD</code> command. This option is very simple to use:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy MAXLEN 2 * rider Jones</span></span>
+<span class="giallo-l"><span>&quot;1692633189161-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy MAXLEN 2 * rider Wood</span></span>
+<span class="giallo-l"><span>&quot;1692633198206-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XADD race:italy MAXLEN 2 * rider Henshaw</span></span>
+<span class="giallo-l"><span>&quot;1692633208557-0&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XLEN race:italy</span></span>
+<span class="giallo-l"><span>(integer) 2</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:italy - +</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692633198206-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Wood&quot;</span></span>
+<span class="giallo-l"><span>2) 1) &quot;1692633208557-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Henshaw&quot;</span></span></code></pre>
+<p>Using <strong>MAXLEN</strong> the old entries are automatically evicted when the specified length is reached, so that the stream is left at a constant size. There is currently no option to tell the stream to just retain items that are not older than a given period, because such command, in order to run consistently, would potentially block for a long time in order to evict items. Imagine for example what happens if there is an insertion spike, then a long pause, and another insertion, all with the same maximum time. The stream would block to evict the data that became too old during the pause. So it is up to the user to do some planning and understand what is the maximum stream length desired. Moreover, while the length of the stream is proportional to the memory used, trimming by time is less simple to control and anticipate: it depends on the insertion rate which often changes over time (and when it does not change, then to just trim by size is trivial).</p>
+<p>However trimming with <strong>MAXLEN</strong> can be expensive: streams are represented by macro nodes into a radix tree, in order to be very memory efficient. Altering the single macro node, consisting of a few tens of elements, is not optimal. So it's possible to use the command in the following special form:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>XADD race:italy MAXLEN ~ 1000 * ... entry fields here ...</span></span></code></pre>
+<p>The <code>~</code> argument between the <strong>MAXLEN</strong> option and the actual count means, I don't really need this to be exactly 1000 items. It can be 1000 or 1010 or 1030, just make sure to save at least 1000 items. With this argument, the trimming is performed only when we can remove a whole node. This makes it much more efficient, and it is usually what you want. You'll note here that the client libraries have various implementations of this. For example, the Python client defaults to approximate and has to be explicitly set to a true length.</p>
+<p>There is also the <code>XTRIM</code> command, which performs something very similar to what the <strong>MAXLEN</strong> option does above, except that it can be run by itself:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XTRIM race:italy MAXLEN 10</span></span>
+<span class="giallo-l"><span>(integer) 0</span></span></code></pre>
+<p>Or, as for the <code>XADD</code> option:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XTRIM race:italy MAXLEN ~ 10</span></span>
+<span class="giallo-l"><span>(integer) 0</span></span></code></pre>
+<p>However, <code>XTRIM</code> is designed to accept different trimming strategies. Another trimming strategy is <strong>MINID</strong>, that evicts entries with IDs lower than the one specified.</p>
+<p>As <code>XTRIM</code> is an explicit command, the user is expected to know about the possible shortcomings of different trimming strategies.</p>
+<p>Another useful eviction strategy that may be added to <code>XTRIM</code> in the future, is to remove by a range of IDs to ease use of <code>XRANGE</code> and <code>XTRIM</code> to move data from Valkey to other storage systems if needed.</p>
+<h2 id="special-ids-in-the-streams-api">Special IDs in the streams API</h2>
+<p>You may have noticed that there are several special IDs that can be used in the Valkey API. Here is a short recap, so that they can make more sense in the future.</p>
+<p>The first two special IDs are <code>-</code> and <code>+</code>, and are used in range queries with the <code>XRANGE</code> command. Those two IDs respectively mean the smallest ID possible (that is basically <code>0-1</code>) and the greatest ID possible (that is <code>18446744073709551615-18446744073709551615</code>). As you can see it is a lot cleaner to write <code>-</code> and <code>+</code> instead of those numbers.</p>
+<p>Then there are APIs where we want to say, the ID of the item with the greatest ID inside the stream. This is what <code>$</code> means. So for instance if I want only new entries with <code>XREADGROUP</code> I use this ID to signify I already have all the existing entries, but not the new ones that will be inserted in the future. Similarly when I create or set the ID of a consumer group, I can set the last delivered item to <code>$</code> in order to just deliver new entries to the consumers in the group.</p>
+<p>As you can see <code>$</code> does not mean <code>+</code>, they are two different things, as <code>+</code> is the greatest ID possible in every possible stream, while <code>$</code> is the greatest ID in a given stream containing given entries. Moreover APIs will usually only understand <code>+</code> or <code>$</code>, yet it was useful to avoid loading a given symbol with multiple meanings.</p>
+<p>Another special ID is <code>&gt;</code>, that is a special meaning only related to consumer groups and only when the <code>XREADGROUP</code> command is used. This special ID means that we want only entries that were never delivered to other consumers so far. So basically the <code>&gt;</code> ID is the <em>last delivered ID</em> of a consumer group.</p>
+<p>Finally the special ID <code>*</code>, that can be used only with the <code>XADD</code> command, means to auto select an ID for us for the new entry.</p>
+<p>So we have <code>-</code>, <code>+</code>, <code>$</code>, <code>&gt;</code> and <code>*</code>, and all have a different meaning, and most of the time, can be used in different contexts.</p>
+<h2 id="persistence-replication-and-message-safety">Persistence, replication and message safety</h2>
+<p>A Stream, like any other Valkey data structure, is asynchronously replicated to replicas and persisted into AOF and RDB files. However what may not be so obvious is that also the consumer groups full state is propagated to AOF, RDB and replicas, so if a message is pending in the primary, also the replica will have the same information. Similarly, after a restart, the AOF will restore the consumer groups' state.</p>
+<p>However note that Streams and consumer groups are persisted and replicated using the Valkey default replication, so:</p>
+<ul>
+<li>AOF must be used with a strong fsync policy if persistence of messages is important in your application.</li>
+<li>By default the asynchronous replication will not guarantee that <code>XADD</code> commands or consumer groups state changes are replicated: after a failover something can be missing depending on the ability of replicas to receive the data from the primary.</li>
+<li>The <code>WAIT</code> command may be used in order to force the propagation of the changes to a set of replicas. However note that while this makes it very unlikely that data is lost, the Valkey failover process as operated by Sentinel or Valkey Cluster performs only a <em>best effort</em> check to failover to the replica which is the most updated, and under certain specific failure conditions may promote a replica that lacks some data.</li>
+</ul>
+<p>So when designing an application using Streams and consumer groups, make sure to understand the semantical properties your application should have during failures, and configure things accordingly, evaluating whether it is safe enough for your use case.</p>
+<h2 id="removing-single-items-from-a-stream">Removing single items from a stream</h2>
+<p>Streams also have a special command for removing items from the middle of a stream, just by ID. Normally for an append only data structure this may look like an odd feature, but it is actually useful for applications involving, for instance, privacy regulations. The command is called <code>XDEL</code> and receives the name of the stream followed by the IDs to delete:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:italy - + COUNT 2</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692633198206-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Wood&quot;</span></span>
+<span class="giallo-l"><span>2) 1) &quot;1692633208557-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Henshaw&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XDEL race:italy 1692633208557-0</span></span>
+<span class="giallo-l"><span>(integer) 1</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; XRANGE race:italy - + COUNT 2</span></span>
+<span class="giallo-l"><span>1) 1) &quot;1692633198206-0&quot;</span></span>
+<span class="giallo-l"><span>   2) 1) &quot;rider&quot;</span></span>
+<span class="giallo-l"><span>      2) &quot;Wood&quot;</span></span></code></pre>
+<p>However in the current implementation, memory is not really reclaimed until a macro node is completely empty, so you should not abuse this feature.</p>
+<h2 id="zero-length-streams">Zero length streams</h2>
+<p>A difference between streams and other Valkey data structures is that when the other data structures no longer have any elements, as a side effect of calling commands that remove elements, the key itself will be removed. So for instance, a sorted set will be completely removed when a call to <code>ZREM</code> will remove the last element in the sorted set. Streams, on the other hand, are allowed to stay at zero elements, both as a result of using a <strong>MAXLEN</strong> option with a count of zero (<code>XADD</code> and <code>XTRIM</code> commands), or because <code>XDEL</code> was called.</p>
+<p>The reason why such an asymmetry exists is because Streams may have associated consumer groups, and we do not want to lose the state that the consumer groups defined just because there are no longer any items in the stream. Currently the stream is not deleted even when it has no associated consumer groups.</p>
+<h2 id="total-latency-of-consuming-a-message">Total latency of consuming a message</h2>
+<p>Non blocking stream commands like <code>XRANGE</code> and <code>XREAD</code> or <code>XREADGROUP</code> without the BLOCK option are served synchronously like any other Valkey command, so to discuss latency of such commands is meaningless: it is more interesting to check the time complexity of the commands in the Valkey documentation. It should be enough to say that stream commands are at least as fast as sorted set commands when extracting ranges, and that <code>XADD</code> is very fast and can easily insert from half a million to one million items per second in an average machine if pipelining is used.</p>
+<p>However latency becomes an interesting parameter if we want to understand the delay of processing a message, in the context of blocking consumers in a consumer group, from the moment the message is produced via <code>XADD</code>, to the moment the message is obtained by the consumer because <code>XREADGROUP</code> returned with the message.</p>
+<h2 id="how-serving-blocked-consumers-works">How serving blocked consumers works</h2>
+<p>Before providing the results of performed tests, it is interesting to understand what model Valkey uses in order to route stream messages (and in general actually how any blocking operation waiting for data is managed).</p>
+<ul>
+<li>The blocked client is referenced in a hash table that maps keys for which there is at least one blocking consumer, to a list of consumers that are waiting for such key. This way, given a key that received data, we can resolve all the clients that are waiting for such data.</li>
+<li>When a write happens, in this case when the <code>XADD</code> command is called, it calls the <code>signalKeyAsReady()</code> function. This function will put the key into a list of keys that need to be processed, because such keys may have new data for blocked consumers. Note that such <em>ready keys</em> will be processed later, so in the course of the same event loop cycle, it is possible that the key will receive other writes.</li>
+<li>Finally, before returning into the event loop, the <em>ready keys</em> are finally processed. For each key the list of clients waiting for data is scanned, and if applicable, such clients will receive the new data that arrived. In the case of streams the data is the messages in the applicable range requested by the consumer.</li>
+</ul>
+<p>As you can see, basically, before returning to the event loop both the client calling <code>XADD</code> and the clients blocked to consume messages, will have their reply in the output buffers, so the caller of <code>XADD</code> should receive the reply from Valkey at about the same time the consumers will receive the new messages.</p>
+<p>This model is <em>push-based</em>, since adding data to the consumers buffers will be performed directly by the action of calling <code>XADD</code>, so the latency tends to be quite predictable.</p>
+<h2 id="latency-tests-results">Latency tests results</h2>
+<p>In order to check these latency characteristics a test was performed using multiple instances of Ruby programs pushing messages having as an additional field the computer millisecond time, and Ruby programs reading the messages from the consumer group and processing them. The message processing step consisted of comparing the current computer time with the message timestamp, in order to understand the total latency.</p>
+<p>Results obtained:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>Processed between 0 and 1 ms -&gt; 74.11%</span></span>
+<span class="giallo-l"><span>Processed between 1 and 2 ms -&gt; 25.80%</span></span>
+<span class="giallo-l"><span>Processed between 2 and 3 ms -&gt; 0.06%</span></span>
+<span class="giallo-l"><span>Processed between 3 and 4 ms -&gt; 0.01%</span></span>
+<span class="giallo-l"><span>Processed between 4 and 5 ms -&gt; 0.02%</span></span></code></pre>
+<p>So 99.9% of requests have a latency &lt;= 2 milliseconds, with the outliers that remain still very close to the average.</p>
+<p>Adding a few million unacknowledged messages to the stream does not change the gist of the benchmark, with most queries still processed with very short latency.</p>
+<p>A few remarks:</p>
+<ul>
+<li>Here we processed up to 10k messages per iteration, this means that the <code>COUNT</code> parameter of <code>XREADGROUP</code> was set to 10000. This adds a lot of latency but is needed in order to allow the slow consumers to be able to keep with the message flow. So you can expect a real world latency that is a lot smaller.</li>
+<li>The system used for this benchmark is very slow compared to today's standards.</li>
+</ul>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/streams-intro.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

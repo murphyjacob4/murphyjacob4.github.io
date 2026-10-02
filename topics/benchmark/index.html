@@ -1,0 +1,666 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Benchmarking tool</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Benchmarking tool">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Benchmarking tool</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Benchmarking tool
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <h2 id="usage">Usage</h2>
+<p><strong><code>valkey-benchmark</code></strong> [ <em>OPTIONS</em> ] [<strong><code>--</code></strong>] [ <em>COMMAND</em> <em>ARGS</em>... ]</p>
+<h2 id="description">Description</h2>
+<p>Simulates sending commands using multiple clients. The utility provides a
+default set of tests. You can run a subset of the tests using the <code>-t</code> option or
+supply one or more custom commands on the command line.</p>
+<p>To supply multiple commands on the command line, separate them with <code>;</code> as in
+<code>SET foo bar ';' GET foo</code>. (Quote <code>';'</code> to protect it from expansion by the shell.)
+You can prefix a command in the sequence with a number N to repeat the command N times.
+In command arguments, the following placeholders are substituted:</p>
+<p><code>__rand_int__</code>
+: Replaced with a zero-padded random integer in the range selected using the -r option.</p>
+<p><code>__data__</code>
+: Replaced with data of the size specified by the -d option.</p>
+<p><code>{tag}</code>
+: Replaced with a tag that routes the command to the right cluster node.
+Include this in key names when running in cluster mode.</p>
+<h2 id="options">Options</h2>
+<p><strong><code>-h</code></strong> <em>hostname</em>
+: Server hostname (default 127.0.0.1)</p>
+<p><strong><code>-p</code></strong> <em>port</em>
+: Server port (default 6379)</p>
+<p><strong><code>-s</code></strong> <em>socket</em>
+: Server socket (overrides host and port)</p>
+<p><strong><code>-a</code></strong> <em>password</em>
+: Password for Valkey Auth</p>
+<p><strong><code>--user</code></strong> <em>username</em>
+: Used to send ACL style 'AUTH username pass'. Needs -a.</p>
+<p><strong><code>-u</code></strong> <em>uri</em>
+: Server URI on format <code>valkey://user:password@host:port/dbnum</code>.
+User, password and dbnum are optional. For authentication
+without a username, use username 'default'. For TLS, use
+the scheme 'valkeys'.</p>
+<p><strong><code>-c</code></strong> <em>clients</em>
+: Number of parallel connections (default 50).
+Note: If <code>--cluster</code> is used then number of clients has to be
+the same or higher than the number of nodes.</p>
+<p><strong><code>-n</code></strong> <em>requests</em>
+: Total number of requests (default 100000)</p>
+<p><strong><code>-d</code></strong> <em>size</em>
+: Data size of SET/GET value in bytes (default 3)</p>
+<p><strong><code>--dbnum</code></strong> <em>db</em>
+: SELECT the specified db number (default 0)</p>
+<p><strong><code>-3</code></strong>
+: Start session in RESP3 protocol mode.</p>
+<p><strong><code>--threads</code></strong> <em>num</em>
+: Enable multi-thread mode.</p>
+<p><strong><code>--cluster</code></strong>
+: Enable cluster mode.
+If the command is supplied on the command line in cluster
+mode, the key must contain "{tag}". Otherwise, the
+command will not be sent to the right cluster node.</p>
+<p><strong><code>--rfr</code></strong> <em>mode</em>
+: Enable read from replicas in cluster mode.
+This command must be used with the <code>--cluster</code> option.
+There are three modes for reading from replicas:</p>
+<p><strong>no</strong> - sends read requests to primaries only (default).</p>
+<p><strong>yes</strong> - sends read requests to replicas only.</p>
+<p><strong>all</strong> - sends read requests to all nodes.</p>
+<p>Since write commands will be rejected by replicas,
+it is recommended to enable read from replicas only for read command tests.</p>
+<p><strong><code>--enable-tracking</code></strong>
+: Send CLIENT TRACKING ON before starting benchmark.</p>
+<p><strong><code>-k</code></strong> <em>boolean</em>
+: 1=keep alive 0=reconnect (default 1)</p>
+<p><strong><code>-r</code></strong> <em>keyspacelen</em>
+: Use random keys for SET/GET/INCR, random values for SADD,
+random members and scores for ZADD.
+Using this option the benchmark will expand the string
+<code>__rand_int__</code> inside an argument with a 12 digits number in
+the specified range from 0 to keyspacelen - 1. The
+substitution changes every time a command is executed.
+Default tests use this to hit random keys in the specified
+range.
+Note: If <code>-r</code> is omitted, all commands in a benchmark will
+use the same key.</p>
+<p><strong><code>-P</code></strong> <em>numreq</em>
+: Pipeline <em>numreq</em> requests. Default 1 (no pipeline).</p>
+<p><strong><code>-q</code></strong>
+: Quiet. Just show query/sec values</p>
+<p><strong><code>--precision</code></strong>
+: Number of decimal places to display in latency output (default 0)</p>
+<p><strong><code>--csv</code></strong>
+: Output in CSV format</p>
+<p><strong><code>-l</code></strong>
+: Loop. Run the tests forever</p>
+<p><strong><code>-t</code></strong> <em>tests</em>
+: Only run the comma separated list of tests. The test
+names are the same as the ones produced as output.
+The <code>-t</code> option is ignored if a specific command is supplied
+on the command line.</p>
+<p><strong><code>-I</code></strong>
+: Idle mode. Just open N idle connections and wait.</p>
+<p><strong><code>-x</code></strong>
+: Read last argument from STDIN.</p>
+<p><strong><code>--seed</code></strong> <em>num</em>
+: Set the seed for random number generator. Default seed is based on time.</p>
+<p><strong><code>--rps</code></strong> <em>requests</em>
+: Limit the total number of requests per second. Default 0 (no limit).</p>
+<p><strong><code>--tls</code></strong>
+: Establish a secure TLS connection.</p>
+<p><strong><code>--sni</code></strong> <em>host</em>
+: Server name indication for TLS.</p>
+<p><strong><code>--cacert</code></strong> <em>file</em>
+: CA Certificate file to verify with.</p>
+<p><strong><code>--cacertdir</code></strong> <em>dir</em>
+: Directory where trusted CA certificates are stored.
+If neither cacert nor cacertdir are specified, the default
+system-wide trusted root certs configuration will apply.</p>
+<p><strong><code>--insecure</code></strong>
+: Allow insecure TLS connection by skipping cert validation.</p>
+<p><strong><code>--cert</code></strong> <em>file</em>
+: Client certificate to authenticate with.</p>
+<p><strong><code>--key</code></strong> <em>file</em>
+: Private key file to authenticate with.</p>
+<p><strong><code>--tls-ciphers</code></strong> <em>list</em>
+: Sets the list of preferred ciphers (TLSv1.2 and below)
+in order of preference from highest to lowest separated by colon (":").
+See the <strong>ciphers</strong>(1ssl) manpage for more information about the syntax of this string.</p>
+<p><strong><code>--tls-ciphersuites</code></strong> <em>list</em>
+: Sets the list of preferred ciphersuites (TLSv1.3)
+in order of preference from highest to lowest separated by colon (":").
+See the <strong>ciphers</strong>(1ssl) manpage for more information about the syntax of this string,
+and specifically for TLSv1.3 ciphersuites.</p>
+<p><strong><code>--rdma</code></strong>
+: Establish an RDMA connection.</p>
+<p><strong><code>--mptcp</code></strong>
+: Establish an MPTCP connection.</p>
+<p><strong><code>--help</code></strong>
+: Output help and exit.</p>
+<p><strong><code>--version</code></strong>
+: Output version and exit.</p>
+<h2 id="examples">Examples</h2>
+<p>Run the benchmark with the default configuration against 127.0.0.1:6379. You
+need to have a running Valkey instance before launching the benchmark:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark</span></span></code></pre>
+<p>Run a benchmark with 20 parallel clients, pipelining 10 commands at a time,
+using 2 threads and less verbose output:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -c 20 -P 10 --threads 2 -q</span></span></code></pre>
+<p>Use 20 parallel clients, for a total of 100k requests, against 192.168.1.1:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -h 192.168.1.1 -p 6379 -n 100000 -c 20</span></span></code></pre>
+<p>Fill 127.0.0.1:6379 with about 1 million keys only using the SET test:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -t set -n 1000000 -r 100000000</span></span></code></pre>
+<p>Benchmark 127.0.0.1:6379 for a few commands producing CSV output:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -t ping,set,get -n 100000 --csv</span></span></code></pre>
+<p>Benchmark a specific command line:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -r 10000 -n 10000 eval &#39;return redis.call(&quot;ping&quot;)&#39; 0</span></span></code></pre>
+<p>Fill a list with 10000 random elements:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -r 10000 -n 10000 lpush mylist __rand_int__</span></span></code></pre>
+<p>Benchmark a specific transaction:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -- multi &#39;;&#39; set key:__rand_int__ __data__ &#39;;&#39; \</span></span>
+<span class="giallo-l"><span>                      incr counter &#39;;&#39; exec\n\n&quot;);</span></span></code></pre><h3 id="running-only-a-subset-of-the-tests">Running only a subset of the tests</h3>
+<p>You don't need to run all the default tests every time you execute <code>valkey-benchmark</code>.
+For example, to select only a subset of tests, use the <code>-t</code> option
+as in the following example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -t set,lpush -n 100000 -q</span></span>
+<span class="giallo-l"><span>SET: 74239.05 requests per second</span></span>
+<span class="giallo-l"><span>LPUSH: 79239.30 requests per second</span></span></code></pre>
+<p>This example runs the tests for the <code>SET</code> and <code>LPUSH</code> commands and uses quiet mode (see the <code>-q</code> switch).</p>
+<p>You can even benchmark a specific command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -n 100000 -q script load &quot;server.call(&#39;set&#39;,&#39;foo&#39;,&#39;bar&#39;)&quot;</span></span>
+<span class="giallo-l"><span>script load server.call(&#39;set&#39;,&#39;foo&#39;,&#39;bar&#39;): 69881.20 requests per second</span></span></code></pre><h3 id="selecting-the-size-of-the-key-space">Selecting the size of the key space</h3>
+<p>By default, the benchmark runs against a single key. In Valkey the difference
+between such a synthetic benchmark and a real one is not huge since it is an
+in-memory system, however it is possible to stress cache misses and in general
+to simulate a more real-world work load by using a large key space.</p>
+<p>This is obtained by using the <code>-r</code> switch. For instance if I want to run
+one million SET operations, using a random key for every operation out of
+100k possible keys, I'll use the following command line:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-cli flushall</span></span>
+<span class="giallo-l"><span>OK</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>$ valkey-benchmark -t set -r 100000 -n 1000000</span></span>
+<span class="giallo-l"><span>====== SET ======</span></span>
+<span class="giallo-l"><span>  1000000 requests completed in 13.86 seconds</span></span>
+<span class="giallo-l"><span>  50 parallel clients</span></span>
+<span class="giallo-l"><span>  3 bytes payload</span></span>
+<span class="giallo-l"><span>  keep alive: 1</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>99.76% `&lt;=` 1 milliseconds</span></span>
+<span class="giallo-l"><span>99.98% `&lt;=` 2 milliseconds</span></span>
+<span class="giallo-l"><span>100.00% `&lt;=` 3 milliseconds</span></span>
+<span class="giallo-l"><span>100.00% `&lt;=` 3 milliseconds</span></span>
+<span class="giallo-l"><span>72144.87 requests per second</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>$ valkey-cli dbsize</span></span>
+<span class="giallo-l"><span>(integer) 99993</span></span></code></pre><h3 id="using-pipelining">Using pipelining</h3>
+<p>By default every client (the benchmark simulates 50 clients if not otherwise
+specified with <code>-c</code>) sends the next command only when the reply of the previous
+command is received, this means that the server will likely need a read call
+in order to read each command from every client. Also RTT is paid as well.</p>
+<p>Valkey supports <a href="/topics/pipelining">pipelining</a>, so it is possible to send
+multiple commands at once, a feature often exploited by real world applications.
+Valkey pipelining is able to dramatically improve the number of operations per
+second a server is able do deliver.</p>
+<p>Consider this example of running the benchmark using a
+pipelining of 16 commands:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-benchmark -n 1000000 -t set,get -P 16 -q</span></span>
+<span class="giallo-l"><span>SET: 403063.28 requests per second</span></span>
+<span class="giallo-l"><span>GET: 508388.41 requests per second</span></span></code></pre>
+<p>Using pipelining results in a significant increase in performance.</p>
+<h2 id="notes">Notes</h2>
+<h3 id="pitfalls-and-misconceptions">Pitfalls and misconceptions</h3>
+<p>The first point is obvious: the golden rule of a useful benchmark is to
+only compare apples and apples. You can compare different versions of Valkey on the same workload or the same version of Valkey, but with
+different options. If you plan to compare Valkey to something else, then it is
+important to evaluate the functional and technical differences, and take them
+in account.</p>
+<ul>
+<li>Valkey is a server: all commands involve network or IPC round trips. It is meaningless to compare it to embedded data stores, because the cost of most operations is primarily in network/protocol management.</li>
+<li>Valkey commands return an acknowledgment for all usual commands. Some other data stores do not. Comparing Valkey to stores involving one-way queries is only mildly useful.</li>
+<li>Naively iterating on synchronous Valkey commands does not benchmark Valkey itself, but rather measure your network (or IPC) latency and the client library intrinsic latency. To really test Valkey, you need multiple connections (like valkey-benchmark) and/or to use pipelining to aggregate several commands and/or multiple threads or processes.</li>
+<li>Valkey is an in-memory data store with some optional persistence options. If you plan to compare it to transactional servers (MySQL, PostgreSQL, etc ...), then you should consider activating AOF and decide on a suitable fsync policy.</li>
+<li>Valkey primarily operates as a single-threaded server from the POV of commands execution. While the server can employ threads for I/O operations and command parsing, the core command execution remains sequential. For CPU-intensive workloads requiring multiple cores, users should consider running multiple Valkey instances in parallel. It is not really fair to compare one single Valkey instance to a multi-threaded data store.</li>
+</ul>
+<p>The <code>valkey-benchmark</code> program is a quick and useful way to get some figures and
+evaluate the performance of a Valkey instance on a given hardware. However,
+by default, it does not represent the maximum throughput a Valkey instance can
+sustain. Actually, by using pipelining and a fast client (libvalkey), it is fairly
+easy to write a program generating more throughput than valkey-benchmark. The
+default behavior of valkey-benchmark is to achieve throughput by exploiting
+concurrency only (i.e. it creates several connections to the server).
+It does not use pipelining or any parallelism at all (one pending query per
+connection at most, and no multi-threading), if not explicitly enabled via
+the <code>-P</code> parameter. So in some way using <code>valkey-benchmark</code> and, triggering, for
+example, a <code>BGSAVE</code> operation in the background at the same time, will provide
+the user with numbers more near to the <em>worst case</em> than to the best case.</p>
+<p>To run a benchmark using pipelining mode (and achieve higher throughput),
+you need to explicitly use the -P option. Please note that it is still a
+realistic behavior since a lot of Valkey based applications actively use
+pipelining to improve performance. However you should use a pipeline size that
+is more or less the average pipeline length you'll be able to use in your
+application in order to get realistic numbers.</p>
+<p>The benchmark should apply the same operations, and work in the same way
+with the multiple data stores you want to compare. It is absolutely pointless to
+compare the result of valkey-benchmark to the result of another benchmark
+program and extrapolate.</p>
+<p>For instance, Valkey and memcached in single-threaded mode can be compared on
+GET/SET operations. Both are in-memory data stores, working mostly in the same
+way at the protocol level. Provided their respective benchmark application is
+aggregating queries in the same way (pipelining) and use a similar number of
+connections, the comparison is actually meaningful.</p>
+<p>When you're benchmarking a high-performance, in-memory database like Valkey,
+it may be difficult to saturate
+the server. Sometimes, the performance bottleneck is on the client side,
+and not the server-side. In that case, the client (i.e., the benchmarking program itself)
+must be fixed, or perhaps scaled out, to reach the maximum throughput.</p>
+<h3 id="factors-impacting-valkey-performance">Factors impacting Valkey performance</h3>
+<p>There are multiple factors having direct consequences on Valkey performance.
+We mention them here, since they can alter the result of any benchmarks.
+Please note however, that a typical Valkey instance running on a low end,
+untuned box usually provides good enough performance for most applications.</p>
+<ul>
+<li>
+<p>Network bandwidth and latency usually have a direct impact on the performance.
+It is a good practice to use the ping program to quickly check the latency
+between the client and server hosts is normal before launching the benchmark.
+Regarding the bandwidth, it is generally useful to estimate
+the throughput in Gbit/s and compare it to the theoretical bandwidth
+of the network. For instance a benchmark setting 4 KB strings
+in Valkey at 100000 q/s, would actually consume 3.2 Gbit/s of bandwidth
+and probably fit within a 10 Gbit/s link, but not a 1 Gbit/s one. In many real
+world scenarios, Valkey throughput is limited by the network well before being
+limited by the CPU. To consolidate several high-throughput Valkey instances
+on a single server, it worth considering putting a 10 Gbit/s NIC
+or multiple 1 Gbit/s NICs with TCP/IP bonding.</p>
+</li>
+<li>
+<p>CPU is another important factor.</p>
+</li>
+<li>
+<p>Speed of RAM and memory bandwidth seem less critical for global performance
+especially for small objects. For large objects (&gt;10 KB), it may become
+noticeable though. Usually, it is not really cost-effective to buy expensive
+fast memory modules to optimize Valkey.</p>
+</li>
+<li>
+<p>Valkey runs slower on a VM compared to running without virtualization using
+the same hardware. If you have the chance to run Valkey on a physical machine
+this is preferred. However this does not mean that Valkey is slow in
+virtualized environments, the delivered performances are still very good
+and most of the serious performance issues you may incur in virtualized
+environments are due to over-provisioning, non-local disks with high latency,
+or old hypervisor software that have slow <code>fork</code> syscall implementation.</p>
+</li>
+<li>
+<p>When the server and client benchmark programs run on the same box, both
+the TCP/IP loopback and unix domain sockets can be used. Depending on the
+platform, unix domain sockets can achieve around 50% more throughput than
+the TCP/IP loopback (on Linux for instance). The default behavior of
+valkey-benchmark is to use the TCP/IP loopback.</p>
+</li>
+<li>
+<p>The performance benefit of unix domain sockets compared to TCP/IP loopback
+tends to decrease when pipelining is heavily used (i.e. long pipelines).</p>
+</li>
+<li>
+<p>When an ethernet network is used to access Valkey, aggregating commands using
+pipelining is especially efficient when the size of the data is kept under
+the ethernet packet size (about 1500 bytes). Actually, processing 10 bytes,
+100 bytes, or 1000 bytes queries almost result in the same throughput.
+See the graph below.</p>
+<p><img src="/topics/Data_size.png" alt="Data size impact" /></p>
+</li>
+<li>
+<p>On multi CPU sockets servers, Valkey performance becomes dependent on the
+NUMA configuration and process location. The most visible effect is that
+valkey-benchmark results seem non-deterministic because client and server
+processes are distributed randomly on the cores. To get deterministic results,
+it is required to use process placement tools (on Linux: taskset or numactl).
+The most efficient combination is always to put the client and server on two
+different cores of the same CPU to benefit from the L3 cache.
+Here are some results of 4 KB SET benchmark for 3 server CPUs (AMD Istanbul,
+Intel Nehalem EX, and Intel Westmere) with different relative placements.
+Please note this benchmark is not meant to compare CPU models between themselves
+(CPUs exact model and frequency are therefore not disclosed).</p>
+<p><img src="/topics/NUMA_chart.gif" alt="NUMA chart" /></p>
+</li>
+<li>
+<p>With high-end configurations, the number of client connections is also an
+important factor. Being based on epoll/kqueue, the Valkey event loop is quite
+scalable. Valkey has already been benchmarked at more than 60000 connections,
+and was still able to sustain 50000 q/s in these conditions. As a rule of thumb,
+an instance with 30000 connections can only process half the throughput
+achievable with 100 connections. Here is an example showing the throughput of
+a Valkey instance per number of connections:</p>
+<p><img src="/topics/Connections_chart.png" alt="connections chart" /></p>
+</li>
+<li>
+<p>With high-end configurations, it is possible to achieve higher throughput by
+tuning the NIC(s) configuration and associated interruptions. Best throughput
+is achieved by setting an affinity between Rx/Tx NIC queues and CPU cores,
+and activating RPS (Receive Packet Steering) support. More information in this
+<a rel="external" href="https://groups.google.com/forum/#!msg/redis-db/gUhc19gnYgc/BruTPCOroiMJ">thread</a>.
+Jumbo frames may also provide a performance boost when large objects are used.</p>
+</li>
+<li>
+<p>Depending on the platform, Valkey can be compiled against different memory
+allocators (libc malloc, jemalloc, tcmalloc), which may have different behaviors
+in term of raw speed, internal and external fragmentation.
+If you did not compile Valkey yourself, you can use the INFO command to check
+the <code>mem_allocator</code> field. Please note most benchmarks do not run long enough to
+generate significant external fragmentation (contrary to production Valkey
+instances).</p>
+</li>
+</ul>
+<h3 id="other-things-to-consider">Other things to consider</h3>
+<p>One important goal of any benchmark is to get reproducible results, so they
+can be compared to the results of other tests.</p>
+<ul>
+<li>A good practice is to try to run tests on isolated hardware as much as possible.
+If it is not possible, then the system must be monitored to check the benchmark
+is not impacted by some external activity.</li>
+<li>Some configurations (desktops and laptops for sure, some servers as well)
+have a variable CPU core frequency mechanism. The policy controlling this
+mechanism can be set at the OS level. Some CPU models are more aggressive than
+others at adapting the frequency of the CPU cores to the workload. To get
+reproducible results, it is better to set the highest possible fixed frequency
+for all the CPU cores involved in the benchmark.</li>
+<li>An important point is to size the system accordingly to the benchmark.
+The system must have enough RAM and must not swap. On Linux, do not forget
+to set the <code>overcommit_memory</code> parameter correctly. Please note 32 and 64 bit
+Valkey instances do not have the same memory footprint.</li>
+<li>If you plan to use RDB or AOF for your benchmark, please check there is no other
+I/O activity in the system. Avoid putting RDB or AOF files on NAS or NFS shares,
+or on any other devices impacting your network bandwidth and/or latency
+(for instance, EBS on Amazon EC2).</li>
+<li>Set Valkey logging level (loglevel parameter) to warning or notice. Avoid putting
+the generated log file on a remote filesystem.</li>
+<li>Avoid using monitoring tools which can alter the result of the benchmark. For
+instance using INFO at regular interval to gather statistics is probably fine,
+but MONITOR will impact the measured performance significantly.</li>
+<li>When running <code>valkey-benchmark</code> on the same machine as the <code>valkey-server</code>
+being tested, you may need to run the benchmark with at least two threads
+(<code>--threads 2</code>) to prevent the benchmarking tool itself from being the
+bottleneck, i.e. prevent that <code>valkey-benchmark</code> is running on 100% CPU while
+<code>valkey-server</code> is using less than 100% CPU.</li>
+</ul>
+<h3 id="other-valkey-benchmarking-tools">Other Valkey benchmarking tools</h3>
+<p>There are several third-party tools that can be used for benchmarking Valkey. Refer to each tool's
+documentation for more information about its goals and capabilities.</p>
+<ul>
+<li><a rel="external" href="https://github.com/redislabs/memtier_benchmark">memtier_benchmark</a> from <a rel="external" href="https://twitter.com/RedisInc">Redis Ltd.</a> is a NoSQL Valkey, Redis and Memcache traffic generation and benchmarking tool.</li>
+<li><a rel="external" href="https://github.com/twitter/rpc-perf">rpc-perf</a> from <a rel="external" href="https://twitter.com/twitter">Twitter</a> is a tool for benchmarking RPC services that supports Valkey and Memcache.</li>
+<li><a rel="external" href="https://github.com/brianfrankcooper/YCSB">YCSB</a> from <a rel="external" href="https://twitter.com/Yahoo">Yahoo @Yahoo</a> is a benchmarking framework with clients to many databases, including Valkey.</li>
+</ul>
+<h2 id="see-also">See also</h2>
+<p><a href="/topics/cli">valkey-cli</a>, <a href="/topics/server">valkey-server</a></p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/benchmark.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

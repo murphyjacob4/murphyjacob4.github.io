@@ -1,0 +1,476 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Scripting with Lua</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Scripting with Lua">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Scripting with Lua</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Scripting with Lua
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+<p><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review. 
+    In the future it may change substantially or be removed entirely.</p>
+<hr />
+
+    <p>Valkey lets users upload and execute Lua scripts on the server.
+Scripts can employ programmatic control structures and use most of the <a href="/commands/">commands</a> while executing to access the database.
+Because scripts execute in the server, reading and writing data from scripts is very efficient.</p>
+<p>Valkey guarantees the script's atomic execution.
+While executing the script, all server activities are blocked during its entire runtime.
+These semantics mean that all of the script's effects either have yet to happen or had already happened.</p>
+<p>Scripting offers several properties that can be valuable in many cases.
+These include:</p>
+<ul>
+<li>Providing locality by executing logic where data lives. Data locality reduces overall latency and saves networking resources.</li>
+<li>Blocking semantics that ensure the script's atomic execution.</li>
+<li>Enabling the composition of simple capabilities that are either missing from Valkey or are too niche to be a part of it.</li>
+</ul>
+<p>Lua lets you run part of your application logic inside Valkey.
+Such scripts can perform conditional updates across multiple keys, possibly combining several different data types atomically.</p>
+<p>Scripts are executed in Valkey by an embedded execution engine.
+Presently, Valkey supports a single scripting engine, the <a rel="external" href="https://www.lua.org/">Lua 5.1</a> interpreter.
+Please refer to the <a href="/topics/lua-api">Valkey Lua API Reference</a> page for complete documentation.</p>
+<p>Although the server executes them, Eval scripts are regarded as a part of the client-side application, which is why they're not named, versioned, or persisted.
+So all scripts may need to be reloaded by the application at any time if missing (after a server restart, fail-over to a replica, etc.).
+As of version 7.0, <a href="/topics/functions-intro">Valkey Functions</a> offer an alternative approach to programmability which allow the server itself to be extended with additional programmed logic.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>We'll start scripting with Valkey by using the <code>EVAL</code> command.</p>
+<p>Here's our first example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; EVAL &quot;return &#39;Hello, scripting!&#39;&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;Hello, scripting!&quot;</span></span></code></pre>
+<p>In this example, <code>EVAL</code> takes two arguments.
+The first argument is a string that consists of the script's Lua source code.
+The script doesn't need to include any definitions of Lua function.
+It is just a Lua program that will run in the Valkey engine's context.</p>
+<p>The second argument is the number of arguments that follow the script's body, starting from the third argument, representing Valkey key names.
+In this example, we used the value <em>0</em> because we didn't provide the script with any arguments, whether the names of keys or not.</p>
+<h2 id="script-parameterization">Script parameterization</h2>
+<p>It is possible, although highly ill-advised, to have the application dynamically generate script source code per its needs.
+For example, the application could send these two entirely different, but at the same time perfectly identical scripts:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return &#39;Hello&#39;&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;Hello&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return &#39;Scripting!&#39;&quot; 0</span></span>
+<span class="giallo-l"><span>&quot;Scripting!&quot;</span></span></code></pre>
+<p>Although this mode of operation isn't blocked by Valkey, it is an anti-pattern due to script cache considerations (more on the topic below).
+Instead of having your application generate subtle variations of the same scripts, you can parametrize them and pass any arguments needed for to execute them.</p>
+<p>The following example demonstrates how to achieve the same effects as above, but via parameterization:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return ARGV[1]&quot; 0 Hello</span></span>
+<span class="giallo-l"><span>&quot;Hello&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return ARGV[1]&quot; 0 Parameterization!</span></span>
+<span class="giallo-l"><span>&quot;Parameterization!&quot;</span></span></code></pre>
+<p>At this point, it is essential to understand the distinction Valkey makes between input arguments that are names of keys and those that aren't.</p>
+<p>While key names in Valkey are just strings, unlike any other string values, these represent keys in the database.
+The name of a key is a fundamental concept in Valkey and is the basis for operating the Valkey Cluster.</p>
+<p><strong>Important:</strong>
+to ensure the correct execution of scripts, both in standalone and clustered deployments, all names of keys that a script accesses must be explicitly provided as input key arguments.
+The script <strong>should only</strong> access keys whose names are given as input arguments.
+Scripts <strong>should never</strong> access keys with programmatically-generated names or based on the contents of data structures stored in the database.</p>
+<p>Any input to the function that isn't the name of a key is a regular input argument.</p>
+<p>In the example above, both <em>Hello</em> and <em>Parameterization!</em> regular input arguments for the script.
+Because the script doesn't touch any keys, we use the numerical argument <em>0</em> to specify there are no key name arguments.
+The execution context makes arguments available to the script through <a href="/topics/lua-api#the-keys-global-variable"><em>KEYS</em></a> and <a href="/topics/lua-api#the-argv-global-variable"><em>ARGV</em></a> global runtime variables.
+The <em>KEYS</em> table is pre-populated with all key name arguments provided to the script before its execution, whereas the <em>ARGV</em> table serves a similar purpose but for regular arguments.</p>
+<p>The following attempts to demonstrate the distribution of input arguments between the scripts <em>KEYS</em> and <em>ARGV</em> runtime global variables:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVAL &quot;return { KEYS[1], KEYS[2], ARGV[1], ARGV[2], ARGV[3] ]: &quot; 2 key1 key2 arg1 arg2 arg3</span></span>
+<span class="giallo-l"><span>1) &quot;key1&quot;</span></span>
+<span class="giallo-l"><span>2) &quot;key2&quot;</span></span>
+<span class="giallo-l"><span>3) &quot;arg1&quot;</span></span>
+<span class="giallo-l"><span>4) &quot;arg2&quot;</span></span>
+<span class="giallo-l"><span>5) &quot;arg3&quot;</span></span></code></pre>
+<p><strong>Note:</strong>
+as can been seen above, Lua's table arrays are returned as <a href="/topics/protocol#arrays">RESP2 array replies</a>, so it is likely that your client's library will convert it to the native array data type in your programming language.
+Please refer to the rules that govern <a href="/topics/lua-api#data-type-conversion">data type conversion</a> for more pertinent information.</p>
+<h2 id="interacting-with-valkey-from-a-script">Interacting with Valkey from a script</h2>
+<p>It is possible to call Valkey commands from a Lua script either via <a href="/topics/lua-api#server.call"><code>server.call()</code></a> or <a href="/topics/lua-api#server.pcall"><code>server.pcall()</code></a>.</p>
+<p>The two are nearly identical.
+Both execute a Valkey command along with its provided arguments, if these represent a well-formed command.
+However, the difference between the two functions lies in the manner in which runtime errors (such as syntax errors, for example) are handled.
+Errors raised from calling <code>server.call()</code> function are returned directly to the client that had executed it.
+Conversely, errors encountered when calling the <code>server.pcall()</code> function are returned to the script's execution context instead for possible handling.</p>
+<p>For example, consider the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&gt; EVAL &quot;return server.call(&#39;SET&#39;, KEYS[1], ARGV[1])&quot; 1 foo bar</span></span>
+<span class="giallo-l"><span>OK</span></span></code></pre>
+<p>The above script accepts one key name and one value as its input arguments.
+When executed, the script calls the <code>SET</code> command to set the input key, <em>foo</em>, with the string value "bar".</p>
+<h2 id="script-cache">Script cache</h2>
+<p>Until this point, we've used the <code>EVAL</code> command to run our script.</p>
+<p>Whenever we call <code>EVAL</code>, we also include the script's source code with the request.
+Repeatedly calling <code>EVAL</code> to execute the same set of parameterized scripts, wastes both network bandwidth and also has some overheads in Valkey.
+Naturally, saving on network and compute resources is key, so, instead, Valkey provides a caching mechanism for scripts.</p>
+<p>Every script you execute with <code>EVAL</code> is stored in a dedicated cache that the server keeps.
+The cache's contents are organized by the scripts' SHA1 digest sums, so the SHA1 digest sum of a script uniquely identifies it in the cache.
+You can verify this behavior by running <code>EVAL</code> and calling <code>INFO</code> afterward.
+You'll notice that the <em>used_memory_scripts_eval</em> and <em>number_of_cached_scripts</em> metrics grow with every new script that's executed.</p>
+<p>As mentioned above, dynamically-generated scripts are an anti-pattern.
+Generating scripts during the application's runtime may, and probably will, exhaust the host's memory resources for caching them.
+Instead, scripts should be as generic as possible and provide customized execution via their arguments.</p>
+<p>A script is loaded to the server's cache by calling the <code>SCRIPT LOAD</code> command and providing its source code.
+The server doesn't execute the script, but instead just compiles and loads it to the server's cache.
+Once loaded, you can execute the cached script with the SHA1 digest returned from the server.</p>
+<p>Here's an example of loading and then executing a cached script:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; SCRIPT LOAD &quot;return &#39;Immabe a cached script&#39;&quot;</span></span>
+<span class="giallo-l"><span>&quot;c664a3bf70bd1d45c4284ffebb65a6f2299bfc9f&quot;</span></span>
+<span class="giallo-l"><span>127.0.0.1:6379&gt; EVALSHA c664a3bf70bd1d45c4284ffebb65a6f2299bfc9f 0</span></span>
+<span class="giallo-l"><span>&quot;Immabe a cached script&quot;</span></span></code></pre><h3 id="cache-volatility">Cache volatility</h3>
+<p>The Valkey script cache is <strong>always volatile</strong>.
+It isn't considered as a part of the database and is <strong>not persisted</strong>.
+The cache may be cleared when the server restarts, during fail-over when a replica assumes the primary role, or explicitly by <code>SCRIPT FLUSH</code>.
+That means that cached scripts are ephemeral, and the cache's contents can be lost at any time.</p>
+<p>Applications that use scripts should always call <code>EVALSHA</code> to execute them.
+The server returns an error if the script's SHA1 digest is not in the cache.
+For example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>127.0.0.1:6379&gt; EVALSHA ffffffffffffffffffffffffffffffffffffffff 0</span></span>
+<span class="giallo-l"><span>(error) NOSCRIPT No matching script</span></span></code></pre>
+<p>In this case, the application should first load it with <code>SCRIPT LOAD</code> and then call <code>EVALSHA</code> once more to run the cached script by its SHA1 sum.
+Most of <a href="../clients/">Valkey' clients</a> already provide utility APIs for doing that automatically.
+Please consult your client's documentation regarding the specific details.</p>
+<h3 id="evalsha-in-the-context-of-pipelining"><code>EVALSHA</code> in the context of pipelining</h3>
+<p>Special care should be given executing <code>EVALSHA</code> in the context of a <a href="/topics/pipelining">pipelined request</a>.
+The commands in a pipelined request run in the order they are sent, but other clients' commands may be interleaved for execution between these.
+Because of that, the <code>NOSCRIPT</code> error can return from a pipelined request but can't be handled.</p>
+<p>Therefore, a client library's implementation should revert to using plain <code>EVAL</code> of parameterized in the context of a pipeline.</p>
+<h3 id="script-cache-semantics">Script cache semantics</h3>
+<p>During normal operation, an application's scripts are meant to stay indefinitely in the cache (that is, until the server is restarted or the cache being flushed).
+The underlying reasoning is that the script cache contents of a well-written application are unlikely to grow continuously.
+Even large applications that use hundreds of cached scripts shouldn't be an issue in terms of cache memory usage.</p>
+<p>The only way to flush the script cache is by explicitly calling the <code>SCRIPT FLUSH</code> command.
+Running the command will <em>completely flush</em> the scripts cache, removing all the scripts executed so far.
+Typically, this is only needed when the instance is going to be instantiated for another customer or application in a cloud environment.</p>
+<p>Also, as already mentioned, restarting a Valkey instance flushes the non-persistent script cache.
+However, from the point of view of the Valkey client, there are only two ways to make sure that a Valkey instance was not restarted between two different commands:</p>
+<ul>
+<li>The connection we have with the server is persistent and was never closed so far.</li>
+<li>The client explicitly checks the <code>run_id</code> field in the <code>INFO</code> command to ensure the server was not restarted and is still the same process.</li>
+</ul>
+<p>Practically speaking, it is much simpler for the client to assume that in the context of a given connection, cached scripts are guaranteed to be there unless the administrator explicitly invoked the <code>SCRIPT FLUSH</code> command.
+The fact that the user can count on Valkey to retain cached scripts is semantically helpful in the context of pipelining.</p>
+<h2 id="the-script-command">The <code>SCRIPT</code> command</h2>
+<p>The Valkey <code>SCRIPT</code> provides several ways for controlling the scripting subsystem.
+These are:</p>
+<ul>
+<li>
+<p><code>SCRIPT FLUSH</code>: this command is the only way to force Valkey to flush the scripts cache.
+It is most useful in environments where the same Valkey instance is reassigned to different uses.
+It is also helpful for testing client libraries' implementations of the scripting feature.</p>
+</li>
+<li>
+<p><code>SCRIPT EXISTS</code>: given one or more SHA1 digests as arguments, this command returns an array of <em>1</em>'s and <em>0</em>'s.
+<em>1</em> means the specific SHA1 is recognized as a script already present in the scripting cache. <em>0</em>'s meaning is that a script with this SHA1 wasn't loaded before (or at least never since the latest call to <code>SCRIPT FLUSH</code>).</p>
+</li>
+<li>
+<p><code>SCRIPT LOAD script</code>: this command registers the specified script in the Valkey script cache.
+It is a useful command in all the contexts where we want to ensure that <code>EVALSHA</code> doesn't not fail (for instance, in a pipeline or when called from a <a href="/topics/transactions"><code>MULTI</code>/<code>EXEC</code> transaction</a>), without the need to execute the script.</p>
+</li>
+<li>
+<p><code>SCRIPT SHOW</code>: this command shows the original source code for a script that is stored in the script cache.
+It is useful to help users easily obtain scripts using signature.</p>
+</li>
+<li>
+<p><code>SCRIPT KILL</code>: this command is the only way to interrupt a long-running script (a.k.a slow script), short of shutting down the server.
+A script is deemed as slow once its execution's duration exceeds the configured <a href="/topics/programmability#maximum-execution-time">maximum execution time</a> threshold.
+The <code>SCRIPT KILL</code> command can be used only with scripts that did not modify the dataset during their execution (since stopping a read-only script does not violate the scripting engine's guaranteed atomicity).</p>
+</li>
+<li>
+<p><code>SCRIPT DEBUG</code>: controls use of the built-in <a href="/topics/ldb">Valkey Lua scripts debugger</a>.</p>
+</li>
+</ul>
+<h2 id="script-replication">Script replication</h2>
+<p>In a primary-replica setup (see <a href="/topics/replication">replication</a>), write commands performed by a script on the primary are also sent to replicas to maintain consistency.
+When the script execution finishes, the sequence of commands that the script generated are wrapped into a <a href="/topics/transactions"><code>MULTI</code>/<code>EXEC</code> transaction</a> and are sent to the replicas and written to the AOF file, if an AOF file is used. (See <a href="/topics/persistence">Persistence</a>.)
+This is called <em>effects replication</em>.</p>
+<p>In the past, it was also possible to use <em>verbatim replication</em> which means that a script was replicated as a whole, but this was removed in 7.0.</p>
+<p>The <a href="/topics/lua-api#server.replicate_commands"><code>server.replicate_commands()</code></a> function is deprecated and has no effect, but it exists to avoid breaking existing scripts.</p>
+<h2 id="debugging-eval-scripts">Debugging Eval scripts</h2>
+<p>Valkey has a built-in Lua debugger.
+The Valkey Lua debugger is a remote debugger consisting of a server, which is Valkey itself, and a client, which is by default <a href="/topics/cli"><code>valkey-cli</code></a>.</p>
+<p>The Lua debugger is described in the <a href="/topics/ldb">Lua scripts debugging</a> section of the Valkey documentation.</p>
+<h2 id="execution-under-low-memory-conditions">Execution under low memory conditions</h2>
+<p>When memory usage in Valkey exceeds the <code>maxmemory</code> limit, the first write command encountered in the script that uses additional memory will cause the script to abort (unless <a href="/topics/lua-api#server.pcall"><code>server.pcall</code></a> was used).</p>
+<p>However, an exception to the above is when the script's first write command does not use additional memory, as is the case with  (for example, <code>DEL</code> and <code>LREM</code>).
+In this case, Valkey will allow all commands in the script to run to ensure atomicity.
+If subsequent writes in the script consume additional memory, Valkey' memory usage can exceed the threshold set by the <code>maxmemory</code> configuration directive.</p>
+<p>Another scenario in which a script can cause memory usage to cross the <code>maxmemory</code> threshold is when the execution begins when Valkey is slightly below <code>maxmemory</code>, so the script's first write command is allowed.
+As the script executes, subsequent write commands consume more memory leading to the server using more RAM than the configured <code>maxmemory</code> directive.</p>
+<p>In those scenarios, you should consider setting the <code>maxmemory-policy</code> configuration directive to any values other than <code>noeviction</code>.
+In addition, Lua scripts should be as fast as possible so that eviction can kick in between executions.</p>
+<p>Note that you can change this behaviour by using <a href="#eval-flags">flags</a></p>
+<h2 id="eval-flags">Eval flags</h2>
+<p>Normally, when you run an Eval script, the server does not know how it accesses the database.
+By default, Valkey assumes that all scripts read and write data.
+However, starting with Redis OSS 7.0, there's a way to declare flags when creating a script in order to tell Valkey how it should behave.</p>
+<p>The way to do that is by using a Shebang statement on the first line of the script like so:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>#!lua flags=no-writes,allow-stale</span></span>
+<span class="giallo-l"><span>local x = server.call(&#39;get&#39;,&#39;x&#39;)</span></span>
+<span class="giallo-l"><span>return x</span></span></code></pre>
+<p>Note that as soon as Valkey sees the <code>#!</code> comment, it'll treat the script as if it declares flags, even if no flags are defined,
+it still has a different set of defaults compared to a script without a <code>#!</code> line.</p>
+<p>Another difference is that scripts without <code>#!</code> can run commands that access keys belonging to different cluster hash slots, but ones with <code>#!</code> inherit the default flags, so they cannot.</p>
+<p>Please refer to <a href="/topics/lua-api#script_flags">Script flags</a> to learn about the various scripts and the defaults.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/eval-intro.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

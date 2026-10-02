@@ -1,0 +1,377 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; FAQ</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: FAQ">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: FAQ</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            FAQ
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+<p><strong>This page is under review.</strong> The page is likely incorrect, contains invalid links, and/or needs technical review. 
+    In the future it may change substantially or be removed entirely.</p>
+<hr />
+
+    <h2 id="how-is-valkey-different-from-other-key-value-stores">How is Valkey different from other key-value stores?</h2>
+<ul>
+<li>Valkey has a different evolution path in the key-value DBs where values can contain more complex data types, with atomic operations defined on those data types. Valkey data types are closely related to fundamental data structures and are exposed to the programmer as such, without additional abstraction layers.</li>
+<li>Valkey is an in-memory but persistent on disk database, so it represents a different trade off where very high write and read speed is achieved with the limitation of data sets that can't be larger than memory. Another advantage of
+in-memory databases is that the memory representation of complex data structures
+is much simpler to manipulate compared to the same data structures on disk, so
+Valkey can do a lot with little internal complexity. At the same time the
+two on-disk storage formats (RDB and AOF) don't need to be suitable for random
+access, so they are compact and always generated in an append-only fashion
+(Even the AOF log rotation is an append-only operation, since the new version
+is generated from the copy of data in memory). However this design also involves
+different challenges compared to traditional on-disk stores. Being the main data
+representation on memory, Valkey operations must be carefully handled to make sure
+there is always an updated version of the data set on disk.</li>
+</ul>
+<h2 id="what-s-the-valkey-memory-footprint">What's the Valkey memory footprint?</h2>
+<p>To give you a few examples:</p>
+<ul>
+<li>An empty instance uses ~ 3MB of memory.</li>
+<li>1 Million small Keys -&gt; String Value pairs use ~ 85MB of memory.</li>
+<li>1 Million Keys -&gt; Hash value, representing an object with 5 fields, use ~ 160 MB of memory.</li>
+</ul>
+<p>Testing your use case is trivial. Use the <code>valkey-benchmark</code> utility to generate random data sets then check the space used with the <code>INFO memory</code> command.</p>
+<h2 id="why-does-valkey-keep-its-entire-dataset-in-memory">Why does Valkey keep its entire dataset in memory?</h2>
+<p>In the past, developers experimented with Virtual Memory and other systems in order to allow larger than RAM datasets, but after all we are very happy if we can do one thing well: data served from memory, disk used for storage. So for now there are no plans to create an on disk backend for Valkey. Most of what
+Valkey is, after all, a direct result of its current design.</p>
+<p>If your real problem is not the total RAM needed, but the fact that you need
+to split your data set into multiple Valkey instances, please read the
+<a href="/topics/cluster-tutorial">partitioning page</a> in this documentation for more info.</p>
+<h2 id="can-you-use-valkey-with-a-disk-based-database">Can you use Valkey with a disk-based database?</h2>
+<p>Yes, a common design pattern involves taking very write-heavy small data
+in Valkey (and data you need the Valkey data structures to model your problem
+in an efficient way), and big <em>blobs</em> of data into an SQL or eventually
+consistent on-disk database. Similarly sometimes Valkey is used in order to
+take in memory another copy of a subset of the same data stored in the on-disk
+database. This may look similar to caching, but actually is a more advanced model
+since normally the Valkey dataset is updated together with the on-disk DB dataset,
+and not refreshed on cache misses.</p>
+<h2 id="how-can-i-reduce-valkey-overall-memory-usage">How can I reduce Valkey' overall memory usage?</h2>
+<p>A good practice is to consider memory consumption when mapping your logical data model to the physical data model within Valkey. These considerations include using specific data types, key patterns, and normalization.</p>
+<p>Beyond data modeling, there is more info in the <a href="/topics/memory-optimization">Memory Optimization page</a>.</p>
+<h2 id="what-happens-if-valkey-runs-out-of-memory">What happens if Valkey runs out of memory?</h2>
+<p>Valkey has built-in protections allowing the users to set a max limit on memory
+usage, using the <code>maxmemory</code> option in the configuration file to put a limit
+to the memory Valkey can use. If this limit is reached, Valkey will start to reply
+with an error to write commands (but will continue to accept read-only
+commands).</p>
+<p>You can also configure Valkey to evict keys when the max memory limit
+is reached. See the <a href="/topics/lru-cache">eviction policy docs</a> for more information on this.</p>
+<h2 id="background-saving-fails-with-a-fork-error-on-linux">Background saving fails with a fork() error on Linux?</h2>
+<p>Short answer: <code>echo 1 &gt; /proc/sys/vm/overcommit_memory</code> :)</p>
+<p>And now the long one:</p>
+<p>The Valkey background saving schema relies on the copy-on-write semantic of the <code>fork</code> system call in
+modern operating systems: Valkey forks (creates a child process) that is an
+exact copy of the parent. The child process dumps the DB on disk and finally
+exits. In theory the child should use as much memory as the parent being a
+copy, but actually thanks to the copy-on-write semantic implemented by most
+modern operating systems the parent and child process will <em>share</em> the common
+memory pages. A page will be duplicated only when it changes in the child or in
+the parent. Since in theory all the pages may change while the child process is
+saving, Linux can't tell in advance how much memory the child will take, so if
+the <code>overcommit_memory</code> setting is set to zero the fork will fail unless there is
+as much free RAM as required to really duplicate all the parent memory pages.
+If you have a Valkey dataset of 3 GB and just 2 GB of free
+memory it will fail.</p>
+<p>Setting <code>overcommit_memory</code> to 1 tells Linux to relax and perform the fork in a
+more optimistic allocation fashion, and this is indeed what you want for Valkey.</p>
+<p>You can refer to the <a rel="external" href="https://man7.org/linux/man-pages/man5/proc.5.html">proc(5)</a> man page for explanations of the
+available values.</p>
+<h2 id="are-valkey-on-disk-snapshots-atomic">Are Valkey on-disk snapshots atomic?</h2>
+<p>Yes, the Valkey background saving process is always forked when the server is
+outside of the execution of a command, so every command reported to be atomic
+in RAM is also atomic from the point of view of the disk snapshot.</p>
+<h2 id="how-can-valkey-use-multiple-cpus-or-cores">How can Valkey use multiple CPUs or cores?</h2>
+<p>Enable I/O threading to offload client communication to threads.
+In Valkey 8, the I/O threading implementation has been rewritten and greatly improved.
+Reading commands from clients and writing replies back uses considerable CPU time.
+By offloading this work to separate threads, the main thread can focus on executing commands.</p>
+<p>You can also start multiple instances of Valkey in the same box and combine them into a <a href="/topics/cluster-tutorial">cluster</a>.</p>
+<h2 id="what-is-the-maximum-number-of-keys-a-single-valkey-instance-can-hold-what-is-the-maximum-number-of-elements-in-a-hash-list-set-and-sorted-set">What is the maximum number of keys a single Valkey instance can hold? What is the maximum number of elements in a Hash, List, Set, and Sorted Set?</h2>
+<p>Valkey can handle up to 2<sup>32</sup> keys, and was tested in practice to
+handle at least 250 million keys per instance.</p>
+<p>Every hash, list, set, and sorted set, can hold 2<sup>32</sup> elements.</p>
+<p>In other words your limit is likely the available memory in your system.</p>
+<h2 id="why-does-my-replica-have-a-different-number-of-keys-than-its-primary-instance">Why does my replica have a different number of keys than its primary instance?</h2>
+<p>If you use keys with limited time to live (Valkey expires) this is normal behavior. This is what happens:</p>
+<ul>
+<li>The primary generates an RDB file on the first synchronization with the replica.</li>
+<li>The RDB file will not include keys already expired in the primary but which are still in memory.</li>
+<li>These keys are still in the memory of the Valkey primary, even if logically expired. They'll be considered non-existent, and their memory will be reclaimed later, either incrementally or explicitly on access. While these keys are not logically part of the dataset, they are accounted for in the <code>INFO</code> output and in the <code>DBSIZE</code> command.</li>
+<li>When the replica reads the RDB file generated by the primary, this set of keys will not be loaded.</li>
+</ul>
+<p>Because of this, it's common for users with many expired keys to see fewer keys in the replicas. However, logically, the primary and replica will have the same content.</p>
+<h2 id="why-did-linux-foundation-start-the-valkey-project">Why did Linux Foundation start the Valkey project?</h2>
+<p>Read about <a href="/topics/history">the history of Valkey</a>.</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/faq.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

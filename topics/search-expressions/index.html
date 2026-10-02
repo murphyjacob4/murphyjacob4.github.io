@@ -1,0 +1,405 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Valkey Search - Aggregation Expressions</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Valkey Search - Aggregation Expressions">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Valkey Search - Aggregation Expressions</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Valkey Search - Aggregation Expressions
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>The <code>FILTER</code>, <code>APPLY</code>, <code>SORTBY</code> and <code>GROUPBY</code> stages of <code>FT.AGGREGATE</code> use expressions to compute values.</p>
+<p>The expression engine operates on scalar input values, generating scalar output values. Values in the expression language are dynamically typed and can be either Nil (missing/invalid), Numeric (64-bit floating point) or String (a sequence of bytes).</p>
+<p>The syntax of expressions generally follows the "C" language syntax and operator precedence rules with some specialized syntax for accessing fields of records and parameters from the <code>FT.AGGREGATE</code> command.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>&lt;expression&gt;    ::= &lt;logical-or&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;logical-or&gt;    ::= &lt;logical-and&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;logical-or&gt; &quot;||&quot; &lt;logical-and&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;logical-and&gt;   ::=  &lt;relational&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;logical-and&gt; &quot;&amp;&amp;&quot; &lt;relational&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;relational&gt;    ::= &lt;multiplicative&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;relational&gt; &lt;rel-op&gt; &lt;multiplicative&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;rel-op&gt;        ::= &quot;&lt;&quot; | &quot;&lt;=&quot; | &quot;==&quot; | &quot;!=&quot; | &quot;&gt;&quot; | &quot;&gt;=&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;multiplicative&gt;::= &lt;additive&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;multiplicative&gt; &lt;mul-op&gt; &lt;additive&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;mul-op&gt;        ::= &quot;*&quot; | &quot;/&quot; | &quot;^&quot; | &quot;%&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;additive&gt;      ::= &lt;unary&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;additive&gt; &lt;add-op&gt; &lt;unary&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;add-op&gt;        ::= &quot;+&quot; | &quot;-&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;unary&gt;         ::= &lt;primary&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;unary&gt; &lt;unary-op&gt; &lt;primary&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;unary-op&gt;      ::= &quot;!&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;primary&gt;       ::= &lt;numeric-constant&gt;</span></span>
+<span class="giallo-l"><span>                | &lt;string-constant&gt;</span></span>
+<span class="giallo-l"><span>                | &lt;field-ref&gt;</span></span>
+<span class="giallo-l"><span>                | &lt;parameter-ref&gt;</span></span>
+<span class="giallo-l"><span>                | &lt;function-call&gt;</span></span>
+<span class="giallo-l"><span>                | &quot;(&quot; &lt;expression&gt; &quot;)&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;field-ref&gt;     ::= &quot;@&quot; &lt;identifier&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;parameter-ref&gt; ::= &quot;$&quot; &lt;identifier&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;function-call&gt; ::= &lt;identifier&gt; &quot;(&quot; &lt;arg-list&gt; &quot;)&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;arg-list&gt;      ::=</span></span>
+<span class="giallo-l"><span>                  | &lt;primary&gt;</span></span>
+<span class="giallo-l"><span>                  | &lt;arg-list&gt; &quot;,&quot; &lt;primary&gt;</span></span>
+<span class="giallo-l"></span></code></pre><h1 id="primary-values">Primary Values</h1>
+<p>Numeric constants are the usual syntax of decimal integer and floating point expression formats, plus <em>inf</em>, <em>+inf</em> and <em>-inf</em>.</p>
+<p>String constants are enclosed with single (<code>'</code>) or double quotes(<code>"</code>). A backslash (<code>\</code>) followed by a quote can be used to insert a quote character.</p>
+<p>A parameter-ref selects a string value provided by the <code>PARAMS</code> clause of the executing <code>FT.AGGREGATE</code> command.</p>
+<p>A field-ref is used to access values from the record currently being processed. If the field doesn't exist then the reference returns a Nil value.</p>
+<h1 id="operators">Operators</h1>
+<h2 id="arithmetic-operators">Arithmetic Operators</h2>
+<p>The following numeric operators are available. String values are converted to numeric, but become a Nil if the conversion fails. If either input to a numeric operator is Nil, then the output is Nil.</p>
+<table><thead><tr><th style="text-align: center">Syntax</th><th style="text-align: left">Operation</th></tr></thead><tbody>
+<tr><td style="text-align: center">+</td><td style="text-align: left">Addition</td></tr>
+<tr><td style="text-align: center">-</td><td style="text-align: left">Subtraction</td></tr>
+<tr><td style="text-align: center">*</td><td style="text-align: left">Multiplication</td></tr>
+<tr><td style="text-align: center">/</td><td style="text-align: left">Division</td></tr>
+<tr><td style="text-align: center">%</td><td style="text-align: left">Modulo</td></tr>
+<tr><td style="text-align: center">^</td><td style="text-align: left">Exponentiation</td></tr>
+</tbody></table>
+<h2 id="relational-operators">Relational Operators</h2>
+<p>The following relational operators are available. Relational operators perform conversions according to the following prioritized rules:</p>
+<ol>
+<li>If both inputs are Nil, they are considered equal.</li>
+<li>If one of the inputs is Nil then the comparison is unordered.</li>
+<li>If both inputs are numbers, then a numeric comparison is performed.</li>
+<li>If both inputs are strings, then a string comparison is performed.</li>
+<li>If either input is a number and the other input can be converted to a number, then a numeric comparison is performed.</li>
+<li>The two inputs are compared as strings.</li>
+</ol>
+<table><thead><tr><th style="text-align: center">Syntax</th><th style="text-align: left">Operation</th></tr></thead><tbody>
+<tr><td style="text-align: center">&lt;</td><td style="text-align: left">Less than</td></tr>
+<tr><td style="text-align: center">&lt;=</td><td style="text-align: left">Less than or equal to</td></tr>
+<tr><td style="text-align: center">==</td><td style="text-align: left">Equal to</td></tr>
+<tr><td style="text-align: center">!=</td><td style="text-align: left">Not equal to</td></tr>
+<tr><td style="text-align: center">&gt;</td><td style="text-align: left">Greater than</td></tr>
+<tr><td style="text-align: center">&gt;=</td><td style="text-align: left">Greater than or equal to</td></tr>
+</tbody></table>
+<h2 id="logical-operators">Logical Operators</h2>
+<p>The logical operators <code>&amp;&amp;</code>, <code>||</code> and <code>!</code> generate a numeric 0 if the input can be converted to a numeric 0, otherwise they generate a numeric 1.</p>
+<h1 id="functions">Functions</h1>
+<h2 id="numeric-processing-functions">Numeric Processing Functions</h2>
+<p>Supported numeric functions are listed. Numeric functions always convert their inputs to a number. If the conversion fails then a Nil is returned.</p>
+<table><thead><tr><th style="text-align: center">Syntax</th><th style="text-align: left">Operation</th></tr></thead><tbody>
+<tr><td style="text-align: center">log(expression)</td><td style="text-align: left">ln(expression)</td></tr>
+<tr><td style="text-align: center">abs(expression)</td><td style="text-align: left">| expression |</td></tr>
+<tr><td style="text-align: center">ceil(expression)</td><td style="text-align: left">Round to smallest not less than expression</td></tr>
+<tr><td style="text-align: center">floor(expression)</td><td style="text-align: left">Round to largest not greater than expression</td></tr>
+<tr><td style="text-align: center">log2(expression)</td><td style="text-align: left">log2(expression)</td></tr>
+<tr><td style="text-align: center">exp(expression)</td><td style="text-align: left">exp(expression)</td></tr>
+<tr><td style="text-align: center">sqrt(expression)</td><td style="text-align: left">sqrt(expression)</td></tr>
+</tbody></table>
+<h2 id="string-processing-functions">String Processing Functions</h2>
+<p>String processing functions. Inputs are converted to strings as appropriate.</p>
+<table><thead><tr><th style="text-align: center">Syntax</th><th>Operation</th></tr></thead><tbody>
+<tr><td style="text-align: center">upper(s)</td><td>Convert to upper case (ASCII Only)</td></tr>
+<tr><td style="text-align: center">lower(s)</td><td>Convert to lower case (ASCII Only)</td></tr>
+<tr><td style="text-align: center">startswith(s1, s2)</td><td>1 if s2 matches the start of s1 otherwise 0</td></tr>
+<tr><td style="text-align: center">contains(s1, s2)</td><td>The number of occurrences of s2 in s1</td></tr>
+<tr><td style="text-align: center">strlen(s)</td><td>Number of bytes in the string</td></tr>
+<tr><td style="text-align: center">substr(s, offset, length)</td><td>The string extracted from s starting at offset for length characters. A length of -1 means the remainder of the string</td></tr>
+<tr><td style="text-align: center">concat(s1, s2, ...)</td><td>Concatenate up to 50 string expressions into a single string</td></tr>
+</tbody></table>
+<h2 id="timestamp-processing-functions">Timestamp Processing Functions</h2>
+<p>Time functions extract various time fields from a numeric UTC Unix timestamp using the <code>gmtime</code> C library function.</p>
+<p>Supported time functions include:</p>
+<table><thead><tr><th style="text-align: center">Syntax</th><th style="text-align: left">Operation</th></tr></thead><tbody>
+<tr><td style="text-align: center">dayofweek(timestamp)</td><td style="text-align: left">Extract day of week from timestamp. Range: 0-6</td></tr>
+<tr><td style="text-align: center">dayofmonth(timestamp)</td><td style="text-align: left">Extract day of month from timestamp. Range: 1-31</td></tr>
+<tr><td style="text-align: center">dayofyear(timestamp)</td><td style="text-align: left">Extract day of year from timestamp. Range: 0-365</td></tr>
+<tr><td style="text-align: center">monthofyear(timestamp)</td><td style="text-align: left">Extract day of month from timestamp. Range: 0-11</td></tr>
+<tr><td style="text-align: center">year(timestamp)</td><td style="text-align: left">Extract year from timestamp.</td></tr>
+<tr><td style="text-align: center">minute(timestamp)</td><td style="text-align: left">Extract minute from timestamp. Range: 0-59</td></tr>
+<tr><td style="text-align: center">hour(timestamp)</td><td style="text-align: left">Extract hour from timestamp. Range: 0-23</td></tr>
+<tr><td style="text-align: center">day(timestamp)</td><td style="text-align: left">Extract day from timestamp. Range: 1-31</td></tr>
+<tr><td style="text-align: center">month(timestamp)</td><td style="text-align: left">Extract month from timestamp. Range: 0-11</td></tr>
+<tr><td style="text-align: center">timefmt(timestamp, fmt)</td><td style="text-align: left">Convert timestamp to string using strftime.</td></tr>
+<tr><td style="text-align: center">parsetime(time_string, fmt)</td><td style="text-align: left">Parse time string into timestamp using strptime.</td></tr>
+</tbody></table>
+<h2 id="exists-function">Exists Function</h2>
+<p>The exists function returns 0 if the input argument is Nil else 1. This can be used to test if a field is present in the current record.</p>
+<table><thead><tr><th style="text-align: center">Syntax</th><th style="text-align: left">Operation</th></tr></thead><tbody>
+<tr><td style="text-align: center">exists(value)</td><td style="text-align: left">0 if the value is Nil, else 1.</td></tr>
+</tbody></table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/search-expressions.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

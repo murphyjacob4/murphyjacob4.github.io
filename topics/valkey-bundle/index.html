@@ -1,0 +1,459 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Valkey Bundle Getting Started Guide</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Valkey Bundle Getting Started Guide">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Valkey Bundle Getting Started Guide</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Valkey Bundle Getting Started Guide
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <h2 id="what-is-valkey-bundle">What is Valkey Bundle</h2>
+<p>Valkey Bundle is a pre-packaged, containerized version of Valkey that comes preloaded with a collection of supported modules.
+These modules enable advanced data structures and search capabilities to extend Valkey’s core functionality.
+The bundle is designed to help developers quickly get started with powerful Valkey features without needing to manually install or configure anything.
+Some of the modules included in the bundle are:</p>
+<ol>
+<li><a href="/topics/valkey-json">Valkey JSON</a> - Allows users to natively store, query, and modify JSON data structures using the JSONPath query language.</li>
+<li><a href="/topics/bloomfilters">Valkey Bloom</a> - Provides space-efficient probabilistic data structures, such as Bloom filters, for adding elements and checking whether they exist in a set.</li>
+<li><a href="/topics/search">Valkey Search</a> - Enables the creation of indexes and similarity searches through the use of complex filters.</li>
+<li><a href="/topics/ldap">Valkey LDAP</a> - Handles user authentication against LDAP based identity providers.</li>
+</ol>
+<h1 id="quick-start-to-using-the-bundle">Quick Start to Using the Bundle</h1>
+<p>The fastest way to start using Valkey Bundle is by downloading the official image through <a rel="external" href="https://hub.docker.com/r/valkey/valkey-bundle/">Docker Hub</a>. The following steps will guide you through launching and interacting with your first instance!</p>
+<ol>
+<li>
+<p><strong>Pull the image to get the latest public release</strong></p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">docker</span><span style="color: #A5D6FF;"> pull valkey/valkey-bundle</span></span></code></pre>
+<p>This command downloads the most recent stable image of Valkey Bundle, which includes the Valkey server along with the preloaded modules.</p>
+<p>The Valkey Bundle image also supports multiple tags, allowing you to control the specific version and operating system base. This allows for more control over the environment, whether you’re aiming for a reproducible build (using a version like 8.1-bookworm) or a minimal footprint (alpine variant).</p>
+<p>Check out the <a rel="external" href="https://hub.docker.com/r/valkey/valkey-bundle/tags">Valkey Bundle Docker Hub Tag</a> section to view all available tags and example pull commands.</p>
+</li>
+<li>
+<p><strong>Start a Valkey container</strong></p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">docker</span><span style="color: #A5D6FF;"> run</span><span style="color: #79C0FF;"> --name</span><span style="color: #A5D6FF;"> my-valkey-bundle</span><span style="color: #79C0FF;"> -d -p</span><span style="color: #A5D6FF;"> 6379:6379 valkey/valkey-bundle</span></span></code></pre>
+<p>This command starts a container named my-valkey-bundle and maps Valkey’s default port 6379 to your local machine for external access. By default, it uses the latest available image. To run a specific version or variant, append the desired tag to the image name. For example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">docker</span><span style="color: #A5D6FF;"> run</span><span style="color: #79C0FF;"> --name</span><span style="color: #A5D6FF;"> my-valkey-bundle</span><span style="color: #79C0FF;"> -d -p</span><span style="color: #A5D6FF;"> 6379:6379 valkey/valkey-bundle:8.1.0-alpine</span></span></code></pre></li>
+<li>
+<p><strong>Connect to the server using valkey-cli</strong></p>
+<p>To interact with the server, use the Valkey command-line interface (valkey-cli). You can run the CLI directly inside the running container using the following command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">docker</span><span style="color: #A5D6FF;"> exec</span><span style="color: #79C0FF;"> -it</span><span style="color: #A5D6FF;"> my-valkey-bundle valkey-cli</span><span style="color: #79C0FF;"> -h</span><span style="color: #A5D6FF;"> localhost</span><span style="color: #79C0FF;"> -p 6379 -3</span></span></code></pre>
+<p>This launches an interactive valkey-cli session within the container and connects to the server via localhost.</p>
+</li>
+<li>
+<p><strong>Try some commands</strong></p>
+<p>Check the available modules using the info command.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">my-valkey-bundle:6379</span><span>&gt;</span><span style="color: #A5D6FF;"> INFO modules</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Modules</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">module:name</span><span style="color: #A5D6FF;">=bf,ver=10000,api=1,filters=0,usedby=[],using=[],options=[]</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">module:name</span><span style="color: #A5D6FF;">=search,ver=10000,api=1,filters=0,usedby=[],using=[],options=[handle-io-errors</span><span style="color: #FF7B72;">|</span><span style="color: #FFA657;">handle-repl-async-load</span><span style="color: #FF7B72;">|</span><span style="color: #FFA657;">no-implicit-signal-modified]</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">module:name</span><span style="color: #A5D6FF;">=json,ver=10010,api=1,filters=0,usedby=[],using=[],options=[handle-io-errors]</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">module:name</span><span style="color: #A5D6FF;">=ldap,ver=16777471,api=1,filters=0,usedby=[],using=[],options=[]</span></span></code></pre>
+<p>Use the Valkey JSON Module</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> JSON.SET test $ </span><span style="color: #A5D6FF;">&#39;{&quot;hello&quot;: &quot;world&quot;}&#39;</span></span></code></pre><pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> JSON.GET test</span></span></code></pre>
+<p>Use the Valkey Bloom Module</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> BF.RESERVE test_bloom 0.01 1000</span></span></code></pre><pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> BF.ADD test_bloom </span><span style="color: #A5D6FF;">&quot;item1&quot;</span></span></code></pre><pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> BF.EXISTS test_bloom </span><span style="color: #A5D6FF;">&quot;item1&quot;</span></span></code></pre>
+<p>Use the Valkey Search Module</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> FT.CREATE idx SCHEMA description VECTOR HNSW 6 TYPE FLOAT32 DIM 3 DISTANCE_METRIC L2</span></span></code></pre><pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> HSET p1 description </span><span style="color: #A5D6FF;">&quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> HSET p2 description </span><span style="color: #A5D6FF;">&quot;\x00\x00\x00\x00\x00\x00\x80?\x00\x00\x00\x00&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> HSET p3 description </span><span style="color: #A5D6FF;">&quot;\x00\x00\x80?\x00\x00\x00\x00\x00\x00\x00\x00&quot;</span></span></code></pre><pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> FT.SEARCH idx </span><span style="color: #A5D6FF;">&quot;*=&gt;[KNN 3 @description </span><span>$vec</span><span style="color: #A5D6FF;">]&quot;</span><span> PARAMS 2 vec </span><span style="color: #A5D6FF;">&quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80?&quot;</span><span> DIALECT 2</span></span></code></pre>
+<p>Use the Valkey LDAP Module</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> CONFIG SET ldap.servers </span><span style="color: #A5D6FF;">&quot;ldap://ldap.valkey.io:389&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> CONFIG SET ldap.bind_dn_prefix </span><span style="color: #A5D6FF;">&quot;cn=&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> CONFIG SET ldap.bind_dn_suffix </span><span style="color: #A5D6FF;">&quot;,ou=users,dc=valkey,dc=io&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span></code></pre><pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FF7B72;">&gt;</span><span> AUTH valkey </span><span style="color: #A5D6FF;">&quot;ldap_password&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">OK</span></span></code></pre>
+<p>Make sure to check out the full list of commands for all the bundle components:</p>
+<ol>
+<li><a rel="external" href="https://valkey.io/commands/">Valkey Commands</a></li>
+<li><a rel="external" href="https://valkey.io/commands/#json">Valkey JSON Commands</a></li>
+<li><a rel="external" href="https://valkey.io/commands/#bloom">Valkey Bloom Commands</a></li>
+<li><a rel="external" href="https://valkey.io/commands/#search">Valkey Search Commands</a></li>
+</ol>
+</li>
+</ol>
+<p>Valkey Bundle supports more advanced setup options too including:</p>
+<ol>
+<li>
+<p><strong>Persistent storage</strong></p>
+<p>Persistent storage allows you to save data snapshots locally. The command below is an example of how you can save a snapshot every 60 seconds if at least one write occurred.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">docker</span><span style="color: #A5D6FF;"> run</span><span style="color: #79C0FF;"> --name</span><span style="color: #A5D6FF;"> my-valkey-bundle</span><span style="color: #79C0FF;"> -d</span><span style="color: #A5D6FF;"> valkey/valkey-bundle valkey-server</span><span style="color: #79C0FF;"> --save 60 1 --loglevel</span><span style="color: #A5D6FF;"> warning</span></span></code></pre>
+<p>By default, Valkey logs are written to standard output and can be viewed using <code>docker logs</code>. Logs from all modules are included in the same stream since Valkey doesn't generate separate log files per module. If you prefer to log to a file, you can use the <code>--logfile</code> flag to specify a file path.</p>
+</li>
+<li>
+<p><strong>Custom Flags with Environment Variable</strong></p>
+<p>This allows you to pass additional Valkey flags at runtime using the VALKEY_EXTRA_FLAGS environment variable. It is a flexible way to customize behavior without needing to modify the existing image or use a custom configuration file.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">docker</span><span style="color: #A5D6FF;"> run</span><span style="color: #79C0FF;"> --env</span><span style="color: #A5D6FF;"> VALKEY_EXTRA_FLAGS=&#39;--save 60 1 --loglevel warning&#39; valkey/valkey-bundle</span></span></code></pre>
+<p>In this example, the save flag enables data persistence while the loglevel warning flag limits log output to warnings and errors. You can include any <a rel="external" href="https://github.com/valkey-io/valkey/blob/unstable/valkey.conf">supported Valkey flags</a> in this variable to further tailor runtime behavior.</p>
+</li>
+<li>
+<p><strong>Use a Custom Configuration File</strong></p>
+<p>If you need full control over your Valkey settings, you can create a custom configuration file and use it inside the container.
+This allows you to override the default settings using your own valkey.conf file.</p>
+<p>First, ensure you have a valkey.conf file located in a local directory, such as /myvalkey/conf/valkey.conf.
+The valkey.conf file can include any standard Valkey configuration directives such as memory limits, save intervals, logging levels, and more. The file has a very simple format:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">keyword</span><span style="color: #A5D6FF;"> arg1 arg2 ... argN</span></span></code></pre>
+<p>Here is a sample configuration file that includes optimized settings for Valkey as well as the modules:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #8B949E;"># Valkey settings</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">port</span><span style="color: #79C0FF;"> 6379</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bind</span><span style="color: #79C0FF;"> 127.0.0.1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">protected-mode</span><span style="color: #A5D6FF;"> yes</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">requirepass</span><span style="color: #A5D6FF;"> &quot;strong_password&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">######################## JSON Module ########################</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Maximum document size (in bytes, 0 = unlimited)</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">json.max-document-size</span><span style="color: #79C0FF;"> 1048576</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Maximum nesting depth for JSON documents</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">json.max-path-limit</span><span style="color: #79C0FF;"> 32</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">######################## Bloom Module ########################</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Default initial capacity for new bloom filters</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf.bloom-capacity</span><span style="color: #79C0FF;"> 100000</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Default false positive rate</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf.bloom-fp-rate</span><span style="color: #79C0FF;"> 0.01</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Memory usage limit per bloom filter (in bytes)</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf.bloom-memory-usage-limit</span><span style="color: #79C0FF;"> 134217728</span><span style="color: #8B949E;">  # 128MB</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Default expansion rate for scaling filters</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">bf.bloom-expansion</span><span style="color: #79C0FF;"> 2</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">######################## Search Module ########################</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Thread configuration for search operations</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">search.reader-threads</span><span style="color: #79C0FF;"> 8</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">search.writer-threads</span><span style="color: #79C0FF;"> 4</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># HNSW graph configuration</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">search.hnsw-block-size</span><span style="color: #79C0FF;"> 10000</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Enable cluster mode</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">search.use-coordinator</span><span style="color: #A5D6FF;"> no</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Log level (debug, verbose, notice, warning)</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">search.log-level</span><span style="color: #A5D6FF;"> notice</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">######################## LDAP Module ########################</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># LDAP server configuration</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.servers</span><span style="color: #A5D6FF;"> &quot;ldap://primary:389,ldap://backup:389&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.auth_mode</span><span style="color: #A5D6FF;"> &quot;search+bind&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># TLS configuration</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.use_starttls</span><span style="color: #A5D6FF;"> yes</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.tls_ca_cert_path</span><span style="color: #A5D6FF;"> &quot;/path/to/ca.crt&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.tls_cert_path</span><span style="color: #A5D6FF;"> &quot;/path/to/client.crt&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.tls_key_path</span><span style="color: #A5D6FF;"> &quot;/path/to/client.key&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Search+bind mode settings</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.search_base</span><span style="color: #A5D6FF;"> &quot;ou=users,dc=valkey,dc=io&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.search_filter</span><span style="color: #A5D6FF;"> &quot;objectClass=person&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.search_attribute</span><span style="color: #A5D6FF;"> &quot;uid&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.search_bind_dn</span><span style="color: #A5D6FF;"> &quot;cn=readonly,dc=valkey,dc=io&quot;</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.search_bind_passwd</span><span style="color: #A5D6FF;"> &quot;readonly_password&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Performance tuning</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.connection_pool_size</span><span style="color: #79C0FF;"> 5</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.timeout_connection</span><span style="color: #79C0FF;"> 5</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.timeout_ldap_operation</span><span style="color: #79C0FF;"> 3</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">ldap.failure_detector_interval</span><span style="color: #79C0FF;"> 1</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;">######################## Common Settings ########################</span></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Memory and performance</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">maxmemory</span><span style="color: #A5D6FF;"> 4gb</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">maxmemory-policy</span><span style="color: #A5D6FF;"> allkeys-lru</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Persistence</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">save</span><span style="color: #79C0FF;"> 900 1</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">save</span><span style="color: #79C0FF;"> 300 10</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">save</span><span style="color: #79C0FF;"> 60 10000</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8B949E;"># Logging</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">loglevel</span><span style="color: #A5D6FF;"> notice</span></span>
+<span class="giallo-l"><span style="color: #FFA657;">logfile</span><span style="color: #A5D6FF;"> &quot;/var/log/valkey/valkey.log&quot;</span></span></code></pre>
+<p>Check out the <a href="/topics/valkey.conf">Configuration Documentation</a> to learn more.</p>
+<p>After setting up the configuration file, run the container with a volume mount that maps your local directory into the container:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFA657;">docker</span><span style="color: #A5D6FF;"> run</span><span style="color: #79C0FF;"> -v</span><span style="color: #A5D6FF;"> /myvalkey/conf:/usr/local/etc/valkey</span><span style="color: #79C0FF;"> --name</span><span style="color: #A5D6FF;"> my-valkey-bundle valkey/valkey-bundle valkey-server /usr/local/etc/valkey/valkey.conf</span></span></code></pre>
+<p>This command mounts your local configuration folder into the container and tells Valkey to start using your custom configuration file.</p>
+</li>
+</ol>
+<h2 id="next-steps">Next Steps</h2>
+<p>Once you’ve set up the Valkey Bundle, it’s time to start exploring the modules. Check out the documentation for each one to learn what they can do and how to use them effectively.</p>
+<ol>
+<li><a href="/topics/valkey-json">Valkey JSON Documentation</a></li>
+<li><a href="/topics/bloomfilters">Valkey Bloom Documentation</a></li>
+<li><a href="/topics/search">Valkey Search Documentation</a></li>
+<li><a href="/topics/ldap">Valkey LDAP Documentation</a></li>
+</ol>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/valkey-bundle.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey &middot; Client Libraries</title>
+    <meta name="title" property="og:title" content="Valkey: Client Libraries">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+<div class="styled-title">
+    <h1>Client Libraries</h1>
+</div>
+
+<div class="width-limiter">
+    <main class="container">
+        
+    
+    
+    
+        <div class="markdown-content">
+            
+            <p>This page offers an overview of recommended Valkey clients for various programming languages. A table of advanced features supported by the respective clients is provided, highlighting the unique advantages of one client over another.</p>
+<p>This page includes only clients which are regularly tested and recommended. However, it's important to note that other clients that support Redis OSS version 7.2 are compatible with Valkey 7.2 and above. To add your client to the list, please refer to <a rel="external" href="https://github.com/valkey-io/valkey-doc/blob/main/clients/README.md">this link.</a></p>
+
+        </div>
+
+        <div class="client-list">
+            <h2>Table of Contents</h2>
+            <ul>              
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                
+                    <li><a href="#python">
+    
+        Python
+    
+</a></li>
+                
+                    <li><a href="#node-js">
+    
+        Node.Js
+    
+</a></li>
+                
+                    <li><a href="#java">
+    
+        Java
+    
+</a></li>
+                
+                    <li><a href="#go">
+    
+        Go
+    
+</a></li>
+                
+                    <li><a href="#php">
+    
+        PHP
+    
+</a></li>
+                
+                    <li><a href="#swift">
+    
+        Swift
+    
+</a></li>
+                
+                    <li><a href="#csharp">
+    
+        C#
+    
+</a></li>
+                
+                    <li><a href="#ruby">
+    
+        Ruby
+    
+</a></li>
+                
+                <li><a href="#feature-comparison-table">Feature Comparison Table</a></li>
+            </ul>
+            
+                <div class="language-clients">
+                    <h2 id="python">
+    
+        Python
+    
+</h2>
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-glide-python">Valkey GLIDE Python</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-glide&#x2F;tree&#x2F;main&#x2F;python">Valkey GLIDE Python</a></li>
+                                
+                                    <li><strong>Website:</strong> <a href="https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=python">https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=python</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>pip install valkey-glide</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v2.5.1</li>
+                                <li><strong>Version Released:</strong> 2026-08-11</li>
+                                <li><strong>Description:</strong> Valkey GLIDE Python is designed for reliability, optimized performance, and high-availability, for Valkey and Redis OSS based applications. GLIDE is a multi language client library, written in Rust with programming language bindings, such as Java, node.js and Python.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-py">valkey-py</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-py">valkey-py</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>pip install valkey</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> 6.1.0</li>
+                                <li><strong>Version Released:</strong> 2025-02-11</li>
+                                <li><strong>Description:</strong> The Python interface to the Valkey key-value store.</li>
+                                <li><strong>License:</strong> MIT</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                </div>
+            
+                <div class="language-clients">
+                    <h2 id="node-js">
+    
+        Node.Js
+    
+</h2>
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-glide-node-js">Valkey GLIDE Node.js</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-glide&#x2F;tree&#x2F;main&#x2F;node">Valkey GLIDE Node.js</a></li>
+                                
+                                    <li><strong>Website:</strong> <a href="https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=node">https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=node</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>npm install @valkey&#x2F;valkey-glide</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v2.5.1</li>
+                                <li><strong>Version Released:</strong> 2026-08-11</li>
+                                <li><strong>Description:</strong> Valkey GLIDE Node.js is designed for reliability, optimized performance, and high-availability, for Valkey and Redis OSS based applications. GLIDE is a multi language client library, written in Rust with programming language bindings, such as Java, node.js and Python.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="iovalkey">iovalkey</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;iovalkey">iovalkey</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>npm install iovalkey</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v0.3.1</li>
+                                <li><strong>Version Released:</strong> 2025-03-10</li>
+                                <li><strong>Description:</strong> A robust, performance-focused and full-featured Redis client for Node.js.</li>
+                                <li><strong>License:</strong> MIT</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                </div>
+            
+                <div class="language-clients">
+                    <h2 id="java">
+    
+        Java
+    
+</h2>
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-glide-java">Valkey GLIDE Java</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-glide&#x2F;tree&#x2F;main&#x2F;java">Valkey GLIDE Java</a></li>
+                                
+                                    <li><strong>Website:</strong> <a href="https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=java">https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=java</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <ul>
+                                            
+                                                <li>
+                                                    Maven:
+                                                    <pre>&#x2F;&#x2F;Choose the appropriate classifier 
+ &lt;dependency&gt;
+  &lt;groupId&gt;io.valkey&lt;&#x2F;groupId&gt;
+  &lt;artifactId&gt;valkey-glide&lt;&#x2F;artifactId&gt;
+  &lt;classifier&gt;osx-aarch_64 OR linux-aarch_64 OR linux-x86_64&lt;&#x2F;classifier&gt; 
+  &lt;version&gt;[1.0.0,2.0.0)&lt;&#x2F;version&gt;
+&lt;&#x2F;dependency&gt;</pre>
+                                                </li>
+                                            
+                                                <li>
+                                                    Gradle:
+                                                    <pre>&#x2F;&#x2F;Choose the appropriate classifier 
+ implementation group: &#x27;io.valkey&#x27;, name: &#x27;valkey-glide&#x27;, version: &#x27;1.+&#x27;, classifier: &#x27;osx-aarch_64 OR linux-aarch_64 OR linux-x86_64&#x27;</pre>
+                                                </li>
+                                            
+                                        </ul>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v2.5.1</li>
+                                <li><strong>Version Released:</strong> 2026-08-11</li>
+                                <li><strong>Description:</strong> Valkey GLIDE Java is designed for reliability, optimized performance, and high-availability, for Valkey and Redis OSS based applications. GLIDE is a multi language client library, written in Rust with programming language bindings, such as Java, node.js and Python.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-java">valkey-java</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-java">valkey-java</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <ul>
+                                            
+                                                <li>
+                                                    Maven:
+                                                    <pre>&lt;dependency&gt;
+  &lt;groupId&gt;io.valkey&lt;&#x2F;groupId&gt;
+  &lt;artifactId&gt;valkey-java&lt;&#x2F;artifactId&gt;
+  &lt;version&gt;LATEST&lt;&#x2F;version&gt;
+&lt;&#x2F;dependency&gt;</pre>
+                                                </li>
+                                            
+                                                <li>
+                                                    Gradle:
+                                                    <pre>implementation &#x27;io.valkey:valkey-java:+&#x27;</pre>
+                                                </li>
+                                            
+                                        </ul>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v5.3.0</li>
+                                <li><strong>Version Released:</strong> 2024-08-08</li>
+                                <li><strong>Description:</strong> valkey-java is Valkey&#x27;s Java client, dedicated to maintaining simplicity and high performance.</li>
+                                <li><strong>License:</strong> MIT</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="redisson">redisson</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;redisson&#x2F;redisson">redisson</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <ul>
+                                            
+                                                <li>
+                                                    Maven:
+                                                    <pre>&lt;dependency&gt;
+  &lt;groupId&gt;org.redisson&lt;&#x2F;groupId&gt;
+  &lt;artifactId&gt;redisson&lt;&#x2F;artifactId&gt;
+  &lt;version&gt;LATEST&lt;&#x2F;version&gt;
+&lt;&#x2F;dependency&gt;</pre>
+                                                </li>
+                                            
+                                                <li>
+                                                    Gradle:
+                                                    <pre>implementation &#x27;org.redisson:redisson:+&#x27;</pre>
+                                                </li>
+                                            
+                                        </ul>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v4.7.0</li>
+                                <li><strong>Version Released:</strong> 2026-08-04</li>
+                                <li><strong>Description:</strong> Redisson is a Valkey &amp; Redis Java client and Real-Time Data Platform. Implements over 60 Valkey based Java objects and services. Integrated with Spring, Hibernate, MyBatis, JCache, Quarkus, Micronaut, Helidon.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                </div>
+            
+                <div class="language-clients">
+                    <h2 id="go">
+    
+        Go
+    
+</h2>
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-glide-go">Valkey GLIDE Go</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-glide&#x2F;tree&#x2F;main&#x2F;go">Valkey GLIDE Go</a></li>
+                                
+                                    <li><strong>Website:</strong> <a href="https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=go">https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=go</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>go get github.com&#x2F;valkey-io&#x2F;valkey-glide&#x2F;go</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v2.5.1</li>
+                                <li><strong>Version Released:</strong> 2026-08-11</li>
+                                <li><strong>Description:</strong> Valkey GLIDE Go is designed for reliability, optimized performance, and high-availability, for Valkey and Redis OSS based applications. GLIDE is a multi language client library, written in Rust with programming language bindings, such as Java, node.js and Python.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-go">valkey-go</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-go">valkey-go</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>go get github.com&#x2F;valkey-io&#x2F;valkey-go</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> 1.0.67</li>
+                                <li><strong>Version Released:</strong> 2025-10-12</li>
+                                <li><strong>Description:</strong> A fast Golang Valkey client that does auto pipelining and supports server-assisted client-side caching.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                </div>
+            
+                <div class="language-clients">
+                    <h2 id="php">
+    
+        PHP
+    
+</h2>
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-glide-php">Valkey GLIDE PHP</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-glide-php">Valkey GLIDE PHP</a></li>
+                                
+                                    <li><strong>Website:</strong> <a href="https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=php">https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=php</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>pie install valkey-io&#x2F;valkey-glide-php</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v1.1.2</li>
+                                <li><strong>Version Released:</strong> 2026-07-03</li>
+                                <li><strong>Description:</strong> Valkey GLIDE PHP is designed for reliability, optimized performance, and high-availability, for Valkey and Redis OSS based applications. GLIDE is a multi language client library, written in Rust with programming language bindings, such as Java, node.js and Python.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="phpredis">phpredis</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;phpredis&#x2F;phpredis">phpredis</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>pecl install redis</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> 6.1.0</li>
+                                <li><strong>Version Released:</strong> 2024-10-05</li>
+                                <li><strong>Description:</strong>  A PHP extension for Redis, offering high performance and a native API.</li>
+                                <li><strong>License:</strong> PHP-3.01</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="predis">predis</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;predis&#x2F;predis">predis</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>composer require predis&#x2F;predis</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v2.3.0</li>
+                                <li><strong>Version Released:</strong> 2024-11-21</li>
+                                <li><strong>Description:</strong> A flexible and feature-complete Redis client for PHP.</li>
+                                <li><strong>License:</strong> MIT</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                </div>
+            
+                <div class="language-clients">
+                    <h2 id="swift">
+    
+        Swift
+    
+</h2>
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-swift">valkey-swift</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-swift">valkey-swift</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>swift package add-dependency https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-swift</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v1.0.0</li>
+                                <li><strong>Version Released:</strong> 2026-02-24</li>
+                                <li><strong>Description:</strong> Swift client for Valkey.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                </div>
+            
+                <div class="language-clients">
+                    <h2 id="csharp">
+    
+        C#
+    
+</h2>
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-glide-c">Valkey GLIDE C#</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-glide-csharp">Valkey GLIDE C#</a></li>
+                                
+                                    <li><strong>Website:</strong> <a href="https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=c%23">https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=c%23</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>dotnet add package Valkey.Glide</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v1.1.0</li>
+                                <li><strong>Version Released:</strong> 2026-05-13</li>
+                                <li><strong>Description:</strong> Valkey GLIDE C# is designed for reliability, optimized performance, and high-availability, for Valkey and Redis OSS based applications. GLIDE is a multi language client library, written in Rust with programming language bindings, such as Java, node.js and Python.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                        
+                        
+                    
+                </div>
+            
+                <div class="language-clients">
+                    <h2 id="ruby">
+    
+        Ruby
+    
+</h2>
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                    
+                        
+                        
+                        <div class="client-item" >
+                            <h3 id="valkey-glide-ruby">Valkey GLIDE Ruby</h3>
+                            <ul>
+                                <li><strong>Repo:</strong> <a href="https:&#x2F;&#x2F;github.com&#x2F;valkey-io&#x2F;valkey-glide-ruby">Valkey GLIDE Ruby</a></li>
+                                
+                                    <li><strong>Website:</strong> <a href="https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=ruby">https:&#x2F;&#x2F;glide.valkey.io&#x2F;getting-started&#x2F;quickstart&#x2F;?lang=ruby</a></li>
+                                 
+                                <li>
+                                    <strong>Installation:</strong>
+                                    
+                                        <code>gem install valkey-glide-rb</code>
+                                    
+                                </li>
+                                <li><strong>Version:</strong> v1.0.0</li>
+                                <li><strong>Version Released:</strong> 2026-08-13</li>
+                                <li><strong>Description:</strong> Valkey GLIDE Ruby is designed for reliability, optimized performance, and high-availability, for Valkey and Redis OSS based applications. GLIDE is a multi language client library, written in Rust with programming language bindings, such as Java, node.js and Python.</li>
+                                <li><strong>License:</strong> Apache-2.0</li>
+                            </ul>
+                        </div>                    
+                        
+                    
+                </div>
+            
+        </div>
+        <div class="markdown-content">
+            <h2 id="advanced-features-overview">Advanced Features Overview</h2>
+<ol>
+<li>
+<p><strong>Read from Replica</strong> - The ability to read data from a replica node, which can be useful for load balancing and reducing the load on the primary node. This feature is particularly important in read-heavy applications.</p>
+</li>
+<li>
+<p><strong>Smart Backoff to Prevent Connection Storm</strong> - A strategy used to prevent connection storms by progressively updating the wait time between retries when attempting to reconnect to a Valkey server. This helps to reduce the load on the server during topology updates, periods of high demand or network instability.</p>
+</li>
+<li>
+<p><strong>PubSub State Restoration</strong> - The ability to restore the state of Pub/Sub (publish/subscribe) channels after a client reconnects. This feature ensures that clients can continue receiving messages after disconnections or topology updates such as adding or removing shards, for both legacy Pub/Sub and sharded Pub/Sub. The client will automatically resubscribe the connections to the new node. The advantage is that the application code is simplified, and doesn’t have to take care of resubscribing to new nodes during reconnects.</p>
+</li>
+<li>
+<p><strong>Cluster Scan</strong> - This feature ensures that the user experience and guarantees for scanning a cluster are identical to those for scanning a single node. The SCAN function operates as a cursor-based iterator. With each command, the server provides an updated cursor, which must be used as the cursor argument in subsequent calls. A complete iteration with SCAN retrieves all elements present in the collection from start to finish. If an element exists in the collection at the beginning and remains until the end of the iteration, SCAN will return it. Conversely, any element removed before the iteration begins and not re-added during the process will not be returned by SCAN. A client supporting this feature ensures the scan iterator remains valid even during failovers or cluster scaling (in or out) during the SCAN operation.</p>
+</li>
+<li>
+<p><strong>Latency-Based Read from Replica</strong> - This feature enables reading data from the nearest replica, i.e., the replica that offers the best latency. It supports complex deployments where replicas are distributed across various distances, including different geographical regions, to ensure data is read from the closest replica, thereby minimizing latency.</p>
+</li>
+<li>
+<p><strong>AZ-Based Read from Replica</strong> - This feature enables reading data from replicas within the same Availability Zone (AZ). When running Valkey in a cloud environment across multiple AZs, it is preferable to keep traffic localized within an AZ to reduce costs and latency. By reading from replicas in the same AZ as the client, you can optimize performance and minimize cross-AZ data transfer charges. For more detailed information about this feature and its implementation, please refer to <a rel="external" href="https://github.com/valkey-io/valkey/pull/700">this link.</a></p>
+</li>
+<li>
+<p><strong>Client Side Caching</strong> - Valkey client-side caching is a feature that allows clients to cache the results of Valkey queries on the client-side, reducing the need for frequent communication with the Valkey server. This can significantly improve application performance by lowering latency, reducing the network usage and cost and reducing the load on the Valkey server.</p>
+</li>
+<li>
+<p><strong><code>CLIENT CAPA redirect</code> Support</strong> - The <code>CLIENT CAPA redirect</code> feature was introduced in Valkey 8 to facilitate seamless upgrades without causing errors in standalone mode. When enabled, this feature allows the replica to redirect data access commands (both read and write operations) to the primary instance. This ensures uninterrupted service during the upgrade process. For more detailed information about this feature, please refer to <a rel="external" href="https://github.com/valkey-io/valkey/pull/325">this link.</a></p>
+</li>
+<li>
+<p><strong>Persistent Connection Pool</strong> - This feature enables the Valkey client to maintain a pool of persistent connections to the Valkey server, improving performance and reducing overhead. Instead of establishing a new connection for each request, the client can reuse existing connections from the pool, minimizing the time and resources required for connection setup.</p>
+</li>
+</ol>
+
+        </div>
+        <div  id="feature-comparison-table" class = "feature-comparison-table" >
+            
+            
+            
+    <hr/>
+    <h2 >Feature Comparison Table</h2>
+
+    <div class="table-container">
+        <table >
+            <thead>
+                <tr class="table-header">
+                    
+                        <th class="table-header-cell">Name</th>
+                    
+                        <th class="table-header-cell">Language</th>
+                    
+                        <th class="table-header-cell">Read From Replica</th>
+                    
+                        <th class="table-header-cell">Smart Backoff To Prevent Connection Storm</th>
+                    
+                        <th class="table-header-cell">Pubsub State Restoration</th>
+                    
+                        <th class="table-header-cell">Cluster Scan</th>
+                    
+                        <th class="table-header-cell">Latency Based Read From Replica</th>
+                    
+                        <th class="table-header-cell">AZ Based Read From Replica</th>
+                    
+                        <th class="table-header-cell">Client Side Caching</th>
+                    
+                        <th class="table-header-cell">Client Capa Redirect</th>
+                    
+                        <th class="table-header-cell">Persistent Connection Pool</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    Valkey GLIDE Python
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    python
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row even-row">
+                        
+                            <td class="table-cell">
+                                
+                                    valkey-py
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    python
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    Valkey GLIDE Node.js
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    node.js
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row even-row">
+                        
+                            <td class="table-cell">
+                                
+                                    iovalkey
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    node.js
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    Valkey GLIDE Java
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    java
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row even-row">
+                        
+                            <td class="table-cell">
+                                
+                                    valkey-java
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    java
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    redisson
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    java
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row even-row">
+                        
+                            <td class="table-cell">
+                                
+                                    Valkey GLIDE Go
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    go
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    valkey-go
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    go
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row even-row">
+                        
+                            <td class="table-cell">
+                                
+                                    Valkey GLIDE PHP
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    php
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    phpredis
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    php
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row even-row">
+                        
+                            <td class="table-cell">
+                                
+                                    predis
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    php
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    valkey-swift
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    swift
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row even-row">
+                        
+                            <td class="table-cell">
+                                
+                                    Valkey GLIDE C#
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    csharp
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+                    
+                    <tr class="table-row odd-row">
+                        
+                            <td class="table-cell">
+                                
+                                    Valkey GLIDE Ruby
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    ruby
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-true">✓</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                            <td class="table-cell">
+                                
+                                    
+        <span class="checkmark-false">✗</span>
+    
+                                
+                            </td>
+                        
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+
+        </div>
+    
+
+    </main>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

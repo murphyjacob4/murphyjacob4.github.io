@@ -1,0 +1,407 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; LDAP Authentication</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: LDAP Authentication">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: LDAP Authentication</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            LDAP Authentication
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey supports LDAP authentication through the official <a rel="external" href="https://github.com/valkey-io/valkey-ldap">valkey-ldap module</a>, compatible with Valkey versions 7.2.x and above. To enable this feature, you must load the module on your Valkey server.</p>
+<p>This module allows Valkey to authenticate users using external LDAP-based systems, such as Active Directory. It seamlessly integrates Valkey’s authentication with enterprise identity management solutions, enabling organizations to leverage their existing authentication infrastructure.</p>
+<p>This module supports two LDAP authentication modes. The <code>bind</code> mode, and the <code>search+bind</code> mode.</p>
+<p>The <code>bind</code> mode is used when the username provided in the Valkey <a href="/commands/auth"><code>AUTH</code></a> command matches a substring of the distinguished name (DN) of user entries in the LDAP directory. The <code>search+bind</code> mode offers greater flexibility, allowing the username to match any attribute value of an LDAP user entry, making it suitable for more complex directory structures.</p>
+<h2 id="bind-mode-authentication">Bind Mode Authentication</h2>
+<p>In the <code>bind</code> mode, the module constructs the distinguished name (DN) by adding a configurable prefix and suffix to the username.</p>
+<p>Typically, the prefix is set to <code>CN=</code> or <code>DOMAIN\</code> for Active Directory environments, while the suffix defines the remainder of the DN in non-Active Directory setups.</p>
+<p>Here’s an example of how to use <code>bind</code> mode for authentication.</p>
+<p>Consider the following LDAP user entry:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>dn: uid=ben,ou=engineering,dc=valkey,dc=io</span></span>
+<span class="giallo-l"><span>objectclass: person</span></span>
+<span class="giallo-l"><span>objectclass: inetOrgPerson</span></span>
+<span class="giallo-l"><span>cn: Ben Alex</span></span>
+<span class="giallo-l"><span>sn: Alex</span></span>
+<span class="giallo-l"><span>uid: ben</span></span></code></pre>
+<p>In this case, the DN is <code>uid=ben,ou=engineering,dc=valkey,dc=io</code>, and the username is <code>ben</code>. To use <code>bind</code> mode, set the prefix to <code>uid=</code> and the suffix to <code>,ou=engineering,dc=valkey,dc=io</code>.</p>
+<p>You can configure these values using the <code>ldap.bind_dn_prefix</code> and <code>ldap.bind_dn_suffix</code> options.</p>
+<h2 id="search-bind-authentication">Search+Bind Authentication</h2>
+<p>In the <code>search+bind</code> mode, the module first binds to the LDAP directory using a username and password of an account that has permissions to perform search operations in the LDAP directory. These credentials are stored in the module configuration, where you specify the bind DN (Distinguished Name) in <code>ldap.search_bind_dn</code> and the password in <code>ldap.search_bind_passwd</code>.</p>
+<p>If no username and password is configured for search bind account, an anonymous bind will be attempted to the directory.</p>
+<p><strong>Warning:</strong> Anonymous binds can expose sensitive directory information if not properly restricted.
+Ensure that your LDAP server is configured to limit access for anonymous users to prevent unintended data exposure.</p>
+<p>After the binding phase, a search operation is performed over the subtree at a configurable base DN string, which is set in the module configuration under the <code>ldap.search_base_dn</code> parameter. The module will then attempt to match the username specified in the <code>AUTH</code> command against the value of a configurable entry attribute, defined by the <code>ldap.search_attribute</code> parameter in the configuration.</p>
+<p>Once the user entry is found, the module retrieves the user’s DN from the attribute specified by the <code>ldap.search_dn_attribute</code> configuration option. It then re-binds to the LDAP directory as this user, using the extracted DN and the password provided in the <code>AUTH</code> command, to verify the login credentials.</p>
+<p>Here’s an example of how to use <code>search+bind</code> mode for authentication.</p>
+<p>Consider the following LDAP user entry:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>dn: cn=Ben Alex,ou=engineering,dc=valkey,dc=io</span></span>
+<span class="giallo-l"><span>objectClass: person</span></span>
+<span class="giallo-l"><span>objectClass: inetOrgPerson</span></span>
+<span class="giallo-l"><span>entryDN: cn=Ben Alex,ou=engineering,dc=valkey,dc=io</span></span>
+<span class="giallo-l"><span>cn: Ben Alex</span></span>
+<span class="giallo-l"><span>sn: Alex</span></span>
+<span class="giallo-l"><span>uid: ben</span></span></code></pre>
+<p>In this example, the username <code>ben</code> is stored in the <code>uid</code> attribute, and the user's DN is stored in the <code>entryDN</code> attribute. Since it's not possible to construct the DN using the username with a prefix and suffix as in the <code>bind</code> mode, you need to use <code>search+bind</code> mode to locate the user entry and extract its DN.</p>
+<p>Set <code>ldap.search_attribute</code> to <code>uid</code> and <code>ldap.search_dn_attribute</code> to <code>entryDN</code> to match the username and retrieve the DN.</p>
+<p>You can also use the <code>ldap.search_filter</code> option to restrict which LDAP objects are included in the search. By default, <code>ldap.search_filter</code> is set to <code>objectClass=*</code>, which matches all objects.</p>
+<p>Internally, the module performs an LDAP search with a filter like <code>(&amp;(objectClass=*)(uid=ben))</code>, which matches the entry above. It then extracts the DN from the <code>entryDN</code> attribute and re-binds using this DN and the password provided in the <code>AUTH</code> command to complete authentication.</p>
+<h3 id="comparison-with-bind-mode">Comparison with Bind Mode</h3>
+<p>While <code>bind</code> mode is simpler and faster, as it directly constructs the DN from the username, it is best suited for environments where the directory structure is straightforward and usernames directly correspond to DN components.</p>
+<p>On the other hand, <code>search+bind</code> mode provides greater flexibility, allowing authentication in complex directory structures where usernames may not directly map to DN components.</p>
+<p>However, this flexibility comes at the cost of additional LDAP requests, making it slightly slower than <code>bind</code> mode.</p>
+<h2 id="setting-up-valkey-users">Setting Up Valkey Users</h2>
+<p>The LDAP server is used solely for authenticating users.
+Authorization rules for each user must be configured in Valkey using either the <a href="/commands/acl-setuser"><code>ACL SETUSER</code></a> command, through entries in <code>valkey.conf</code>, or using an <a href="/topics/acl">ACL file</a>.
+This means that user accounts must exist in Valkey in order for LDAP authentication to succeed.</p>
+<p>For example, to allow the user <code>bob</code> to authenticate via LDAP, a corresponding user named <code>bob</code> must be present in the Valkey ACL database.</p>
+<p>To ensure that <code>bob</code> cannot log in using password-based authentication, you can create the Valkey user without specifying a password.</p>
+<p>To create a user without a password, simply omit the password when running the <code>ACL SETUSER</code> command and define the appropriate ACL rules. For example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>ACL SETUSER bob on +@hash</span></span></code></pre>
+<p>After creating the user <code>bob</code> in Valkey, authentication will only be possible through the LDAP module.</p>
+<h2 id="setting-up-ldap-module">Setting Up LDAP module</h2>
+<p>All module configuration options are prefixed with <code>ldap.</code> and can be set using the <code>CONFIG SET</code> command. To view the current values of all module-related options, use the command <code>CONFIG GET ldap.*</code>.</p>
+<p>After the module is loaded in Valkey, the first thing that is required for the LDAP authentication to work is to configure the list of LDAP servers that should be used for the authentication.</p>
+<p>The configuration option <code>ldap.servers</code> accepts a space separated list of LDAP URLs of the form <code>ldap[s]://&lt;domain&gt;:&lt;port&gt;</code>.</p>
+<p>After setting this option, the module will initialize the connection pools to the configured LDAP servers.</p>
+<p>The authentication mode <code>bind</code> vs <code>search+bind</code> is configured using the <code>ldap.auth_mode</code> option.</p>
+<h3 id="tls-configuration">TLS Configuration</h3>
+<p>The LDAP protocol supports two methods for securing connections between the client and the server: <strong>LDAPS</strong> and <strong>STARTTLS</strong>.</p>
+<ul>
+<li>
+<p><strong>LDAPS (LDAP over SSL):</strong><br />
+LDAPS secures the connection by establishing an SSL/TLS session as soon as the TCP connection is made, typically on port 636. All communication between the client and server is encrypted from the start. To use LDAPS, specify an LDAP URL with the <code>ldaps://</code> scheme.</p>
+</li>
+<li>
+<p><strong>STARTTLS:</strong><br />
+STARTTLS starts with a standard, unencrypted LDAP connection (usually on port 389). The client then issues a STARTTLS command to upgrade the connection to TLS encryption. To enable this method, set the <code>ldap.use_starttls</code> option to <code>yes</code>.</p>
+</li>
+</ul>
+<p>Both methods provide strong encryption for LDAP traffic. The choice depends on your environment and security requirements. Make sure your LDAP server is configured with valid SSL/TLS certificates to support secure connections.</p>
+<p>To verify LDAP server certificates, use the <code>ldap.tls_ca_cert_path</code> option to specify the path to a trusted CA certificate file. If this option is not set, the module will use the system’s default trusted CA certificates.</p>
+<p>If you need to use client certificates for authentication, configure the <code>ldap.tls_cert_path</code> and <code>ldap.tls_key_path</code> options with the paths to your client certificate and private key.</p>
+<h2 id="monitoring">Monitoring</h2>
+<p>The module extends the output of the <code>INFO</code> command by adding a new section called <code>ldap_status</code>, which provides status information for each LDAP server configured via the <code>ldap.servers</code> option.</p>
+<p>The <code>ldap_status</code> section includes a dictionary entry for each server, with the following possible fields:</p>
+<ul>
+<li><code>host</code>: The server hostname extracted from the URL specified in the <code>ldap.servers</code> configuration.</li>
+<li><code>status</code>: Indicates the server's health. Possible values are <code>healthy</code> (the server is reachable and responds to LDAP operations) or <code>unhealthy</code> (the server cannot process LDAP operations).</li>
+<li><code>ping_time_ms</code>: The round-trip time (RTT) for a simple LDAP operation, in milliseconds. This field is shown only for <code>healthy</code> servers.</li>
+<li><code>error</code>: A description of the error that caused the server to be marked as <code>unhealthy</code>. This field is shown only for <code>unhealthy</code> servers.</li>
+</ul>
+<p>Example output from the <code>INFO</code> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span># ldap_status</span></span>
+<span class="giallo-l"><span>ldap_server_0:host=&lt;hostname&gt;,status=unhealthy,error=&lt;some error message&gt;</span></span>
+<span class="giallo-l"><span>ldap_server_1:host=&lt;hostname&gt;,status=healthy,ping_time_ms=1.645</span></span></code></pre><h2 id="advanced-configuration">Advanced Configuration</h2>
+<p>The LDAP module provides several configuration options to help adapt authentication behavior to your network environment and LDAP server load.</p>
+<h3 id="ldap-server-connection-management">LDAP Server Connection Management</h3>
+<p>Because LDAP servers are often shared by multiple applications, it's important to limit the number of connections each application opens to avoid exhausting the server's resources.</p>
+<p>The <code>ldap.connection_pool_size</code> option specifies the maximum number of connections the module will open to each configured LDAP server. Set this value based on the expected number of concurrent authentication requests in Valkey and the maximum number of connections your LDAP server can support.</p>
+<p>If the number of parallel authentication requests exceeds the configured pool size, authentication latency may increase as requests wait for available connections.</p>
+<h3 id="ldap-server-failure-detection">LDAP Server Failure Detection</h3>
+<p>The module includes a background process that periodically checks the status of each configured LDAP server.</p>
+<p>The frequency of these checks is controlled by the <code>ldap.failure_detector_interval</code> option, which accepts a value in seconds.</p>
+<p>If the failure detector determines that an LDAP server is unreachable or unable to process LDAP operations, it marks the server as "unhealthy" and automatically fails over authentication requests to another available LDAP server.</p>
+<p>If network latency between Valkey and the LDAP server is variable, or if the LDAP server is under heavy load, you can adjust the connection and operation timeouts using the <code>ldap.timeout_connection</code> and <code>ldap.timeout_ldap_operation</code> options.</p>
+<h2 id="configuration-options">Configuration Options</h2>
+<h3 id="general-options">General Options</h3>
+<table><thead><tr><th>Config Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ldap.auth_mode</code></td><td>Enum(<code>bind</code>, <code>search+bind</code>)</td><td><code>bind</code></td><td>The authentication method.</td></tr>
+<tr><td><code>ldap.servers</code></td><td>string</td><td><code>""</code></td><td>Space-separated list of LDAP URLs in the form <code>ldap[s]://&lt;domain&gt;:&lt;port&gt;</code>.</td></tr>
+</tbody></table>
+<h3 id="tls-options">TLS Options</h3>
+<table><thead><tr><th>Config Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ldap.use_starttls</code></td><td>boolean</td><td><code>no</code></td><td>Whether to upgrade to a TLS-encrypted connection using the STARTTLS operation (RFC 4513).</td></tr>
+<tr><td><code>ldap.tls_ca_cert_path</code></td><td>string</td><td><code>""</code></td><td>Filesystem path to the CA certificate for validating the LDAP server certificate.</td></tr>
+<tr><td><code>ldap.tls_cert_path</code></td><td>string</td><td><code>""</code></td><td>Filesystem path to the client certificate for TLS connections to the LDAP server.</td></tr>
+<tr><td><code>ldap.tls_key_path</code></td><td>string</td><td><code>""</code></td><td>Filesystem path to the client certificate key for TLS connections to the LDAP server.</td></tr>
+</tbody></table>
+<h3 id="bind-mode-options">Bind Mode Options</h3>
+<table><thead><tr><th>Config Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ldap.bind_dn_prefix</code></td><td>string</td><td><code>"cn="</code></td><td>String to prepend to the username from the <code>AUTH</code> command when forming the DN for LDAP bind.</td></tr>
+<tr><td><code>ldap.bind_dn_suffix</code></td><td>string</td><td><code>""</code></td><td>String to append to the username from the <code>AUTH</code> command when forming the DN for LDAP bind.</td></tr>
+</tbody></table>
+<h3 id="search-bind-mode-options">Search+Bind Mode Options</h3>
+<table><thead><tr><th>Config Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ldap.search_bind_dn</code></td><td>string</td><td><code>""</code></td><td>DN of the user account used to perform LDAP searches.</td></tr>
+<tr><td><code>ldap.search_bind_passwd</code></td><td>string</td><td><code>""</code></td><td>Password for the search bind user.</td></tr>
+<tr><td><code>ldap.search_base</code></td><td>string</td><td><code>""</code></td><td>Base DN where the search for the user entry begins.</td></tr>
+<tr><td><code>ldap.search_filter</code></td><td>string</td><td><code>"objectClass=*"</code></td><td>LDAP search filter to apply when searching for user entries.</td></tr>
+<tr><td><code>ldap.search_attribute</code></td><td>string</td><td><code>"uid"</code></td><td>LDAP attribute to match against the username provided in the <code>AUTH</code> command.</td></tr>
+<tr><td><code>ldap.search_scope</code></td><td>Enum(<code>base</code>, <code>one</code>, <code>sub</code>)</td><td><code>sub</code></td><td>Scope of the LDAP search.</td></tr>
+<tr><td><code>ldap.search_dn_attribute</code></td><td>string</td><td><code>"entryDN"</code></td><td>Attribute containing the DN of the user entry.</td></tr>
+</tbody></table>
+<h3 id="advanced-options">Advanced Options</h3>
+<table><thead><tr><th>Config Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ldap.connection_pool_size</code></td><td>number</td><td><code>2</code></td><td>Number of connections in each LDAP server's connection pool.</td></tr>
+<tr><td><code>ldap.failure_detector_interval</code></td><td>number</td><td><code>1</code></td><td>Interval (in seconds) between each failure detector check.</td></tr>
+<tr><td><code>ldap.timeout_connection</code></td><td>number</td><td><code>10</code></td><td>Number of seconds to wait when connecting to an LDAP server before timing out.</td></tr>
+<tr><td><code>ldap.timeout_ldap_operation</code></td><td>number</td><td><code>10</code></td><td>Number of seconds to wait for an LDAP operation before timing out.</td></tr>
+</tbody></table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/ldap.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

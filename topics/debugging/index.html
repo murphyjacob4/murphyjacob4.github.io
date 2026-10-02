@@ -1,0 +1,423 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Debugging</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Debugging">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Debugging</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Debugging
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <p>Valkey is developed with an emphasis on stability. We do our best with
+every release to make sure you'll experience a stable product with no
+crashes. However, if you ever need to debug the Valkey process itself, read on.</p>
+<p>When Valkey crashes, it produces a detailed report of what happened. However,
+sometimes looking at the crash report is not enough, nor is it possible for
+the Valkey core team to reproduce the issue independently. In this scenario, we
+need help from the user who can reproduce the issue.</p>
+<p>This guide shows how to use GDB to provide the information the
+Valkey developers will need to track the bug more easily.</p>
+<h2 id="what-is-gdb">What is GDB?</h2>
+<p>GDB is the Gnu Debugger: a program that is able to inspect the internal state
+of another program. Usually tracking and fixing a bug is an exercise in
+gathering more information about the state of the program at the moment the
+bug happens, so GDB is an extremely useful tool.</p>
+<p>GDB can be used in two ways:</p>
+<ul>
+<li>It can attach to a running program and inspect the state of it at runtime.</li>
+<li>It can inspect the state of a program that already terminated using what is called a <em>core file</em>, that is, the image of the memory at the time the program was running.</li>
+</ul>
+<p>From the point of view of investigating Valkey bugs we need to use both of these
+GDB modes. The user able to reproduce the bug attaches GDB to their running Valkey
+instance, and when the crash happens, they create the <code>core</code> file that in turn
+the developer will use to inspect the Valkey internals at the time of the crash.</p>
+<p>This way the developer can perform all the inspections in his or her computer
+without the help of the user, and the user is free to restart Valkey in their
+production environment.</p>
+<h2 id="compiling-valkey-without-optimizations">Compiling Valkey without optimizations</h2>
+<p>By default, Valkey is compiled with the <code>-O3</code> optimization flag, which enables
+a high level of compiler optimizations that aim to maximize runtime performance.
+Valkey is also compiled with the <code>-fno-omit-frame-pointer</code> flag by default, ensuring that
+the frame pointer is preserved across function calls. This combination allows for
+precise stack walking and call stack tracing, which is essential for debugging.</p>
+<p>It is better to attach GDB to Valkey compiled without optimizations using the
+<code>make noopt</code> command (instead of just using the plain <code>make</code> command). However,
+if you have an already running Valkey in production there is no need to recompile
+and restart it if this is going to create problems on your side. GDB still works
+against executables compiled with optimizations.</p>
+<p>You should not be overly concerned at the loss of performance from compiling Valkey
+without optimizations. It is unlikely that this will cause problems in your
+environment as Valkey is not very CPU-bound.</p>
+<h2 id="attaching-gdb-to-a-running-process">Attaching GDB to a running process</h2>
+<p>If you have an already running Valkey server, you can attach GDB to it, so that
+if Valkey crashes it will be possible to both inspect the internals and generate
+a <code>core dump</code> file.</p>
+<p>After you attach GDB to the Valkey process it will continue running as usual without
+any loss of performance, so this is not a dangerous procedure.</p>
+<p>In order to attach GDB the first thing you need is the <em>process ID</em> of the running
+Valkey instance (the <em>pid</em> of the process). You can easily obtain it using
+<code>valkey-cli</code>:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ valkey-cli info | grep process_id</span></span>
+<span class="giallo-l"><span>process_id:58414</span></span></code></pre>
+<p>In the above example the process ID is <strong>58414</strong>.</p>
+<p>Login into your Valkey server.</p>
+<p>(Optional but recommended) Start <strong>screen</strong> or <strong>tmux</strong> or any other program that will make sure that your GDB session will not be closed if your ssh connection times out. You can learn more about screen in <a rel="external" href="https://www.linuxjournal.com/article/6340">this article</a>.</p>
+<p>Attach GDB to the running Valkey server by typing:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ gdb &lt;path-to-valkey-executable&gt; &lt;pid&gt;</span></span></code></pre>
+<p>For example:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>$ gdb /usr/local/bin/valkey-server 58414</span></span></code></pre>
+<p>GDB will start and will attach to the running server printing something like the following:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>Reading symbols for shared libraries + done</span></span>
+<span class="giallo-l"><span>0x00007fff8d4797e6 in epoll_wait ()</span></span>
+<span class="giallo-l"><span>(gdb)</span></span></code></pre>
+<p>At this point GDB is attached but <strong>your Valkey instance is blocked by GDB</strong>. In
+order to let the Valkey instance continue the execution just type <strong>continue</strong> at
+the GDB prompt, and press enter.</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(gdb) continue</span></span>
+<span class="giallo-l"><span>Continuing.</span></span></code></pre>
+<p>Done! Now your Valkey instance has GDB attached. Now you can wait for the next crash. :)</p>
+<p>Now it's time to detach your screen/tmux session, if you are running GDB using it, by
+pressing <strong>Ctrl-a a</strong> key combination.</p>
+<h2 id="after-the-crash">After the crash</h2>
+<p>Valkey has a command to simulate a segmentation fault (in other words a bad crash) using
+the <code>DEBUG SEGFAULT</code> command (don't use it against a real production instance of course!
+So I'll use this command to crash my instance to show what happens in the GDB side:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(gdb) continue</span></span>
+<span class="giallo-l"><span>Continuing.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Program received signal EXC_BAD_ACCESS, Could not access memory.</span></span>
+<span class="giallo-l"><span>Reason: KERN_INVALID_ADDRESS at address: 0xffffffffffffffff</span></span>
+<span class="giallo-l"><span>debugCommand (c=0x7ffc32005000) at debug.c:220</span></span>
+<span class="giallo-l"><span>220         *((char*)-1) = &#39;x&#39;;</span></span></code></pre>
+<p>As you can see GDB detected that Valkey crashed, and was even able to show me
+the file name and line number causing the crash. This is already much better
+than the Valkey crash report back trace (containing just function names and
+binary offsets).</p>
+<h2 id="obtaining-the-stack-trace">Obtaining the stack trace</h2>
+<p>The first thing to do is to obtain a full stack trace with GDB. This is as
+simple as using the <strong>bt</strong> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(gdb) bt</span></span>
+<span class="giallo-l"><span>#0  debugCommand (c=0x7ffc32005000) at debug.c:220</span></span>
+<span class="giallo-l"><span>#1  0x000000010d246d63 in call (c=0x7ffc32005000) at valkey.c:1163</span></span>
+<span class="giallo-l"><span>#2  0x000000010d247290 in processCommand (c=0x7ffc32005000) at valkey.c:1305</span></span>
+<span class="giallo-l"><span>#3  0x000000010d251660 in processInputBuffer (c=0x7ffc32005000) at networking.c:959</span></span>
+<span class="giallo-l"><span>#4  0x000000010d251872 in readQueryFromClient (el=0x0, fd=5, privdata=0x7fff76f1c0b0, mask=220924512) at networking.c:1021</span></span>
+<span class="giallo-l"><span>#5  0x000000010d243523 in aeProcessEvents (eventLoop=0x7fff6ce408d0, flags=220829559) at ae.c:352</span></span>
+<span class="giallo-l"><span>#6  0x000000010d24373b in aeMain (eventLoop=0x10d429ef0) at ae.c:397</span></span>
+<span class="giallo-l"><span>#7  0x000000010d2494ff in main (argc=1, argv=0x10d2b2900) at valkey.c:2046</span></span></code></pre>
+<p>This shows the backtrace, but we also want to dump the processor registers using the <strong>info registers</strong> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(gdb) info registers</span></span>
+<span class="giallo-l"><span>rax            0x0  0</span></span>
+<span class="giallo-l"><span>rbx            0x7ffc32005000   140721147367424</span></span>
+<span class="giallo-l"><span>rcx            0x10d2b0a60  4515891808</span></span>
+<span class="giallo-l"><span>rdx            0x7fff76f1c0b0   140735188943024</span></span>
+<span class="giallo-l"><span>rsi            0x10d299777  4515796855</span></span>
+<span class="giallo-l"><span>rdi            0x0  0</span></span>
+<span class="giallo-l"><span>rbp            0x7fff6ce40730   0x7fff6ce40730</span></span>
+<span class="giallo-l"><span>rsp            0x7fff6ce40650   0x7fff6ce40650</span></span>
+<span class="giallo-l"><span>r8             0x4f26b3f7   1327936503</span></span>
+<span class="giallo-l"><span>r9             0x7fff6ce40718   140735020271384</span></span>
+<span class="giallo-l"><span>r10            0x81 129</span></span>
+<span class="giallo-l"><span>r11            0x10d430398  4517462936</span></span>
+<span class="giallo-l"><span>r12            0x4b7c04f8babc0  1327936503000000</span></span>
+<span class="giallo-l"><span>r13            0x10d3350a0  4516434080</span></span>
+<span class="giallo-l"><span>r14            0x10d42d9f0  4517452272</span></span>
+<span class="giallo-l"><span>r15            0x10d430398  4517462936</span></span>
+<span class="giallo-l"><span>rip            0x10d26cfd4  0x10d26cfd4 &lt;debugCommand+68&gt;</span></span>
+<span class="giallo-l"><span>eflags         0x10246  66118</span></span>
+<span class="giallo-l"><span>cs             0x2b 43</span></span>
+<span class="giallo-l"><span>ss             0x0  0</span></span>
+<span class="giallo-l"><span>ds             0x0  0</span></span>
+<span class="giallo-l"><span>es             0x0  0</span></span>
+<span class="giallo-l"><span>fs             0x0  0</span></span>
+<span class="giallo-l"><span>gs             0x0  0</span></span></code></pre>
+<p>Please <strong>make sure to include</strong> both of these outputs in your bug report.</p>
+<h2 id="obtaining-the-core-file">Obtaining the core file</h2>
+<p>The next step is to generate the core dump, that is the image of the memory of the running Valkey process. This is done using the <code>gcore</code> command:</p>
+<pre class="giallo" style="color: #E6EDF3; background-color: #0D1117;"><code data-lang="plain"><span class="giallo-l"><span>(gdb) gcore</span></span>
+<span class="giallo-l"><span>Saved corefile core.58414</span></span></code></pre>
+<p>Now you have the core dump to send to the Valkey developer, but <strong>it is important
+to understand</strong> that this happens to contain all the data that was inside the
+Valkey instance at the time of the crash; Valkey developers will make sure not to
+share the content with anyone else, and will delete the file as soon as it is no
+longer used for debugging purposes, but you are warned that by sending the core
+file you are sending your data.</p>
+<h2 id="what-to-send-to-developers">What to send to developers</h2>
+<p>Finally you can send everything to the Valkey core team:</p>
+<ul>
+<li>The Valkey executable you are using.</li>
+<li>The stack trace produced by the <strong>bt</strong> command, and the registers dump.</li>
+<li>The core file you generated with gdb.</li>
+<li>Information about the operating system and GCC version, and Valkey version you are using.</li>
+</ul>
+<h2 id="thank-you">Thank you</h2>
+<p>Your help is extremely important! Many issues can only be tracked this way. So
+thanks!</p>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/debugging.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>

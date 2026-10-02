@@ -1,0 +1,414 @@
+
+
+
+
+
+    
+    
+    
+    
+        
+     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="" />
+    <meta name="keywords" content="open-source, valkey" />
+    <meta property="og:image" content="https:&#x2F;&#x2F;murphyjacob4.github.io/img/valkey-logo-og.png" />
+    
+    
+
+    
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Valkey Documentation &middot; Valkey Search - Metrics and configurations</title>
+    <meta name="title" property="og:title" content="Valkey Documentation: Valkey Search - Metrics and configurations">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="alternate" type="application/atom+xml" title="Atom feed" href="https://murphyjacob4.github.io/atom.xml" />
+
+    <!-- Nav JS -->
+    <script src="/assets/js/nav.js"></script>
+
+    <!-- Carousel JS -->
+    <script src="/assets/js/carousel.js"></script>
+
+    <!-- cookie banner, LF standard -->
+    <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/31b1b91a-e0b6-47ea-bde2-7f2bd13dbe5c/osano.js?variant=one"></script>
+
+    <!-- google analytics, LF standard -->
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFFCB7SR');</script>
+    <!-- End Google Tag Manager -->
+
+    
+</head>
+<script>
+// Banner state management: Check localStorage before DOM renders to prevent layout shift
+// and ensure banner visibility state is consistent with user's previous interactions.
+(function() {
+  const bannerClosedTime = localStorage.getItem('bannerClosedTime');
+  if (bannerClosedTime) {
+    const closedTime = parseInt(bannerClosedTime, 10);
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in ms
+    if (Date.now() - closedTime < twentyFourHours) {
+      document.documentElement.classList.add('banner-hidden');
+    } else {
+      // Clear expired timestamp
+      localStorage.removeItem('bannerClosedTime');
+    }
+  }
+})();
+</script>
+<body
+  
+  ><div class="banner">
+    <div class="width-limiter">
+      <p><strong><a rel="external" href="https://events.linuxfoundation.org/valkeyconf">Save Your Spot for ValkeyConf 2026</a></strong> | October 5, 2026 | Prague, Czechia</p>
+
+    </div>
+    <a href="/" class="close-banner">
+      <img src="/img/icon-outline-close.svg" alt="Icon Close" width="16" height="16"/>
+    </a>
+  </div><div class="header">
+    <div class="width-limiter">
+      <a href="/" class="logo">
+        <img src="/img/valkey-horizontal.svg" alt="Valkey Logo" width="130" height="46"/>
+      </a>
+      <div role="button" 
+        class="btn-menu"
+        onclick="window.toggleHeaderMenu();"
+      ></div>
+      <nav role="navigation" aria-label="Main">
+        <a role="menuitem" href="/download/">Download</a>
+
+        <div class="has-submenu">
+          <a role="menuitem" href="/docs/">Documentation</a>
+          <div class="submenu">
+            <a role="menuitem" href="/commands/">Command Reference</a>
+            <a role="menuitem" href="/topics/">Documentation by Topic</a>
+            <a role="menuitem" href="/clients/">Client Libraries</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/blog/">Blog</a>
+        <div class="has-submenu">
+          <a role="menuitem" href="/community/">Community</a>
+          <div class="submenu">
+            <a role="menuitem" href="/events/">Events</a>
+          </div>
+        </div>
+        <a role="menuitem" href="/participants/">Participants</a>
+        <a role="menuitem" href="/try-valkey/">Try Valkey</a>
+        <a role="menuitem" href="https://github.com/valkey-io" target="_blank" class="github-button">
+          <img src="/img/IconGithub.svg" alt="GitHub Icon" width="16" height="16" />
+          GitHub
+          <!-- Star count will be injected here by JS -->
+        </a>
+        
+      </nav>
+    </div>
+  </div>
+  <div class="body">
+      
+
+
+    <div class="styled-title">
+        <h1 class="page-title">Documentation: Valkey Search - Metrics and configurations</h1>
+    </div>
+
+
+<div class="left-aside-bg ">
+    <div class="left-aside">
+        <main>
+            
+
+<nav class="breadcrumbs">
+    <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+            <a href="/topics/" class="breadcrumb-link">Topics</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+            <img src="/img/caret-right.svg" alt="Caret Right Icon" width="8" height="10"/>
+            Valkey Search - Metrics and configurations
+        </li>
+    </ul>
+</nav>
+
+            <div class="main-inner">
+                
+
+    <h2 id="metrics-info-search">Metrics - INFO SEARCH</h2>
+<h3 id="search-index-stats">search_index_stats</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_number_of_attributes</td><td style="text-align: center">Count</td><td style="text-align: left">Total attributes across all search indexes</td></tr>
+<tr><td style="text-align: left">search_number_of_indexes</td><td style="text-align: center">Count</td><td style="text-align: left">Total number of search indexes</td></tr>
+<tr><td style="text-align: left">search_total_active_write_threads</td><td style="text-align: center">Count</td><td style="text-align: left">Active writer threads (0 if suspended)</td></tr>
+<tr><td style="text-align: left">search_total_indexed_documents</td><td style="text-align: center">Count</td><td style="text-align: left">Total documents indexed across all indexes</td></tr>
+</tbody></table>
+<h3 id="search-indexing">search_indexing</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_background_indexing_status</td><td style="text-align: center">String</td><td style="text-align: left">Background indexing status: IN_PROGRESS or NO_ACTIVITY</td></tr>
+</tbody></table>
+<h3 id="search-memory">search_memory</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_index_reclaimable_memory</td><td style="text-align: center">Bytes</td><td style="text-align: left">Memory reclaimable after vector deletions</td></tr>
+<tr><td style="text-align: left">search_used_memory_bytes</td><td style="text-align: center">Bytes</td><td style="text-align: left">Total memory used by the module</td></tr>
+<tr><td style="text-align: left">search_used_memory_human</td><td style="text-align: center">String</td><td style="text-align: left">Total memory used by the module (human readable)</td></tr>
+</tbody></table>
+<h3 id="search-query">search_query</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_failure_requests_count</td><td style="text-align: center">Count</td><td style="text-align: left">Total failed query requests</td></tr>
+<tr><td style="text-align: left">search_hybrid_requests_count</td><td style="text-align: center">Count</td><td style="text-align: left">Hybrid queries (vector and non-vector)</td></tr>
+<tr><td style="text-align: left">search_inline_filtering_requests_count</td><td style="text-align: center">Count</td><td style="text-align: left">Queries using inline filtering</td></tr>
+<tr><td style="text-align: left">search_nonvector_requests_count</td><td style="text-align: center">Count</td><td style="text-align: left">Exclusively non-vector search queries</td></tr>
+<tr><td style="text-align: left">search_prefiltering_requests_count</td><td style="text-align: center">Count</td><td style="text-align: left">Queries using pre-filtering</td></tr>
+<tr><td style="text-align: left">search_result_record_dropped_count</td><td style="text-align: center">Count</td><td style="text-align: left">Records dropped when search results exceed limits</td></tr>
+<tr><td style="text-align: left">search_successful_requests_count</td><td style="text-align: center">Count</td><td style="text-align: left">Total successful query requests</td></tr>
+<tr><td style="text-align: left">search_vector_requests_count</td><td style="text-align: center">Count</td><td style="text-align: left">Query requests that include a vector component</td></tr>
+</tbody></table>
+<h3 id="search-rdb">search_rdb</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_rdb_load_failure_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Failed RDB load operations</td></tr>
+<tr><td style="text-align: left">search_rdb_load_success_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Successful RDB load operations</td></tr>
+<tr><td style="text-align: left">search_rdb_save_failure_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Failed RDB save operations</td></tr>
+<tr><td style="text-align: left">search_rdb_save_success_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Successful RDB save operations</td></tr>
+</tbody></table>
+<h3 id="search-string-interning">search_string_interning</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_string_interning_store_size</td><td style="text-align: center">Count</td><td style="text-align: left">Unique strings in the interning store</td></tr>
+</tbody></table>
+<h3 id="search-thread-pool">search_thread-pool</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_query_queue_size</td><td style="text-align: center">Count</td><td style="text-align: left">Current reader thread pool queue size</td></tr>
+<tr><td style="text-align: left">search_reader_resumed_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Times the reader thread pool was resumed</td></tr>
+<tr><td style="text-align: left">search_used_read_cpu</td><td style="text-align: center">Decimal fractions</td><td style="text-align: left">Average CPU used by reader threads (-1 if unavailable)</td></tr>
+<tr><td style="text-align: left">search_used_write_cpu</td><td style="text-align: center">Decimal fractions</td><td style="text-align: left">Average CPU used by writer threads (-1 if unavailable)</td></tr>
+<tr><td style="text-align: left">search_worker_pool_suspend_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Times the worker thread pool was suspended</td></tr>
+<tr><td style="text-align: left">search_writer_queue_size</td><td style="text-align: center">Count</td><td style="text-align: left">Current writer thread pool queue size</td></tr>
+<tr><td style="text-align: left">search_writer_resumed_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Times the writer thread pool was resumed</td></tr>
+<tr><td style="text-align: left">search_writer_suspension_expired_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Times writer suspension expired due to timeout</td></tr>
+</tbody></table>
+<h3 id="search-vector-externing">search_vector_externing</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_vector_externing_deferred_entry_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Deferred entries in vector externalization</td></tr>
+<tr><td style="text-align: left">search_vector_externing_entry_count</td><td style="text-align: center">Count</td><td style="text-align: left">Total entries in the vector externalizer</td></tr>
+<tr><td style="text-align: left">search_vector_externing_generated_value_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">Generated values during vector externalization</td></tr>
+<tr><td style="text-align: left">search_vector_externing_hash_extern_errors</td><td style="text-align: center">Count</td><td style="text-align: left">Errors during hash externalization</td></tr>
+<tr><td style="text-align: left">search_vector_externing_lru_promote_cnt</td><td style="text-align: center">Count</td><td style="text-align: left">LRU promotions in vector externalization</td></tr>
+<tr><td style="text-align: left">search_vector_externing_num_lru_entries</td><td style="text-align: center">Count</td><td style="text-align: left">Entries in the vector externalizer LRU cache</td></tr>
+</tbody></table>
+<h3 id="search-latency">search_latency</h3>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_flat_vector_index_search_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency distribution for flat vector index searches</td></tr>
+<tr><td style="text-align: left">search_hnsw_vector_index_search_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency distribution for HNSW vector index searches</td></tr>
+</tbody></table>
+<h3 id="search-coordinator">search_coordinator</h3>
+<p>These metrics are only available when cluster mode is enabled.</p>
+<table><thead><tr><th style="text-align: left">Metric Name</th><th style="text-align: center">Unit</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search_coordinator_bytes_in</td><td style="text-align: center">Bytes</td><td style="text-align: left">Total incoming gRPC response bytes from remote nodes</td></tr>
+<tr><td style="text-align: left">search_coordinator_bytes_out</td><td style="text-align: center">Bytes</td><td style="text-align: left">Total outgoing gRPC request bytes to remote nodes</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_get_global_metadata_failure_count</td><td style="text-align: center">Count</td><td style="text-align: left">Failed client requests to get global metadata</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_get_global_metadata_failure_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for failed client metadata requests</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_get_global_metadata_success_count</td><td style="text-align: center">Count</td><td style="text-align: left">Successful client requests to get global metadata</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_get_global_metadata_success_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for successful client metadata requests</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_search_index_partition_failure_count</td><td style="text-align: center">Count</td><td style="text-align: left">Failed client searches on index partitions</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_search_index_partition_failure_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for failed partition searches</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_search_index_partition_success_count</td><td style="text-align: center">Count</td><td style="text-align: left">Successful client searches on index partitions</td></tr>
+<tr><td style="text-align: left">search_coordinator_client_search_index_partition_success_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for successful partition searches</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_get_global_metadata_failure_count</td><td style="text-align: center">Count</td><td style="text-align: left">Failed server requests to get global metadata</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_get_global_metadata_success_count</td><td style="text-align: center">Count</td><td style="text-align: left">Successful server requests to get global metadata</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_get_global_metadata_failure_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for failed server metadata requests</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_get_global_metadata_success_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for successful server metadata requests</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_listening_port</td><td style="text-align: center">Port</td><td style="text-align: left">Port the coordinator server is listening on</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_search_index_partition_failure_count</td><td style="text-align: center">Count</td><td style="text-align: left">Failed server searches on index partitions</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_search_index_partition_failure_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for failed server partition searches</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_search_index_partition_success_count</td><td style="text-align: center">Count</td><td style="text-align: left">Successful server searches on index partitions</td></tr>
+<tr><td style="text-align: left">search_coordinator_server_search_index_partition_success_latency_usec</td><td style="text-align: center">Microseconds</td><td style="text-align: left">Latency for successful server partition searches</td></tr>
+<tr><td style="text-align: left">search_coordinator_threads_cpu_time_sec</td><td style="text-align: center">Seconds</td><td style="text-align: left">Cumulative CPU time consumed by coordinator (gRPC) threads</td></tr>
+</tbody></table>
+<h2 id="configurations">Configurations</h2>
+<p>The search module uses the Valkey configuration mechanism. Thus each of the named configuration below can be set on the <code>MODULE LODEX</code> command OR via the <code>CONFIG SET</code> command.</p>
+<table><thead><tr><th style="text-align: left">Name</th><th style="text-align: center">Type</th><th style="text-align: center">Default Value</th><th style="text-align: left">Description</th></tr></thead><tbody>
+<tr><td style="text-align: left">search.query-string-bytes</td><td style="text-align: center">Number</td><td style="text-align: center">10240</td><td style="text-align: left">Maximum allowable length of the query string for FT.SEARCH or FT.AGGREGATE commands</td></tr>
+<tr><td style="text-align: left">search.hnsw-block-size</td><td style="text-align: center">Number</td><td style="text-align: center">10240</td><td style="text-align: left">Number of vectors of space to add to HNSW index size when additional space required.</td></tr>
+<tr><td style="text-align: left">search.reader-threads</td><td style="text-align: center">Number</td><td style="text-align: center">Physical core count</td><td style="text-align: left">Reader thread pool size; dynamically resizes pool on modification</td></tr>
+<tr><td style="text-align: left">search.writer-threads</td><td style="text-align: center">Number</td><td style="text-align: center">Physical core count</td><td style="text-align: left">Writer thread pool size; dynamically resizes pool on modification</td></tr>
+<tr><td style="text-align: left">search.utility-threads</td><td style="text-align: center">Number</td><td style="text-align: center">1</td><td style="text-align: left">Utility thread pool size; dynamically resizes pool on modification</td></tr>
+<tr><td style="text-align: left">search.max-worker-suspension-secs</td><td style="text-align: center">Number</td><td style="text-align: center">60</td><td style="text-align: left">Controls how long the worker thread pool quiescing around a fork. Values &gt; 0 are resumption timeouts if a fork runs too long. Values &lt;=0 mean no quiescing.</td></tr>
+<tr><td style="text-align: left">search.skip-rdb-load</td><td style="text-align: center">Boolean</td><td style="text-align: center">false</td><td style="text-align: left">When enabled, loads index schemas from the RDB but ignores all stored index content. This initializes empty, functional indexes that are then repopulated from the underlying data source. Use this to ensure a clean index state or to recover from corrupted index.</td></tr>
+<tr><td style="text-align: left">search.skip-corrupted-internal-update-entries</td><td style="text-align: center">Boolean</td><td style="text-align: center">false</td><td style="text-align: left">Skip corrupted AOF entries during internal updates. May be useful for recovering from a corrupted AOF file.</td></tr>
+<tr><td style="text-align: left">search.log-level</td><td style="text-align: center">Enum</td><td style="text-align: center">from core</td><td style="text-align: left">Controls module log level verbosity: "debug", "verbose", "notice" or "warning". Default value is to fetch the log level from the core at startup.</td></tr>
+<tr><td style="text-align: left">search.enable-partial-results</td><td style="text-align: center">Boolean</td><td style="text-align: center">true</td><td style="text-align: left">Default option for delivering partial results when errors such as timeout occur. This applies a default behavior on commands which can be explicitly overridden by FT.INFO/FT.SEARCH commands using the SOMESHARDS (for partial results) option and the ALLSHARDS (for complete results) option.</td></tr>
+<tr><td style="text-align: left">search.enable-consistent-results</td><td style="text-align: center">Boolean</td><td style="text-align: center">false</td><td style="text-align: left">Default option for delivering consistent results when errors such as timeout occur. This applies a default behavior on commands which can be explicitly overridden by FT.INFO/FT.SEARCH commands using the CONSISTENT/INCONSISTENT option.</td></tr>
+<tr><td style="text-align: left">search.search-result-background-cleanup</td><td style="text-align: center">Boolean</td><td style="text-align: center">false</td><td style="text-align: left">Enable search result cleanup on background thread</td></tr>
+<tr><td style="text-align: left">search.high-priority-weight</td><td style="text-align: center">Number</td><td style="text-align: center">100</td><td style="text-align: left">Fairness for high priority tasks in thread pools [0..100].</td></tr>
+<tr><td style="text-align: left">search.local-fanout-queue-wait-threshold</td><td style="text-align: center">Number</td><td style="text-align: center">50</td><td style="text-align: left">When this value is less than the average read queue wait time (in milliSeconds)  the local node is preferred in a fanout operation.</td></tr>
+<tr><td style="text-align: left">search.thread-pool-wait-time-samples</td><td style="text-align: center">Number</td><td style="text-align: center">100</td><td style="text-align: left">Sample queue size for thread pool wait time tracking</td></tr>
+<tr><td style="text-align: left">search.tag-min-prefix-length</td><td style="text-align: center">Number</td><td style="text-align: center">2</td><td style="text-align: left">Minimum number of characters required before trailing <code>*</code> in TAG wildcard queries (length excludes <code>*</code>)</td></tr>
+<tr><td style="text-align: left">search.max-term-expansions</td><td style="text-align: center">Number</td><td style="text-align: center">200</td><td style="text-align: left">Maximum number of words to search in text operations (prefix, suffix, fuzzy) to limit memory usage</td></tr>
+<tr><td style="text-align: left">search.search-result-buffer-multiplier</td><td style="text-align: center">String</td><td style="text-align: center">1.5</td><td style="text-align: left">Multiplier for search result buffer size to handle rapid data changes. This ensures results are not dropped when concurrent mutations render in-flight data invalid before the response is sent.</td></tr>
+<tr><td style="text-align: left">search.drain-mutation-queue-on-save</td><td style="text-align: center">Boolean</td><td style="text-align: center">false</td><td style="text-align: left">Drain the mutation queue before RDB save.</td></tr>
+<tr><td style="text-align: left">search.query-string-depth</td><td style="text-align: center">Number</td><td style="text-align: center">1000</td><td style="text-align: left">Controls the depth of the query string parsing from the FT.SEARCH cmd</td></tr>
+<tr><td style="text-align: left">search.query-string-terms-count</td><td style="text-align: center">Number</td><td style="text-align: center">1000</td><td style="text-align: left">Controls the size of the query string parsing from the FT.SEARCH cmd (number of nodes in predicate tree)</td></tr>
+<tr><td style="text-align: left">search.fuzzy-max-distance</td><td style="text-align: center">Number</td><td style="text-align: center">3</td><td style="text-align: left">Controls the maximum allowed edit distance for fuzzy search queries</td></tr>
+<tr><td style="text-align: left">search.max-vector-knn</td><td style="text-align: center">Number</td><td style="text-align: center">10000</td><td style="text-align: left">Controls the max KNN parameter for vector search</td></tr>
+<tr><td style="text-align: left">search.proximity-inorder-compat-mode</td><td style="text-align: center">Boolean</td><td style="text-align: center">false</td><td style="text-align: left">Enables / disables the overlap violation check logic in Proximity searches when INORDER is enabled. Use this to allow overlapping intersection blocks within the query string.</td></tr>
+<tr><td style="text-align: left">search.max-prefixes</td><td style="text-align: center">Number</td><td style="text-align: center">8</td><td style="text-align: left">Controls the max number of prefixes per index</td></tr>
+<tr><td style="text-align: left">search.max-tag-field-length</td><td style="text-align: center">Number</td><td style="text-align: center">256</td><td style="text-align: left">Controls the max length of a tag field</td></tr>
+<tr><td style="text-align: left">search.max-numeric-field-length</td><td style="text-align: center">Number</td><td style="text-align: center">128</td><td style="text-align: left">Controls the max length of a numeric field</td></tr>
+<tr><td style="text-align: left">search.max-vector-attributes</td><td style="text-align: center">Number</td><td style="text-align: center">1000</td><td style="text-align: left">Controls the max number of attributes per index</td></tr>
+<tr><td style="text-align: left">search.max-vector-dimensions</td><td style="text-align: center">Number</td><td style="text-align: center">32768</td><td style="text-align: left">Controls the max dimensions for vector indices</td></tr>
+<tr><td style="text-align: left">search.max-vector-m</td><td style="text-align: center">Number</td><td style="text-align: center">2000000</td><td style="text-align: left">Controls the max M parameter for HNSW algorithm</td></tr>
+<tr><td style="text-align: left">search.max-vector-ef-construction</td><td style="text-align: center">Number</td><td style="text-align: center">1000000</td><td style="text-align: left">Controls the max EF construction parameter for HNSW algorithm</td></tr>
+<tr><td style="text-align: left">search.max-vector-ef-runtime</td><td style="text-align: center">Number</td><td style="text-align: center">1000000</td><td style="text-align: left">Controls the max EF runtime parameter for HNSW algorithm</td></tr>
+<tr><td style="text-align: left">search.default-timeout-ms</td><td style="text-align: center">Number</td><td style="text-align: center">50000</td><td style="text-align: left">Controls the default timeout in milliseconds for FT.SEARCH</td></tr>
+<tr><td style="text-align: left">search.max-search-result-record-size</td><td style="text-align: center">Number</td><td style="text-align: center">5242880</td><td style="text-align: left">Controls the max content size for a record in the search response</td></tr>
+<tr><td style="text-align: left">search.max-search-result-fields-count</td><td style="text-align: center">Number</td><td style="text-align: center">500</td><td style="text-align: left">Controls the max number of fields in the content of the search response</td></tr>
+<tr><td style="text-align: left">search.backfill-batch-size</td><td style="text-align: center">Number</td><td style="text-align: center">10240</td><td style="text-align: left">Controls the batch size for backfilling indexes</td></tr>
+<tr><td style="text-align: left">search.coordinator-query-timeout-secs</td><td style="text-align: center">Number</td><td style="text-align: center">120</td><td style="text-align: left">Controls the gRPC deadline timeout (in seconds) for distributed coordinator query operations.</td></tr>
+<tr><td style="text-align: left">search.max-indexes</td><td style="text-align: center">Number</td><td style="text-align: center">1000</td><td style="text-align: left">Controls the maximum number of search indexes that can be created in the system</td></tr>
+<tr><td style="text-align: left">search.async-fanout-threshold</td><td style="text-align: center">Number</td><td style="text-align: center">30</td><td style="text-align: left">Controls the threshold for async fanout operations (minimum number of targets to use async)</td></tr>
+<tr><td style="text-align: left">search.max-nonvector-search-results-fetched</td><td style="text-align: center">Number</td><td style="text-align: center">100000</td><td style="text-align: left">Controls the maximum number of results to fetch in background threads before content fetching on non-vector (numeric/tag/text) query paths</td></tr>
+<tr><td style="text-align: left">search.max-attributes</td><td style="text-align: center">Number</td><td style="text-align: center">1000</td><td style="text-align: left">Controls the max number of attributes per index</td></tr>
+<tr><td style="text-align: left">search.cluster-map-expiration-ms</td><td style="text-align: center">Number</td><td style="text-align: center">250</td><td style="text-align: left">Controls how long (in milliseconds) the coordinator caches the cluster topology map before refreshing it from the Valkey cluster.</td></tr>
+<tr><td style="text-align: left">search.max-mutation-queue-size-on-restore</td><td style="text-align: center">Number</td><td style="text-align: center">10000</td><td style="text-align: left">Controls the maximum mutation queue size during RDB load. If the queue exceeds this threshold, the restore process yields to the main thread, allowing the queue to be processed before continuing ingestion. This prevents excessive memory overhead.</td></tr>
+</tbody></table>
+
+
+
+            </div>
+        </main>
+        
+        <aside>
+            
+<h2 id="topic-list-title">Alphabetical Index</h2>
+<ul id="topic-list"></ul>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var 
+        topicListEl = document.getElementById('topic-list'),
+        f = fetch("/topics-list/");
+
+    f.then((r) => r.text()).then((v) => { topicListEl.innerHTML = v; })
+    f.catch((error) => { topicListEl.innerHTML = "Could not load topic list."; });
+});
+</script>
+
+<div class="edit_box">
+    See an error?
+    <a href="https://github.com/valkey-io/valkey-doc/edit/main/topics/search-monitoring.md">Update this Page on GitHub!</a>
+</div>
+
+        </aside>
+        
+    </div>
+</div>
+
+  </div>
+  <div class="footer">
+      <div class="row">
+        <div class="col col-6 icon-links">
+          <a href="https://valkey.io/slack" target="_blank">
+            <img src="/img/IconSlack.svg" alt="Slack Icon" width="20" height="20" />
+            Slack
+          </a>
+          <a href="https://github.com/valkey-io" target="_blank">
+            <img src="/img/IconGithub.svg" alt="GitHub Icon" width="20" height="20" />
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/company/valkey/" target="_blank">
+            <img src="/img/IconLinkedin.svg" alt="LinkedIn Icon" width="20" height="20" />
+            LinkedIn
+          </a>
+          <a href="https://x.com/valkey_io" target="_blank">
+            <img src="/img/IconX.svg" alt="X Icon" width="20" height="20" />
+            X.com
+          </a>
+          <a href="https://www.youtube.com/@valkeyproject" target="_blank">
+            <img src="/img/IconYoutube.svg" alt="YouTube Icon" width="24" height="24" />
+            YouTube
+          </a>
+          <a href="/connect">
+            <img src="/img/IconMail.svg" alt="Mail Icon" width="20" height="20" />
+            Connect
+          </a>
+        </div>
+        <div class="col col-6 links">
+          <a href="/code_of_conduct">Code of Conduct</a>
+          <a href="/community/meetup-groups/">Meetup Groups</a>
+          <a href="https://github.com/orgs/valkey-io/discussions" target="_blank">Forum</a>
+          <a href="/about">About</a>
+          <a href="/leadership">Leadership</a>
+          <a href="/topics/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row">
+        <div class="row footer-email-list" id="email-signup">
+    <div class="col col-4">
+        <h2>Subscribe for updates, event info, and the latest Valkey news</h2>
+
+        <p>Stay connected with everything happening in the Valkey ecosystem: news, community stories, updates, and opportunities to get involved.</p>
+        <p>Subscriptions are open to all, so invite a friend or teammate. Thanks for joining and happy reading!</p>
+    </div>
+    <div class="footer-form col col-8">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+        <script>
+        hbspt.forms.create({
+            portalId: "8112310",
+            formId: "7d793edf-4628-41c5-8c66-1a40a5b345b6",
+            region: "na1"
+        });
+        </script>
+    </div>
+</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer_bottom">
+        <p>&copy; Valkey contributors.</p>
+        <p>Valkey and the Valkey logo are trademarks of LF Projects, LLC.</p>
+        <p>
+          <a href="https://lfprojects.org/policies/trademark-policy/">Trademark Policy</a>.
+          <a href="https://lfprojects.org/policies/privacy-policy/">Privacy Policy</a>.
+          <a href="https://lfprojects.org/policies/terms-of-use/">Terms of Use</a>.
+          For other policies, please see <a href="https://lfprojects.org/">lfprojects.org</a>.
+        </p>
+        <p>Valkey includes certain 3-Clause BSD-licensed Redis code from Redis Ltd. and other source code. Redis Ltd. is
+          not the source of that other source code. Redis is a registered trademark of Redis Ltd.</p>
+        <p>
+          Logo design by <a href="https://github.com/dizys" target="_blank">Ziyang.</a>
+        </p>
+      </div>
+      <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=4682283c-f8b7-410c-9c31-c6d7944cee8b" />
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFFCB7SR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    </div>
+    
+
+</body>
+</html>
